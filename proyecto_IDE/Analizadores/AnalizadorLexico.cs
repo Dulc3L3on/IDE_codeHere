@@ -35,13 +35,13 @@ namespace proyecto_IDE.Analizadores
                             resultadosHallados = analizarNumero(numeroLinea, caracterActual, lineaDesglosada);
                             break;
 
-                        case 'c':
+                       /* case 'c':
                             resultadosHallados;
                             break;
 
                         case 'o':
                             resultadosHallados;
-                            break;
+                            break;*/
 
                         default:
                             //se manda a llamar al método de Excepciones para que informe el hecho  a la GUI y así pueda marcar y actualizar el área de log
@@ -190,6 +190,8 @@ namespace proyecto_IDE.Analizadores
             detallesDecimal[0] = Convert.ToString(posicionAnalisis);
             return detallesDecimal;
         }//listo
+
+        
 
     }
 }

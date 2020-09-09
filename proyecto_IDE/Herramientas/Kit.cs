@@ -59,6 +59,20 @@ namespace proyecto_IDE.Herramientas
 
         }
 
+        public int agregarLineas(int lineaPosicion, int lineaMostrada) {//la posición es dada por el rich y la linea mostrada por la lista...
+            if (lineaPosicion> lineaMostrada) {
+                return lineaMostrada++;
+            }
 
+            return 0;
+        }
+
+        public int eliminarRangoLineas(int lineasLlenas, int lineaMostrada) {
+            if (lineasLlenas< lineaMostrada) {//quiere decir que hay líneas de más...
+                return (lineaMostrada-lineasLlenas);//se manda el total de elementos a eliminar, por lo cual en el método directo para eliminar deberá borrarse un elemento desde el final de la lista hasta llevar a 0 esta cantidad
+            }
+
+            return 0;//DE TODOS MODOS SI FUERAN IGUALES EL RESULTADO SERÍA 0...
+        }
     }
 }
