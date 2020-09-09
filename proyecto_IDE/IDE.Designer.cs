@@ -38,9 +38,9 @@
             this.areaDesarrollo.BackColor = System.Drawing.SystemColors.Desktop;
             this.areaDesarrollo.Font = new System.Drawing.Font("Microsoft JhengHei", 10.15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.areaDesarrollo.ForeColor = System.Drawing.SystemColors.Menu;
-            this.areaDesarrollo.Location = new System.Drawing.Point(-1, -2);
+            this.areaDesarrollo.Location = new System.Drawing.Point(-1, 25);
             this.areaDesarrollo.Name = "areaDesarrollo";
-            this.areaDesarrollo.Size = new System.Drawing.Size(1075, 539);
+            this.areaDesarrollo.Size = new System.Drawing.Size(1075, 512);
             this.areaDesarrollo.TabIndex = 0;
             this.areaDesarrollo.Text = "Code Here  :3";
             this.areaDesarrollo.TextChanged += new System.EventHandler(this.areaDesarrollo_textChanged);
