@@ -35,7 +35,9 @@ namespace proyecto_IDE.Analizadores
 
         public int analizarAgrupadores(char[] lineaDesglosada, int numeroLinea, int caracterActual) {
             if (herramienta.determinarTipoCaracter(lineaDesglosada[caracterActual]).Equals('c') || !controlCierre.darListaEsperaCierre().estaVacia()) {//si pues solo al inicio será necesaria la primera condi, de ahi en adelante con solo saber que no está vacía basta para entrar a este método...
-                return controlCierre.analizarAgrupaciones(lineaDesglosada, numeroLinea, caracterActual);
+                resultadosHallados = controlCierre.analizarAgrupaciones(lineaDesglosada, numeroLinea, caracterActual);
+                return (controlCierre.darUltimaLineaAnalizada()+1);
+
             }//fin del if que permite entrar al análisis de los que requeren cierre, ya sea para agergar y empezar el análisis O para seguir con el análisis en el que se quedó...
 
             return caracterActual;

@@ -28,7 +28,7 @@ namespace proyecto_IDE.Excepciones
             return "primitiva_palabra";//debe parar por el hecho de que está presente otro tipo de caracter el cual puede estar definido en el alfabeto...
         }
 
-        public String excepcionNumero(int numeroFila, int columnaExcepcion, char[] lineaCompleta)
+        public String excepcionNumero(int numeroFila, int columnaExcepcion, char[] lineaCompleta)//es que no es un error como tal, sino que se empleó para hacer el cambio a decimal...
         {
             if (herramienta.determinarTipoCaracter(lineaCompleta[columnaExcepcion]) == 'p')
             {
@@ -37,6 +37,12 @@ namespace proyecto_IDE.Excepciones
 
             return "primitiva_entero";//pues se tienen otros caracteres, que posiblemente sean de comparación o que no estén en el alfabeto, donde esto últmi será un error, lo cual estará contemplado en el switch...
 
+        }
+
+        public void excepcionNecesitadoCierre(int numeroFila,String mensajeError) {
+            anadirError(numeroFila, mensajeError);
+
+            //no retorno nada porque no he guardado nada en RESULTADO aún, sino que lo hago hasta que encuentre el cierre...
         }
 
         public String excepcionDecimal(int numeroFila, int columnaExcepcion, char[] lineaCompleta)
@@ -63,6 +69,8 @@ namespace proyecto_IDE.Excepciones
         {
             String mensajeError = Convert.ToString(numeroLinea) + "   " + "mensaje";
             listaErrores.anadirAlFinal(mensajeError);
+
+            //se manda a llamar el método para colorear la fila de corinto...
         }
 
         //RECUERDA: que cuando elimines los errores de la lista, deberá ser el de la línea que fue corregido, así que pienso que deberás apoyarte de los evt dericht text box,para que puedas obtener la línea que fue corregida, pero, aquí hay algo, que el hecho de modificar o borrar una fila no impica que haya arreglado el error... 

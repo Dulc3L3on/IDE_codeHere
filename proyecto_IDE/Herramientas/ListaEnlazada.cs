@@ -77,6 +77,27 @@ namespace proyecto_IDE
             return listaCoincidencias;
         }
 
+        public void eliminarUltimoNodo() {
+
+            if (tamanioLista == 1)
+            {
+                primerNodo = ultimoNodo = null;
+            }
+            else {
+                Nodo<T> nodoAuxiliar = primerNodo;
+
+                for (int nodoActual = 1; nodoActual < tamanioLista; nodoActual++)
+                { //Así cabal se queda en el penúltimo nodo...
+                    nodoAuxiliar = nodoAuxiliar.nodoSiguiente;
+                }
+
+                nodoAuxiliar.nodoSiguiente = null;//bye bye xD GRACIAS POR TUS SERVICIOS... XD
+                ultimoNodo = nodoAuxiliar;//Si la lista tiene 1 solo ele cabal 
+            }          
+            
+            tamanioLista--;
+        }
+
         public Nodo<T> darPrimerNodo()
         {
             return primerNodo;
