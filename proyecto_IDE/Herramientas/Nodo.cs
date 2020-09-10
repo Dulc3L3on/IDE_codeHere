@@ -11,7 +11,7 @@ namespace proyecto_IDE.Herramientas
         public E contenido;
         public Nodo<E> nodoSiguiente;
         private int numeroElementosEnNodo;//esta vriable será útil para el proceso en el cual se almacenan las propiedades, por el hecho de saber el número de elementos que debe
-                                          //poseer del grupo para comenzar a construir y saber que tan rico es
+        private String nombre;            //poseer del grupo para comenzar a construir y saber que tan rico es
 
         /**
          *ctrctor para 1er elemento es decir, cabeza
@@ -49,6 +49,10 @@ namespace proyecto_IDE.Herramientas
             nodoSiguiente = siguiente;
         }
 
+        public void establecerNombre(String nombreEstablecido) {
+            nombre = nombreEstablecido;
+        }
+
         public E obtenerObjectcEnCasilla()
         {//no será necesario el índice?? para hacer ref a uno específico y obtener sus respect datos??
             return contenido;
@@ -67,6 +71,10 @@ namespace proyecto_IDE.Herramientas
         public int obtenerNumeroElementosNodo()
         {
             return numeroElementosEnNodo;
+        }
+
+        public String darNombre() {
+            return nombre;
         }
     }
 }

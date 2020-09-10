@@ -51,6 +51,13 @@ namespace proyecto_IDE.Excepciones
             return "primitiva_decimal";//pues se tienen otros caracteres, que posiblemente estén sintácticamente correctos [por ser de comparación, identificadores, aritmeticos, fianlizacion y así xD] por ello será mejor analizar para determinar su validez léxica y posterior a ello la sintáctica
         }
 
+        public String excepcionSimbolo(int numeroFila, int columnaExcepcion, String caracterErroneo) {
+
+            String mensajeError = "La utilizacion de "+ caracterErroneo + " no está permitida";//Aquí de una vez se muestra el error, porque si entró como "otros" y esos otros no están definido, entonces de una vez Strike y fueraaa! xD
+            anadirError(numeroFila, mensajeError);
+            return "erronea";
+        }
+
 
         private void anadirError(int numeroLinea, String mensaje)
         {

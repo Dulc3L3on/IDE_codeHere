@@ -43,10 +43,51 @@ namespace proyecto_IDE
 
             tamanioLista++;
         }
+        public void establecerNombreNodoCreado(String nombre) {
+            ultimoNodo.establecerNombre(nombre);
+        }
 
-        public Nodo<T> obtnerPrimerNodo()
+        public T darUltimaCoincidencia(T contenidoABuscar)
+        {
+            ListaEnlazada<Nodo<T>> listaDeCoincidencias = hallarCoincidencias(contenidoABuscar);
+
+            return listaDeCoincidencias.darUltimoNodo().contenido.contenido;//se devuelve el tipo de contenido como tal que se tenía almacenado... en este caso 
+
+        }
+
+        public void modificarUltimaCoincidencia(T contenido,T contenidoABuscar) {
+            ListaEnlazada<Nodo<T>> listaDeCoincidencias = hallarCoincidencias(contenidoABuscar);
+            listaDeCoincidencias.darUltimoNodo().contenido.reestablecerContenido(contenido);//obtnego el nodo último y su contenido que realmente es un nodo para así reasignar su contenido...
+        }//Esta bien pero en este momento no quiero reemplazar el nodo que al prinicipo estaba aquí así que...
+
+
+
+        public ListaEnlazada<Nodo<T>> hallarCoincidencias(T contenidoABuscar) {
+            Nodo<T> nodoAuxiliar = primerNodo;
+            ListaEnlazada<Nodo<T>> listaCoincidencias = new ListaEnlazada<Nodo<T>>();//el nodo almacenará nodos :v xD
+
+            for (int numeroNodoActual=0; numeroNodoActual< tamanioLista; numeroNodoActual++) {
+                if (nodoAuxiliar.contenido.Equals(contenidoABuscar)) {
+                    listaCoincidencias.anadirAlFinal(nodoAuxiliar);
+                }
+
+                nodoAuxiliar = nodoAuxiliar.nodoSiguiente;
+            }
+
+            return listaCoincidencias;
+        }
+
+        public Nodo<T> darPrimerNodo()
         {
             return primerNodo;
+        }
+
+        public Nodo<T> darUltimoNodo() {
+            return ultimoNodo;
+        }
+
+        public T darContenidoUltimoNodo() {
+            return ultimoNodo.contenido;
         }
 
         public Boolean estaVacia()

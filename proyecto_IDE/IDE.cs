@@ -35,7 +35,7 @@ namespace proyecto_IDE
         }
 
         private void establecerNumeroLinea() { 
-            int numeroLinea = herramienta.agregarLineas(areaDesarrollo.Lines.Length+1, lst_lineario.Items.Count+1);
+            int numeroLinea = herramienta.agregarNumeroLineas(areaDesarrollo.Lines.Length+1, lst_lineario.Items.Count+1);
 
             if (numeroLinea!=0) {
                 lst_lineario.Items.Add(Convert.ToString(numeroLinea));

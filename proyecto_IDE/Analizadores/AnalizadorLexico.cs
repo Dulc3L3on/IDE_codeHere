@@ -14,46 +14,62 @@ namespace proyecto_IDE.Analizadores
         Kit herramienta = new Kit();
         ExcepcionLexico excepcionLexico = new ExcepcionLexico();
         TablaDeSimbolos tablaSimbolos = new TablaDeSimbolos();
+        ControlCierre controlCierre = new ControlCierre();
+        Resultado resultadosHallados;//ahí decides si será local o no, puesto que lo que realmente nec el sintác es el listado de la fila...
+        ListaEnlazada<Resultado> listaResutadosDeFilaActual = new ListaEnlazada<Resultado>();//Esta será necesaria en la fase siguiente
 
-        public void analizar(char[] lineaDesglosada, int numeroLinea)
-        {//Aquí ya actuó el método sea que aquí mismo se encuantre o lo esté en la clase que tiene contacto directo con la interfaz...
-            Resultado resultadosHallados = new Resultado();
-
+        public void analizarLinea(char[] lineaDesglosada, int numeroLinea) {
             for (int caracterActual = 0; caracterActual < lineaDesglosada.Length; caracterActual++)
             {
                 if (!((int)lineaDesglosada[caracterActual] == 32))
                 { //Es decir es un espacio en blanco...
-                    char tipoCaracter = herramienta.determinarTipoCaracter(lineaDesglosada[caracterActual]);//por este método es que no habrán errores de ubicarse en el caracter sigueinte al último que se estudió puesto que aquí se revisa y por o tanto está bien que en los métodos principales de análisis se estudie 1 más allá...
-
-                    switch (tipoCaracter)
+                    caracterActual = analizarAgrupadores(lineaDesglosada, numeroLinea, caracterActual);
+                    if (controlCierre.hayQueAnalizarPrimitivos())
                     {
-                        case 'p'://problemas con los identificadores no habrá... por el hecho de que DEBE empezar con un caracter y por ello caerá al método que tiene como primero una letra ya después conforme se vaya desarrollando el proceso xD se decidirá si el método que debe seguir con la revisión se debe cambiar o no...
-                            resultadosHallados = analizarOcurrenciaConLetras(numeroLinea, caracterActual, lineaDesglosada);
-                            break;
-
-                        case 'd':
-                            resultadosHallados = analizarNumero(numeroLinea, caracterActual, lineaDesglosada);
-                            break;
-
-                       /* case 'c':
-                            resultadosHallados;
-                            break;
-
-                        case 'o':
-                            resultadosHallados;
-                            break;*/
-
-                        default:
-                            //se manda a llamar al método de Excepciones para que informe el hecho  a la GUI y así pueda marcar y actualizar el área de log
-                            break;
-                    }//fin del switch                    
+                        caracterActual = analizarPrimitivos(lineaDesglosada, caracterActual, numeroLinea);
+                    }
                 }
 
-                caracterActual = resultadosHallados.darColumnaFin();//Esto para que pueda seguir con el proceso general a partir de donde se quedaron los subprocesos...
-
             }//fin del for que se encarga de recorrer caracter por caracter la línea que recibió del área de desarrollo
+        }
 
+        public int analizarAgrupadores(char[] lineaDesglosada, int numeroLinea, int caracterActual) {
+            if (herramienta.determinarTipoCaracter(lineaDesglosada[caracterActual]).Equals('c') || !controlCierre.darListaEsperaCierre().estaVacia()) {//si pues solo al inicio será necesaria la primera condi, de ahi en adelante con solo saber que no está vacía basta para entrar a este método...
+                return controlCierre.analizarAgrupaciones(lineaDesglosada, numeroLinea, caracterActual);
+            }//fin del if que permite entrar al análisis de los que requeren cierre, ya sea para agergar y empezar el análisis O para seguir con el análisis en el que se quedó...
 
+            return caracterActual;
+        }
+
+        public int analizarPrimitivos(char[] lineaDesglosada, int numeroLinea, int caracterActual)
+        {//Aquí ya actuó el método sea que aquí mismo se encuantre o lo esté en la clase que tiene contacto directo con la interfaz...            
+           
+            char tipoCaracter = herramienta.determinarTipoCaracter(lineaDesglosada[caracterActual]);//por este método es que no habrán errores de ubicarse en el caracter sigueinte al último que se estudió puesto que aquí se revisa y por o tanto está bien que en los métodos principales de análisis se estudie 1 más allá...
+            //recuerda que en la columnaFin de RESULTADO siempre se almacenará la col en la que terminó el análisis, es decir en la col donde se encontró el último caracter correcto respecto al patrón actual...
+
+            switch (tipoCaracter)
+            {
+                case 'p'://problemas con los identificadores no habrá... por el hecho de que DEBE empezar con un caracter y por ello caerá al método que tiene como primero una letra ya después conforme se vaya desarrollando el proceso xD se decidirá si el método que debe seguir con la revisión se debe cambiar o no...
+                  resultadosHallados = analizarOcurrenciaConLetras(numeroLinea, caracterActual, lineaDesglosada);
+                break;
+
+                case 'd':
+                  resultadosHallados = analizarNumero(numeroLinea, caracterActual, lineaDesglosada);
+                break;
+
+                case 'o':
+                    resultadosHallados= analizarDemasCaracteres(numeroLinea, caracterActual, lineaDesglosada);
+                break;
+
+                default:
+                    //se manda a llamar al método de Excepciones para que informe el hecho  a la GUI y así pueda marcar y actualizar el área de log
+                break;
+            }//fin del switch                    
+                
+            return (resultadosHallados.darColumnaFin()+1);//Esto para que pueda seguir con el proceso general a partir de donde se quedaron los subprocesos...            
+
+            //aquí cuando sea necesario se mandaría a añadir el resultado hallado a la respectiva lisa de resultados de la línea en la que se está analizando
+            //o bien odrías ponerlo en cada uno de los switch, da lo mismo...
         }
 
         private Resultado analizarOcurrenciaConLetras(int numeroLinea, int inicioAnalisis, char[] lineaAEstudiar)
@@ -74,7 +90,9 @@ namespace proyecto_IDE.Analizadores
                 }
             }
 
-            Resultado resultado = new Resultado(datosHallados[2], datosHallados[1], numeroLinea, inicioAnalisis, Convert.ToInt32(datosHallados[0]));//por el momento no me es útil, pero aún así devolveré este elemento para que pueda ser agregado a la lista que almacena en cada nodo un objeto resultado...            
+            Resultado resultado = new Resultado(datosHallados[2], datosHallados[1], numeroLinea, inicioAnalisis, (Convert.ToInt32(datosHallados[0])-1));//por el momento no me es útil, pero aún así devolveré este elemento para que pueda ser agregado a la lista que almacena en cada nodo un objeto resultado...            
+            resultado.establecerFilaFin(numeroLinea);
+
             return resultado;
         }//listo
 
@@ -123,7 +141,10 @@ namespace proyecto_IDE.Analizadores
         {
             String[] hallazgos = analizarEntero(numeroLinea, posicionInicialAnalisis, lineaAEstudiar);
 
-            Resultado resultado = new Resultado(hallazgos[2], hallazgos[1], numeroLinea, posicionInicialAnalisis, Convert.ToInt32(hallazgos[0]));
+            Resultado resultado = new Resultado(hallazgos[2], hallazgos[1], numeroLinea, posicionInicialAnalisis, (Convert.ToInt32(hallazgos[0])-1));
+            resultado.establecerFilaFin(numeroLinea);
+
+            resultado.establecerFilaFin(numeroLinea);
             return resultado;//recuerda que por medio de esto se puede avanzar a partir del indice siguiente al último que terminó de analizar el método
         }//lsito
 
@@ -189,9 +210,84 @@ namespace proyecto_IDE.Analizadores
 
             detallesDecimal[0] = Convert.ToString(posicionAnalisis);
             return detallesDecimal;
-        }//listo
+        }//listo       
 
-        
+       
+        private String[] analizarSimbolosSimples(int numeroLinea, int posicionInicialAnalisis, char caracterAEstudiar)
+        {//Se mnada un arreglo por hecho de que no siempre se podrá generar un objeto resultado, pues puede que el símbolo buscado no se encuentre en el alfabeto...        
+            String[] datosSimboloSimple = {Convert.ToString(posicionInicialAnalisis), "",Convert.ToString(caracterAEstudiar) };//0 -> numeroColumnaFinal, 1-> tipo, 2-> el simbolo en sí
+            Nodo<String> nodoAuxiliar = tablaSimbolos.darListadoSimbolosSimples().darPrimerNodo();
+
+            for (int simboloActual = 1; simboloActual <= tablaSimbolos.darListadoSimbolosSimples().darTamanio(); simboloActual++)
+            {
+                String simboloSimple = nodoAuxiliar.contenido;
+
+                if (Convert.ToString(caracterAEstudiar).Equals(simboloSimple))
+                {
+                    //se llama el método para colorear                   
+                    
+                    datosSimboloSimple[1] = nodoAuxiliar.darNombre();                    
+
+                    return datosSimboloSimple;//Retorno aquí para saber que si salgo del for es porque no hallé nada...
+                }
+
+                nodoAuxiliar = nodoAuxiliar.nodoSiguiente;
+            }//fin del for que se encarga de recorrer el listado que contiene a los símbolos simples...
+
+            datosSimboloSimple[1]= excepcionLexico.excepcionSimbolo(numeroLinea, posicionInicialAnalisis, datosSimboloSimple[2]);//se manda a llamar al método para informar de la excepción...aunque está demás el recibir el tipo pues si se llega aquí es porque no está el caracter en el alfabeto..,
+            return datosSimboloSimple;
+        }
+
+        private String[] analizarSimbolosCompuestos(int numeroLinea, int posicionInicialAnalisis, char caracterActual, char caracterSiguiente) {
+            String conjuntoEstudio = Convert.ToString(caracterActual)+Convert.ToString(caracterSiguiente);
+            String[] datosSimboloCompuesto = { Convert.ToString(posicionInicialAnalisis + 1), "", conjuntoEstudio };//0 -> numeroColumnaFinal, 1-> tipo, 2-> el simbolo en sí
+           
+            Nodo<String> nodoAuxiliar = tablaSimbolos.darListadoSimbolosSimples().darPrimerNodo();
+
+
+            for (int simboloActual = 1; simboloActual <= tablaSimbolos.darListadoSimbolosSimples().darTamanio(); simboloActual++)
+            {
+                String simboloCompuesto = nodoAuxiliar.contenido;
+
+                if (conjuntoEstudio.Equals(simboloCompuesto))
+                {
+                    //se llama el método para colorear                    
+
+                    datosSimboloCompuesto[1] = nodoAuxiliar.darNombre();
+
+                    return datosSimboloCompuesto;
+                }
+
+                nodoAuxiliar = nodoAuxiliar.nodoSiguiente;
+            }//fin del for que se encarga de recorrer el listado que contiene a los símbolos simples...
+
+            //se manda a llamar al método para informar de la excepción...
+            datosSimboloCompuesto[1] = excepcionLexico.excepcionSimbolo(numeroLinea, posicionInicialAnalisis, conjuntoEstudio);
+
+            return datosSimboloCompuesto;
+        }
+
+        public Resultado analizarDemasCaracteres(int numeroLinea, int posicionInicialAnalisis, char[] lineaDeEstudio)
+        {
+            Resultado resultado;
+            String[] resultadosObtenidos;
+
+            if (herramienta.determinarTipoCaracter(lineaDeEstudio[posicionInicialAnalisis + 1]) == 'o')
+            {
+                resultadosObtenidos = analizarSimbolosCompuestos(numeroLinea, posicionInicialAnalisis, lineaDeEstudio[posicionInicialAnalisis], lineaDeEstudio[posicionInicialAnalisis + 1]);                
+            }
+            else
+            {
+                resultadosObtenidos = analizarSimbolosSimples(numeroLinea, posicionInicialAnalisis, lineaDeEstudio[posicionInicialAnalisis]);                
+            }
+
+            resultado = new Resultado(resultadosObtenidos[1], resultadosObtenidos[1], numeroLinea, posicionInicialAnalisis, posicionInicialAnalisis);
+
+            resultado.establecerFilaFin(numeroLinea);
+            return resultado;
+        }//listo :3 xD
 
     }
+
+}
 }

@@ -6,21 +6,23 @@ using System.Threading.Tasks;
 
 namespace proyecto_IDE.Complementos_analizadores
 {
-    class Resultado
+    class Resultado//por el hecho de guardarse en una lista enlazada, se tendría el orden de aparicion, puesto que el primero en aparecer en la lista también sería el primero de la linea...
     {
         String elementoEstudiado;
-        String clasificacion;
-        int fila, columnaInicio, columnaFin;
+        String clasificacion;//esta es la clasificación del conjunto de caracteres mismo
+        String tipoAgrupacion;//esta es la agrupación que será determinada a partir de donde se encuentre su debido agrupador [los parentesis]... le será establecida mientras no encuentre el signo de cierre, cuando no se haya encontrado ninguno, esta var no será empleada, porque basta con la clasificacion inidividual... entre los tipos de agrupaciones está -> condicion, ->opMatematica, -> conversion y así xd...
+        int filaInicio, columnaInicio, columnaFin, filaFin;
 
         public Resultado()
         {
         }
 
-        public Resultado(String elemento, String tipo, int numeroFila, int numeroColumnaInicio, int numeroColumnaFin)
+        public Resultado(String elemento, String tipo, int numeroFilaInicio, int numeroColumnaInicio, int numeroColumnaFin)
         {
             elementoEstudiado = elemento;
             clasificacion = tipo;
-            fila = numeroFila;
+            filaInicio = numeroFilaInicio;
+            filaFin = numeroFilaInicio;//no creo que provoque problemas... esto lo hago porque aún no se si vaya a revisar siempre esta col o no, lo cual dependerá si se tienen métodos personalizados para cada tipo, lo cual facilitaría más el proceso...
             columnaInicio = numeroColumnaInicio;
             columnaFin = numeroColumnaFin;
         }
@@ -35,9 +37,18 @@ namespace proyecto_IDE.Complementos_analizadores
             return clasificacion;
         }
 
-        public int darFilaUbicacion()
+        public int darFilaUbicacionInicio()
         {
-            return fila;
+            return filaInicio;
+        }
+
+        public void establecerFilaFin(int numeroFilaFin) {
+            filaFin = numeroFilaFin;
+        }//para el caso de los primitivos será la misma en la que inicio...
+
+        public int darFilaUbicacionFin()
+        {
+            return filaFin;
         }
 
         public int darColumnaInicio()
@@ -48,6 +59,16 @@ namespace proyecto_IDE.Complementos_analizadores
         public int darColumnaFin()
         {
             return columnaFin;
+        }
+
+        public void establecerTipoAgrupacion(String tipoDeAgrupacion) {
+            tipoAgrupacion = tipoDeAgrupacion;
+        }
+
+
+
+        public String darMembresia() {//xD
+            return tipoAgrupacion;
         }
     }
 

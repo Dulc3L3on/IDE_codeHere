@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analizadores\AnalizadorLexico.cs" />
+    <Compile Include="Complementos_analizadores\ControlCierre.cs" />
     <Compile Include="Complementos_analizadores\Resultado.cs" />
     <Compile Include="Complementos_analizadores\TablaDeSimbolos.cs" />
     <Compile Include="Excepciones\ExcepcionLexico.cs" />
