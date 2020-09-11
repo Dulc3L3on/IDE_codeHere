@@ -7,31 +7,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using proyecto_IDE.Analizadores;
 using proyecto_IDE.Herramientas;
 
 namespace proyecto_IDE
 {
     public partial class IDE : Form
     {
-        Kit herramienta = new Kit();
+        Kit herramienta;
+        AnalizadorLexico analizadorLexico;
+        private int[] lineaCambiada = new int[2];//cuando el 2 tenga un valor !=0 se mandará a llamar la métood para analizar...
 
         public IDE()
         {
             InitializeComponent();
+            herramienta = new Kit(areaDesarrollo, txtBx_mensajero);
+            analizadorLexico = new AnalizadorLexico(herramienta);
         }
 
         private void areaDesarrollo_textChanged(object sender, EventArgs e)
-        {
-            int indice = areaDesarrollo.SelectionStart;//obtiene el caracter en donde se encuentra la barra de intercalado [cursor] si está seleccionado entonces devuelve el punto hasta donde llegó dicha selección...
-            int linea = areaDesarrollo.GetLineFromCharIndex(indice)+1;//recuerda el indice no inicia desde 0 en cada fila sino que sigue su conteo hasta llegar al fin de todos los caracteres que pueda almacenar...
-
-            int primerCaracter = areaDesarrollo.GetFirstCharIndexFromLine(linea-1);
-            int columna = indice - primerCaracter;
-
-            establecerNumeroLinea();
-            txtBx_Informativo.Text ="Linea: "+Convert.ToString(linea)+ " Columna: "+Convert.ToString(columna);
+        {          
+            establecerNumeroLinea();            
             eliminarNumeroLineas();
 
+            lineaCambiada[0] = areaDesarrollo.GetLineFromCharIndex(areaDesarrollo.GetFirstCharIndexOfCurrentLine());//esto es para saber de quien pedir el texto a analizar...
         }
 
         private void establecerNumeroLinea() { 
@@ -50,6 +49,25 @@ namespace proyecto_IDE
                     lst_lineario.Items.RemoveAt((lst_lineario.Items.Count)-1);//y así se eliminan lineas innecesarias xD
                 }
             }
+        }
+
+        private void areaDesarrollo_KeyUp(object sender, KeyEventArgs e)
+        {
+            int linea = areaDesarrollo.GetLineFromCharIndex(areaDesarrollo.GetFirstCharIndexOfCurrentLine());//se obtiene el índice [el número de columna total en el que se encuentra el cursor...
+            int indice = areaDesarrollo.SelectionStart;
+            int columna = indice - areaDesarrollo.GetFirstCharIndexOfCurrentLine();
+
+
+            txtBx_Informativo.Text = "Linea: " + Convert.ToString(linea) + " Columna: " + Convert.ToString(columna);//parece ser repetitivo pero no lo es, porque uno se acciona cuando se presiona el teclado para hacer el cab de linea y el otro cuando se hace el cambio con el mouse
+        }
+
+        private void areaDesarrollo_MouseMoved(object sender, MouseEventArgs e)
+        {
+            int primerCaracter = areaDesarrollo.GetFirstCharIndexOfCurrentLine();
+            int lineaActual = areaDesarrollo.GetLineFromCharIndex(primerCaracter);
+            int columna = areaDesarrollo.SelectionStart - primerCaracter;
+
+            txtBx_Informativo.Text = "Linea: " + Convert.ToString(lineaActual) + " Columna: " + Convert.ToString(columna);
         }
     }
 }

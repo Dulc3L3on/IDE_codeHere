@@ -3,11 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace proyecto_IDE.Herramientas
 {
     class Kit
     {
+        RichTextBox areaDesarrollo;
+        TextBox txtBx_mensajero;
+        ListaEnlazada<int> numeroLineaCambiada = new ListaEnlazada<int>();//será útil para saber cuando se debe llamar al analizador...
+
+        public Kit(RichTextBox areaEnriquecida, TextBox txt_mensajero) {
+            areaDesarrollo = areaEnriquecida;
+            txtBx_mensajero = txt_mensajero;
+        }
+
         public char determinarTipoCaracter(char caracterInicial)
         {
             if (((int)caracterInicial >= 65 && (int)caracterInicial <= 90) || (int)caracterInicial >= 97 && (int)caracterInicial <= 122)
@@ -98,6 +108,100 @@ namespace proyecto_IDE.Herramientas
             }
 
             return 0;//DE TODOS MODOS SI FUERAN IGUALES EL RESULTADO SERÍA 0...
+        }
+
+        public void marcarError(int numeroLinea, int numeroColumnaFinal, ListaEnlazada<String> listaErrores)
+        {
+            areaDesarrollo.Select(areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + numeroColumnaFinal));//así obtnego la columna general, no relativa :v xD
+            areaDesarrollo.SelectionColor = System.Drawing.Color.DarkMagenta;
+            areaDesarrollo.Select(0, 0);
+
+            mostrarError(listaErrores);
+        }
+
+        private void mostrarError(ListaEnlazada<String> listaDeErrores) {//recuerda que aún no has contemplado eliminar el error cuando la línea se modifique... creo que tendrías que hacer un reemplazo o modificación... bueno eso habías dicho antes...
+            Nodo<String> nodoAuxiliar = listaDeErrores.darPrimerNodo();
+
+            for (int errorActual=0; errorActual< listaDeErrores.darTamanio(); errorActual++) {
+                txtBx_mensajero.Text += nodoAuxiliar.contenido;
+
+                nodoAuxiliar = nodoAuxiliar.nodoSiguiente;
+            }            
+        }
+
+        public void colorearConjuntoCaracteres(String tipoAgrupacion,int numeroLinea,  int columnaInicio, int columnaFin) {//recuerda que en realidad este número de cols es la posición del caracter en el arreglo de caracteres obtenido, es decir es su ubucacion relativa, puesto que es en base a la línea actual...
+            switch (tipoAgrupacion)
+            {
+                case "entero":
+                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea)+columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea)+columnaFin));
+                    areaDesarrollo.SelectionColor = System.Drawing.Color.DarkViolet;
+                    areaDesarrollo.SelectionStart = areaDesarrollo.Text.Length;
+
+                    break;
+
+                case "cadena"://hace falta que agregues esto...
+                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin));
+                    areaDesarrollo.SelectionColor = System.Drawing.Color.DimGray;//sino mystiRose xD
+                    areaDesarrollo.SelectionStart = areaDesarrollo.Text.Length;
+
+                    break;
+
+                case "reservada_Tipado"://si app lo que explico 2 lineas abajo, entonces este caso desaparecerá xD
+                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin));
+                    areaDesarrollo.SelectionColor = System.Drawing.Color.DarkOliveGreen;//mientras tanto... en lo que averiguo si tengo que app el mismo color que sus elemntos a la reservada, si e así lo que deberá hacer es terminar el método de abajo para colorearla según ello Ó hacer que la var que se revisa para esto, guarde el nombre de su tipo correspondiente así aunque sea la palabra reservada o su contenido en sí tengan el mismo color... esto me gusta más xD, auqneu eso implicaría add un if donde si es reservada_Tipado el tipo :v del conjunto estudiado entonce que se coloque el 2do nombre para que así concuerde... xD muajajajaj xD
+                    areaDesarrollo.SelectionStart = areaDesarrollo.Text.Length;
+
+                    break;
+
+                case "decimal":
+                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin));
+                    areaDesarrollo.SelectionColor = System.Drawing.Color.LemonChiffon;
+                    areaDesarrollo.SelectionStart = areaDesarrollo.Text.Length;
+
+                    break;
+
+                case "booleano":
+                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin));
+                    areaDesarrollo.SelectionColor = System.Drawing.Color.PapayaWhip;
+                    areaDesarrollo.SelectionStart = areaDesarrollo.Text.Length;
+
+                    break;
+
+                case "caracter":
+                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin));
+                    areaDesarrollo.SelectionColor = System.Drawing.Color.Chocolate;
+                    areaDesarrollo.SelectionStart = areaDesarrollo.Text.Length;
+
+                    break;
+
+                case "finAsignacion":
+                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin));
+                    areaDesarrollo.SelectionColor = System.Drawing.Color.PeachPuff;//sino mystiRose xD
+                    areaDesarrollo.SelectionStart = areaDesarrollo.Text.Length;
+
+                    break;
+
+                case "comentario":
+                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin));
+                    areaDesarrollo.SelectionColor = System.Drawing.Color.Tomato;//sino mystiRose xD
+                    areaDesarrollo.SelectionStart = areaDesarrollo.Text.Length;
+
+                    break;                
+
+                case "simbolo"://hace falta que agregues esto...
+                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin));
+                    areaDesarrollo.SelectionColor = System.Drawing.Color.DarkBlue;//sino mystiRose xD
+                    areaDesarrollo.SelectionStart = areaDesarrollo.Text.Length;
+
+                    break;
+
+                    //De lo contraio, blanco xD
+            }//fin del switch
+
+        }
+
+        public void llevarControlCambios(int numeroLineaAfectada) {
+            numeroLineaCambiada.anadirAlFinal(numeroLineaAfectada);
         }
     }
 }

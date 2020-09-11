@@ -19,6 +19,7 @@ namespace proyecto_IDE.Complementos_analizadores
 
         private String[] reservadasFuncionales = { "SI", "SINO", "SINO_SI", "MIENTRAS", "HACER", "DESDE", "HASTA", "INCREMENTO" };
         private String[] reservadasTipado = { "entero", "decimal", "cadena", "booleano", "caracter" };
+        private String[] reservadasValoresBooleanos = {"verdadero", "falso"};
 
         public TablaDeSimbolos() {
             establecerListadoSimbolosSimples();
@@ -62,8 +63,8 @@ namespace proyecto_IDE.Complementos_analizadores
             listaSimbolosSimples.anadirAlFinal("*");
             listaSimbolosSimples.establecerNombreNodoCreado("aritmetico_multiplicaion");
             listaSimbolosSimples.anadirAlFinal("/");
-            listaSimbolosSimples.establecerNombreNodoCreado("aritmetico_division");//aunque este ya se contempla en e cerre, pero talvez si serí mejor 
-            listaSimbolosSimples.anadirAlFinal("<");
+          /*listaSimbolosSimples.establecerNombreNodoCreado("aritmetico_division");//aunque este ya se contempla en nec cierre, pero talvez si serí mejor 
+            listaSimbolosSimples.anadirAlFinal("<");*/
             listaSimbolosSimples.establecerNombreNodoCreado("relacional_menorQue");
             listaSimbolosSimples.anadirAlFinal(">");
             listaSimbolosSimples.establecerNombreNodoCreado("relacional_mayoQue");
@@ -73,7 +74,6 @@ namespace proyecto_IDE.Complementos_analizadores
             listaSimbolosSimples.establecerNombreNodoCreado("asignacion_igualA");
             listaSimbolosSimples.anadirAlFinal(";");
             listaSimbolosSimples.establecerNombreNodoCreado("asignacion_fin");
-
         }//por si acaso se complica un poquis con la enumeración...
 
         private void establecerListadoSimbolosCompuesto() {
@@ -100,8 +100,13 @@ namespace proyecto_IDE.Complementos_analizadores
             String hallazgo = "";
 
             hallazgo = buscarEnFuncionales(palabraBuscar);
-            hallazgo = buscarEnTipado(palabraBuscar);
+            if (hallazgo.Equals("erronea")) {
+                hallazgo = buscarEnTipado(palabraBuscar);
 
+                if (hallazgo.Equals("erronea")) {
+                    hallazgo = buscarEnValoresBooleanos(palabraBuscar);
+                }
+            }            
             return hallazgo;
         }
 
@@ -111,24 +116,35 @@ namespace proyecto_IDE.Complementos_analizadores
             {
                 if (palabraABuscar.Equals(reservadasFuncionales[palabraActual]))
                 {
-                    return "reservadaFuncional_" + reservadasFuncionales[palabraActual];
+                    return "reservada_Funcional" + reservadasFuncionales[palabraActual];
                 }
             }
 
-            return null;
+            return "erronea";
         }
 
         private String buscarEnTipado(String palabraABuscar)
         {
-            for (int palabraActual = 0; palabraActual < reservadasFuncionales.Length; palabraActual++)
+            for (int palabraActual = 0; palabraActual < reservadasTipado.Length; palabraActual++)
             {
-                if (palabraABuscar.Equals(reservadasFuncionales[palabraActual]))
+                if (palabraABuscar.Equals(reservadasTipado[palabraActual]))
                 {
-                    return "reservadaTipado_" + reservadasFuncionales[palabraActual];
+                    return "reservada_Tipado" + reservadasTipado[palabraActual];//Esto será útil hasta que se ensamble el analizador sintáctico
                 }
             }
 
-            return null;
+            return "erronea";
+        }
+
+        public String buscarEnValoresBooleanos(String palabraABuscar) {
+            if (palabraABuscar.Equals("verdadero")) {
+                return "booleano";//después debería agregársele _ y su valor para saber a cual de los dos se refiere
+            }
+            if(palabraABuscar.Equals("falso")) {
+                return "falso";
+            }
+
+            return "erronea";
         }
 
         public ListaEnlazada<String> darListadoSimbolosSimples() {

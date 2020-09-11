@@ -42,7 +42,7 @@ namespace proyecto_IDE
             this.areaDesarrollo.BackColor = System.Drawing.SystemColors.Desktop;
             this.areaDesarrollo.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.areaDesarrollo.Font = new System.Drawing.Font("Microsoft JhengHei", 10.15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.areaDesarrollo.ForeColor = System.Drawing.SystemColors.Menu;
+            this.areaDesarrollo.ForeColor = System.Drawing.SystemColors.Window;
             this.areaDesarrollo.Location = new System.Drawing.Point(44, 25);
             this.areaDesarrollo.Name = "areaDesarrollo";
             this.areaDesarrollo.Size = new System.Drawing.Size(1030, 512);
@@ -50,6 +50,8 @@ namespace proyecto_IDE
             this.areaDesarrollo.Text = "Code Here  :3";
             this.areaDesarrollo.WordWrap = false;
             this.areaDesarrollo.TextChanged += new System.EventHandler(this.areaDesarrollo_textChanged);
+            this.areaDesarrollo.KeyUp += new System.Windows.Forms.KeyEventHandler(this.areaDesarrollo_KeyUp);
+            this.areaDesarrollo.MouseMove += new System.Windows.Forms.MouseEventHandler(this.areaDesarrollo_MouseMoved);
             // 
             // txtBx_Informativo
             // 

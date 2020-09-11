@@ -13,7 +13,8 @@ namespace proyecto_IDE.Complementos_analizadores
                       //entre los participantes se tiene a la cadena, el comentario y a los paréntesis, pero no del todo por el hecho de que aún no clasifico su agrupación interna
                       //como debe, sino que solo verifico que esté debidamente cerrado...
     {
-        int ultimoCaracterAnalizado = 0;
+        int ultimoCaracterAnalizado = 0;//literalemente guarda el último caracter analizado :v xD
+        String tipoCategoria = "simbolo";
         Resultado resultadoParentesisODivsion = new Resultado();
         ExcepcionLexico excepcionLexico;
 
@@ -23,10 +24,11 @@ namespace proyecto_IDE.Complementos_analizadores
         ListaEnlazada<String> listadoTipoAgrupaciones = new ListaEnlazada<String>();//en este listado se irán guanrdando los tipos de agrupaciones que pertenecerán al paréntesis abierto más reciente
         //[es decir el más adentrado], claro, teniendo en cuenta el hecho de que media ve aparezcan " o cualquier tipo de comentario, me importará un comino lo que venga... 
         //esto indica que tendrá que los paréntesis tendrán un método propio para asignar, puesto que el tipo lo darán según.. el contexto? mmm eso ya me suena a sintáctico o más bien trabajo semántico...
-        Kit herramientas = new Kit();
+        Kit herramientas;
 
-        public ControlCierre(ExcepcionLexico excepcion) {
+        public ControlCierre(ExcepcionLexico excepcion, Kit kitHerramientas) {
             excepcionLexico = excepcion;
+            herramientas = kitHerramientas;
         }       
 
         public Resultado analizarAgrupaciones(char[] lineaDesglosada,int numeroLinea, int caracterActual) {            
@@ -43,6 +45,13 @@ namespace proyecto_IDE.Complementos_analizadores
             return resultadoParentesisODivsion;
         }
 
+        /*
+         Recuerda que esto me será útil para guardar los datos que me importan para crear el objeto resultado 
+         luego de tener el símbolo de cierre, puesto que estos datos no se preservan en otro lado, por ello 
+         en cad nodo, coloco el conjunto en sí, el número de línea donde se encontraba, y el número de columna
+        el tipo no lo incluyo por el hecho de que se sabrá al momento de hallar su cierre, ya que hay que entrar
+        al método que se encarga de esto para el respectivo símbolo de agrupación...
+         */
         private void agregarNecesitado(char[] lineaDesglosada, int caracterActual, int caracterSiguiente , int numeroLinea) {            
 
             String tipoDeNecesitado = herramientas.determinarTipoEncierro(lineaDesglosada[caracterActual], lineaDesglosada[caracterSiguiente]);
@@ -108,10 +117,10 @@ namespace proyecto_IDE.Complementos_analizadores
             Resultado resultado;
             String mensajeError = "Hace falta una \" de cierrre";
 
-            for (int caracterActual = caracterInicial; caracterActual< lineaDesglosada.Length; caracterActual++) {
-                //se manda a llamar el método para colorear
+            tipoCategoria = "cadena";//recuerda que media vez entra a estos métodos, es porque si o sí son de esta categoría, lo único que podría suceder es que no se "cierre" dicha categoría, sino que siga líneas después... por lo tanto estaba pensando que cuando esto suceda, no debería eliminar la lista de Resultados de la línea sino hasta que se obtnega a este cierre... pero eso lo dictaminará el sintáctico...
+            for (int caracterActual = caracterInicial; caracterActual< lineaDesglosada.Length; caracterActual++) {               
 
-                if (lineaDesglosada[caracterActual].Equals("\"")) {
+                if (caracterActual != caracterInicial && lineaDesglosada[caracterActual].Equals("\"")) {
 
                     //auí se establece en RESULTADO de una vez el espacio para el de apertura y cierre, puesto que no puede haber ninguna otra clasificación en medio de ellos... y ya se tienen todos los datos a partir de 
                     //la lista de necesaitados de cierre y se completa al obtner la columnaFin aquí... recuerda que la pareja tendrá la misma col de ini y fin, para que se hagan "referencia" a sí mismas... aunque por el hecho de que 
@@ -129,16 +138,17 @@ namespace proyecto_IDE.Complementos_analizadores
             }
 
             //se manda a llamar el método para mostrar el error, puesto que si llegó aquí es porque no encontró la pareja de la comilla...ni siquiera en el últim espacio del arreglo...
-            excepcionLexico.excepcionNecesitadoCierre(linea, mensajeError);
+            excepcionLexico.excepcionNecesitadoCierre(linea, lineaDesglosada.Length, mensajeError);
 
             ultimoCaracterAnalizado = (lineaDesglosada.Length - 1);//eso quiere decir que allá en el analizador léxico deberé sumarle 1 para ubicarme en la pos siguiente... que toca estudiar...
 
-            return null;//por esta razón tendría que ponerse un if, para que no add cuando sea nulo...
+            return null;//por esta razón tendría que ponerse un if, para que no add a RESULTADO cuando sea nulo...
         }
 
         private Resultado establecerComentarioLinea(char[] lineaDesglosada, int caracterInicial) {//realmente este no puede generar ningún tipo de excepción... ya que solo debe colorear hasta que llegue al último caracter... y por ello no importar todo lo que dentro de su dominio, esté...
             Resultado resultado;
 
+            tipoCategoria ="comentario";//como al color solo le interesa saber qué tipo general es, mas no es tipo específico...
             for (int caracterActual = caracterInicial; caracterActual < lineaDesglosada.Length; caracterActual++)
             { 
                 //se manda a llamar el método para colorear
@@ -148,8 +158,8 @@ namespace proyecto_IDE.Complementos_analizadores
             //se elimina el nodo que corresponde a este símbolo en el listado de espera de cierre...
             listadoNoCerrados.eliminarUltimoNodo();
 
-            ultimoCaracterAnalizado = (lineaDesglosada.Length - 1);
-            return resultado = new Resultado(datosNecistadoCerrado[0], "comentarioLinea", Convert.ToInt32(datosNecistadoCerrado[1]), Convert.ToInt32(datosNecistadoCerrado[2]), caracterActual);            
+            ultimoCaracterAnalizado = (lineaDesglosada.Length - 1);//si llegar a dar error es porque se incluyeron también los espacios, entonces deberás pasar esta var al for y solo asignar cuando llegues al penúltimo espacio del arreglo...
+            return resultado = new Resultado(datosNecistadoCerrado[0], "comentarioLinea", Convert.ToInt32(datosNecistadoCerrado[1]), Convert.ToInt32(datosNecistadoCerrado[2]), ultimoCaracterAnalizado);            
         }
 
         private Resultado establecerComentarioMultiLinea(int linea, char[] lineaDesglosada, int caracterInicial)
@@ -157,23 +167,24 @@ namespace proyecto_IDE.Complementos_analizadores
             String mensajeError = "No se ha cerrado el comentario multiLinea, ingresa */ para hacerlo\n";
             Resultado resultado;
 
-            for (int caracterActual = caracterInicial; caracterActual < lineaDesglosada.Length; caracterActual++) {
+            tipoCategoria = "comentario";
+            for (int caracterActual = caracterInicial; caracterActual < (lineaDesglosada.Length-1); caracterActual++) {//no puedeo ir de 2 en 2 por el hechod de que puede que haya un solo caracter luego de signos de apertura, o puede que no haya nada y por ello surgir el hecho de que justamente en la posición 1 que se saltó estucvera el asterisco y por lo tanto solo tomaría a la barra y por ello parasría de largo al símbolo de cierre...
                 //Se manda a llamar el método para colorear
 
-                if (lineaDesglosada[caracterActual].Equals("*/")) {
+                if (lineaDesglosada[caracterActual].Equals("*") && lineaDesglosada[caracterActual+1].Equals("/")) {//puesto que el valor del caracter actual se quedará un valor antes del último, entonces no habrá problema al analizar el siguiente a él...
                     String[] datosNecistadoCerrado = listadoNoCerrados.darUltimoNodo().contenido.Split(',');
 
                     //se elimina el nodo que corresponde a este símbolo en el listado de espera de cierre...
                     listadoNoCerrados.eliminarUltimoNodo();
 
-                    ultimoCaracterAnalizado = caracterActual;
-                    return resultado = new Resultado(datosNecistadoCerrado[0], "cadena", Convert.ToInt32(datosNecistadoCerrado[1]), Convert.ToInt32(datosNecistadoCerrado[2]), caracterActual);
+                    ultimoCaracterAnalizado = (caracterActual+1);
+                    return resultado = new Resultado(datosNecistadoCerrado[0], "cadena", Convert.ToInt32(datosNecistadoCerrado[1]), Convert.ToInt32(datosNecistadoCerrado[2]), (caracterActual+1));
                 }
                 
             }
 
             //llamo el método para mostrar la excepcion debida a no hallar el símbolo de cierre en la línea donde se aperturó
-            excepcionLexico.excepcionNecesitadoCierre(linea, mensajeError);
+            excepcionLexico.excepcionNecesitadoCierre(linea, lineaDesglosada.Length, mensajeError);
 
             ultimoCaracterAnalizado = (lineaDesglosada.Length - 1);
             return null;
@@ -200,7 +211,11 @@ namespace proyecto_IDE.Complementos_analizadores
 
         public int darUltimaLineaAnalizada() {
             return ultimoCaracterAnalizado;
-        }              
+        }
+
+        public String darTipoClasificacion() { //para colorear correctamente xD
+            return tipoCategoria;
+        }
 
     }
 }
