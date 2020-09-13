@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using proyecto_IDE.Complementos_analizadores;
 using proyecto_IDE.Herramientas;
 
 namespace proyecto_IDE.Excepciones
@@ -12,14 +13,15 @@ namespace proyecto_IDE.Excepciones
         ListaEnlazada<String> listaErrores = new ListaEnlazada<String>();//los nombre de los nodos tendrán el número de fila y el contenido del nodo será la palabra...
                 
         Kit herramienta;
+        ControlCierre controlCierre;
 
         public ExcepcionLexico(Kit kitHerramientas) {
-            herramienta = kitHerramientas;
+            herramienta = kitHerramientas;           
         }
 
         public String excepcionPalabra(int numeroFila, int columnaExcepcion, char[] lineaCompleta)
         {//puesto que aún no han sido solicitados los identificadores, entones no agrego la parte donde si es un # ó _ entonces lo paso a identificador de lo contrario a lista de errores...
-            String mensajeError = "La palabra tiene errores a partir del caracter: ";
+            String mensajeError = "Error en la linea "+Convert.ToString(numeroFila)+"la palabra caracteres incorrectos\n";
 
             if (herramienta.determinarTipoCaracter(lineaCompleta[columnaExcepcion]) == 'n' || lineaCompleta[columnaExcepcion] == '_')
             {
@@ -42,8 +44,10 @@ namespace proyecto_IDE.Excepciones
 
             return "primitiva_entero";//pues se tienen otros caracteres, que posiblemente sean de comparación o que no estén en el alfabeto, donde esto últmi será un error, lo cual estará contemplado en el switch...
         }//listo xD
+             
 
-        public void excepcionNecesitadoCierre(int numeroFila, int numeroColumnaFinal,String mensajeError) {//recuerda que el número de columna final en cualquiera de estos métodos será el tamaño del arr de caracteres xD
+        public void excepcionNecesitadosCierre(int numeroFila, int numeroColumnaFinal,String mensajeError) {//recuerda que el número de columna final en cualquiera de estos métodos será el tamaño del arr de caracteres xD
+
             anadirError(numeroFila, numeroColumnaFinal, mensajeError);
 
             //no retorno nada porque no he guardado nada en RESULTADO aún, sino que lo hago hasta que encuentre el cierre...
@@ -54,7 +58,7 @@ namespace proyecto_IDE.Excepciones
             if (herramienta.determinarTipoCaracter(lineaCompleta[columnaExcepcion]) == 'p')
             {
 
-                String mensajeError = "El decimal debe tener únicamente un . ";
+                String mensajeError = "Error en la fila "+ Convert.ToString(numeroFila)+" el decimal debe tener únicamente un . \n";
                 anadirError(numeroFila, lineaCompleta.Length, mensajeError);
                 return "erronea";
             }//allá en el métoodo de decimal se revisará al sigueinte y estrictamente si no hay un número en el espacio que corresponde -> erronea            
@@ -64,20 +68,28 @@ namespace proyecto_IDE.Excepciones
 
         public String excepcionSimbolo(int numeroFila, int numeroColumnaFinal, String caracterErroneo) {
 
-            String mensajeError = "La utilizacion de "+ caracterErroneo + " no está permitida";//Aquí de una vez se muestra el error, porque si entró como "otros" y esos otros no están definido, entonces de una vez Strike y fueraaa! xD
+            String mensajeError = "La utilizacion de "+ caracterErroneo + " no está permitida\n";//Aquí de una vez se muestra el error, porque si entró como "otros" y esos otros no están definido, entonces de una vez Strike y fueraaa! xD
             anadirError(numeroFila, numeroColumnaFinal, mensajeError);
             return "erronea";
         }//listo xD
 
 
-        private void anadirError(int numeroLinea, int numeroColumaFinal, String mensaje)
+        private void anadirError(int numeroLinea, int numeroColumaFinal, String mensaje)//no habrá problema que con los primitivos muestre de una vez el error...
         {
-            String mensajeError = Convert.ToString(numeroLinea) + "   " + mensaje;
+            String mensajeError = "Error en la linea "+ Convert.ToString(numeroLinea+1) + "   " + mensaje;//para que el mínimo indice de la línea sea 1...
             listaErrores.anadirAlFinal(mensajeError);
 
 
             //se manda a llamar el método para colorear la fila de corinto...
             herramienta.marcarError(numeroLinea, numeroColumaFinal, listaErrores);//te hace falta mandar el número de columna donde termina la línea... deplano que lo recibirás de cada mpetodo desde díonde se llama
+        }
+
+        public void establecerControlCierre(ControlCierre controlDeCierre) {
+            controlCierre = controlDeCierre;
+        }
+
+        public void limpiarListadoErrores() {
+            listaErrores.limpiarLista();
         }
 
         //RECUERDA: que cuando elimines los errores de la lista, deberá ser el de la línea que fue corregido, así que pienso que deberás apoyarte de los evt dericht text box,para que puedas obtener la línea que fue corregida, pero, aquí hay algo, que el hecho de modificar o borrar una fila no impica que haya arreglado el error... 

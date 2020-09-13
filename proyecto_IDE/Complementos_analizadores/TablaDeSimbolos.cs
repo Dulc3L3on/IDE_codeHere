@@ -97,7 +97,7 @@ namespace proyecto_IDE.Complementos_analizadores
 
         public String buscarEnPalabrasReservadas(String palabraBuscar)
         {
-            String hallazgo = "";
+            String hallazgo = "erronea";
 
             hallazgo = buscarEnFuncionales(palabraBuscar);
             if (hallazgo.Equals("erronea")) {
@@ -141,7 +141,7 @@ namespace proyecto_IDE.Complementos_analizadores
                 return "booleano";//después debería agregársele _ y su valor para saber a cual de los dos se refiere
             }
             if(palabraABuscar.Equals("falso")) {
-                return "falso";
+                return "booleano";
             }
 
             return "erronea";

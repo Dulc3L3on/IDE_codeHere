@@ -113,7 +113,7 @@ namespace proyecto_IDE.Herramientas
         public void marcarError(int numeroLinea, int numeroColumnaFinal, ListaEnlazada<String> listaErrores)
         {
             areaDesarrollo.Select(areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + numeroColumnaFinal));//así obtnego la columna general, no relativa :v xD
-            areaDesarrollo.SelectionColor = System.Drawing.Color.DarkMagenta;
+            areaDesarrollo.SelectionColor = System.Drawing.Color.PeachPuff;
             areaDesarrollo.Select(0, 0);
 
             mostrarError(listaErrores);
@@ -202,6 +202,6 @@ namespace proyecto_IDE.Herramientas
 
         public void llevarControlCambios(int numeroLineaAfectada) {
             numeroLineaCambiada.anadirAlFinal(numeroLineaAfectada);
-        }
+        }//deprecated xD
     }
 }

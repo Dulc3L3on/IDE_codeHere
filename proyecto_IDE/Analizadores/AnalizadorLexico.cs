@@ -23,8 +23,8 @@ namespace proyecto_IDE.Analizadores
         public AnalizadorLexico(Kit kitHerramientas) {
 
             herramienta = kitHerramientas;
-            excepcionLexico = new ExcepcionLexico(kitHerramientas);
-            controlCierre = new ControlCierre(excepcionLexico, herramienta);            
+            excepcionLexico = new ExcepcionLexico(herramienta);
+            controlCierre = new ControlCierre(herramienta);            
         }
 
         public void analizarLinea(char[] lineaDesglosada, int numeroLinea) {
@@ -48,15 +48,16 @@ namespace proyecto_IDE.Analizadores
                 tipoAgrupacion = controlCierre.darTipoClasificacion();
                 //se manda a llamar el método para colorear... para acceder de forma más directa a los valores... auqnue si no quieres repetir puedes hacerlo por medio de la obtención de los datos desde la lista 
 
-                if (resultadosHallados!=null) {
+//                if (resultadosHallados!=null) {
                     herramienta.colorearConjuntoCaracteres(tipoAgrupacion, numeroLinea, caracterActual, controlCierre.darUltimaLineaAnalizada());//se colorea :3 UwU xD
-                }
+                    tipoAgrupacion = "erronea";
+//              }//quito el if, porque sin importar que haya o no terminado su trabajo, debo de colorear... creo que estaba por la forma anterior de trabajar, pero ahora ese if solo se nec para saber si debo add a la lista de resultados este en particular ó si fuese null, esperar hasta que temrine de reuinir sus datos...si es que logra hacerlo [esto lo digo por las fallas o "idas" xD que puede tener el desarrollador al estar programando xD]
 
                 return (controlCierre.darUltimaLineaAnalizada()+1);//ajap, esto será muuuy útil, puesto que a veces podría venir elresultado como null, lo cual no tendrás que adjuntar a la lista de la línea... pero esto es ya más orientado par cuendo se add el sintáctico...
 
             }//fin del if que permite entrar al análisis de los que requeren cierre, ya sea para agergar y empezar el análisis O para seguir con el análisis en el que se quedó...
 
-            return caracterActual;
+            return caracterActual;//puesto que no pertenecía a los agrupadores, no se analizó nada... y por lo tanto el indice de col dado es el que se debe devolver, para ser anlizados como se debe...
         }
 
         private int analizarPrimitivos(char[] lineaDesglosada, int numeroLinea, int caracterActual)
@@ -67,7 +68,7 @@ namespace proyecto_IDE.Analizadores
 
             switch (tipoCaracter)
             {
-                case 'p'://problemas con los identificadores no habrá... por el hecho de que DEBE empezar con un caracter y por ello caerá al método que tiene como primero una letra ya después conforme se vaya desarrollando el proceso xD se decidirá si el método que debe seguir con la revisión se debe cambiar o no...
+                case 'l'://problemas con los identificadores no habrá... por el hecho de que DEBE empezar con un caracter y por ello caerá al método que tiene como primero una letra ya después conforme se vaya desarrollando el proceso xD se decidirá si el método que debe seguir con la revisión se debe cambiar o no...
                   resultadosHallados = analizarOcurrenciaConLetras(numeroLinea, caracterActual, lineaDesglosada);
                 break;
 
@@ -83,6 +84,7 @@ namespace proyecto_IDE.Analizadores
 
             if (!tipoAgrupacion.Equals("erronea")) {//con tal de que no busque en vano xD
                 herramienta.colorearConjuntoCaracteres(tipoAgrupacion, numeroLinea, caracterActual, resultadosHallados.darColumnaFin());//YA SE COLOREAN tipos primitivos xD UwU xD
+                tipoAgrupacion = "erronea";
             }            
 
             return (resultadosHallados.darColumnaFin()+1);//Pues aquí se encuentra la pos desde la cual debe entregarse, ya que es la pos+1 desde donde terminaron su trabajo los étodos individuales anteriores...
@@ -126,11 +128,11 @@ namespace proyecto_IDE.Analizadores
 
         private String[] analizarPalabra(int numeroLinea, int posicionInicialAnalisis, char[] lineaAEstudiar)
         {//recuerda que por el hecho de recibir la línea almacenada en un arr, entonces si el número que corresponda a las col será uno menos a lo ordinario, pero debes averiguar como trabaja con las col el richTextBox... para que cuando necesites hacer manipulaciones alguna vez, no surgan problemas...
-            int posicionAnalisis = posicionInicialAnalisis + 1;
+            int posicionAnalisis = posicionInicialAnalisis + 1;//esto es así por el análisisi del for el cual permitió entrar a este método, en este caso...
             String[] detallesPalabra = { "", "primitiva_caracter", Convert.ToString(lineaAEstudiar[posicionInicialAnalisis]) };//al solo tener un caracter no se entraría a la parte para                     
             bool parar = false;
 
-            while ((int)lineaAEstudiar[posicionAnalisis] != 32 && (parar == false) && (posicionAnalisis < lineaAEstudiar.Length))
+            while ((posicionAnalisis < lineaAEstudiar.Length) && (int)lineaAEstudiar[posicionAnalisis] != 32 && (parar == false))
             {//Es decir mientras no halle un espacio en blanco...      para cuando ya se agregue el identificador esta condi de !palabra deberá cambiar puesto que sin importar que sea palabra o identificador, deberá parar... ahi si deberá usarse un bool, que cb de val para que ya no siga, media vez entre al if para usar el método de Excepción...
                 if (posicionAnalisis == (posicionInicialAnalisis + 1))
                 {
@@ -146,6 +148,7 @@ namespace proyecto_IDE.Analizadores
                 }
                 if (parar == false)
                 {
+                    //inconsitencia al estar bien formado el grupo, pues se devolvería 1 pos más allá de la que se analizó
                     detallesPalabra[2] += lineaAEstudiar[posicionAnalisis];
                     posicionAnalisis++;//1 pos más alla de lo que se concatenó por este método, por lo cual al enviar los datos a resultado es nec restarle 1 pues no se quedó en esta col la concat, sino en la any
                 }//esto desaperecerá al tener al identificador, porque independientemente de lo que se tenga se debe parar
@@ -153,6 +156,7 @@ namespace proyecto_IDE.Analizadores
 
             if (detallesPalabra[2].Length==1) {
                 tipoAgrupacion = "caracter";//con caracter y con comentario de una sola línea, no hay excepciones xD
+                detallesPalabra[1] = "primitiva_caracter";//también hubiera podido poner el if para colocar la agrupación como palabra luego de ver que no era "l"[letrar], pero de todos modos tendría que haber hecho el cb cuando yo supiera que se trataba de un carcater, esto por medio de observación e imaginación... +o tb hubiera podido encesaar todo el while en un if, como en decimal, solo que en este caso por no ser directo el envío de la columna a estudiar sí debía revisar si no era una más alla del tamaño, así que para facilitar el trabajao para mí xD, mejor hacer esto que hice xD, lo de corroborar tamño de lo concatenado y listo xD
             }
 
             detallesPalabra[0] = Convert.ToString(posicionAnalisis);//la posición es justo 1 espacio más allá de donde se quedó a analizando, lo cual es exactamente donde el for debe estar para así asginar ese espacio al método que le corresponda...
@@ -161,14 +165,14 @@ namespace proyecto_IDE.Analizadores
         }//por el momento puesto que no se tiene que clasificar a los identificadores, mandará de una vez a la lista de Resultados el tipo de dicha palabra como erronea
         //listo
 
-        public void analizarIdentficador()
+        private void analizarIdentficador()
         {
             //sería llamado en el método de análisisPalabra cuando en la palabra se encontrara con un caracter de valor != a cualquiera de las letras
             //aquí se revisaría si es uno permitido sino a erroneas se iría... esto si es que se acepta algo más que el _
 
         }//Esto será empleado hasta la 2da fase, creo :v xD
 
-        public Resultado analizarNumero(int numeroLinea, int posicionInicialAnalisis, char[] lineaAEstudiar)
+        private Resultado analizarNumero(int numeroLinea, int posicionInicialAnalisis, char[] lineaAEstudiar)
         {
             String[] hallazgos = analizarEntero(numeroLinea, posicionInicialAnalisis, lineaAEstudiar);
 
@@ -184,7 +188,7 @@ namespace proyecto_IDE.Analizadores
             String[] detallesEntero = { "", "primitiva_entero", Convert.ToString(lineaAEstudiar[posicionInicialAnalisis]) };//al solo tener un caracter no se entraría a la parte para                     
             bool parar = false;
 
-            while ((int)lineaAEstudiar[posicionAnalisis] != 32 && (parar == false) && (posicionAnalisis < lineaAEstudiar.Length))
+            while ((posicionAnalisis < lineaAEstudiar.Length) && (int)lineaAEstudiar[posicionAnalisis] != 32 && (parar == false))
             {//Es decir mientras no halle un espacio en blanco...      para cuando ya se agregue el identificador esta condi de !palabra deberá cambiar puesto que sin importar que sea palabra o identificador, deberá parar... ahi si deberá usarse un bool, que cb de val para que ya no siga, media vez entre al if para usar el método de Excepción...
 
                 if (herramienta.determinarTipoCaracter(lineaAEstudiar[posicionAnalisis]) != 'd')
@@ -218,9 +222,9 @@ namespace proyecto_IDE.Analizadores
             String[] detallesDecimal = { "", "primitiva_decimal", concatenadoHastaElMomento+Convert.ToString(lineaAEstudiar[posicionInicialAnalisis])+ Convert.ToString(lineaAEstudiar[posicionInicialAnalisis+1]) };//default erronea porque si no viene un número no entraría a un bloque específico y no tendría donde nombrarle de esta manera, por ello mejor cuando se encuentra que todo esta bien, catalogo respecto a ese bienestar...
             bool parar = false;
 
-            if (herramienta.determinarTipoCaracter(lineaAEstudiar[posicionInicialAnalisis]) == 'd')
+            if (herramienta.determinarTipoCaracter(lineaAEstudiar[posicionInicialAnalisis]) == 'd')//no habrá problema con revisar así de una vez, porque media vez le dieron la posicón, es porque si existe como ubicación dentro del arreglo xD
             {                           
-                while ((int)lineaAEstudiar[posicionAnalisis] != 32 && (parar == false) && (posicionAnalisis < lineaAEstudiar.Length))
+                while ((posicionAnalisis < lineaAEstudiar.Length) && (int)lineaAEstudiar[posicionAnalisis] != 32 && (parar == false))
                 {//Es decir mientras no halle un espacio en blanco...      para cuando ya se agregue el identificador esta condi de !palabra deberá cambiar puesto que sin importar que sea palabra o identificador, deberá parar... ahi si deberá usarse un bool, que cb de val para que ya no siga, media vez entre al if para usar el método de Excepción...
 
                     if (herramienta.determinarTipoCaracter(lineaAEstudiar[posicionAnalisis]) != 'd')
@@ -228,7 +232,8 @@ namespace proyecto_IDE.Analizadores
                         parar = true;
                         detallesDecimal[1] = excepcionLexico.excepcionDecimal(numeroLinea, posicionAnalisis, lineaAEstudiar);
                     }
-                    if (parar == false)                    {
+                    if (parar == false)                  
+                    {
                         detallesDecimal[2] += lineaAEstudiar[posicionAnalisis];
                         posicionAnalisis++;//debe estar aquí porque sino estaría entregando al for 2 passo adelante hasta donde tiene concatenados los caracteres como el tipo que le corresponde al método, en este caso decimal...
                     }//esto desaperecerá al tener al identificador, porque independientemente de lo que se tenga se debe parar
@@ -306,12 +311,12 @@ namespace proyecto_IDE.Analizadores
             return datosSimboloCompuesto;
         }
 
-        public Resultado analizarDemasCaracteres(int numeroLinea, int posicionInicialAnalisis, char[] lineaDeEstudio)//Metod de CONVERGENCIA para los símbolos en el alfabeto
+        private Resultado analizarDemasCaracteres(int numeroLinea, int posicionInicialAnalisis, char[] lineaDeEstudio)//Metod de CONVERGENCIA para los símbolos en el alfabeto
         {
             Resultado resultado;
             String[] resultadosObtenidos;
 
-            if (herramienta.determinarTipoCaracter(lineaDeEstudio[posicionInicialAnalisis + 1]) == 'o')
+            if (posicionInicialAnalisis< (lineaDeEstudio.Length-1) && herramienta.determinarTipoCaracter(lineaDeEstudio[posicionInicialAnalisis + 1]) == 'o')
             {
                 resultadosObtenidos = analizarSimbolosCompuestos(numeroLinea, posicionInicialAnalisis, lineaDeEstudio.Length, lineaDeEstudio[posicionInicialAnalisis], lineaDeEstudio[posicionInicialAnalisis + 1]);                
             }
@@ -325,6 +330,14 @@ namespace proyecto_IDE.Analizadores
             resultado.establecerFilaFin(numeroLinea);
             return resultado;
         }//listo :3 xD
+
+        public ControlCierre darControlCierre() {
+            return controlCierre;
+        }
+
+        public ExcepcionLexico darExcepcionLexico() {
+            return excepcionLexico;
+        }
 
     }
 

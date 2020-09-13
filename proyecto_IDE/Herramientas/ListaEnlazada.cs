@@ -86,7 +86,7 @@ namespace proyecto_IDE
             else {
                 Nodo<T> nodoAuxiliar = primerNodo;
 
-                for (int nodoActual = 1; nodoActual < tamanioLista; nodoActual++)
+                for (int nodoActual = 1; nodoActual < (tamanioLista-1); nodoActual++)//debe ser -1 puesto que quiero quedarme en el penúltimo nodo para así eliminar al último, además por el hehco de tener antes de comenzar con el ciclo el primer nodo, es necesario que considere el valor al que quiero llegar a sabiendas de que ya llevo adelantado un paso...
                 { //Así cabal se queda en el penúltimo nodo...
                     nodoAuxiliar = nodoAuxiliar.nodoSiguiente;
                 }
@@ -117,7 +117,7 @@ namespace proyecto_IDE
         }
 
         public void limpiarLista()
-        {
+        {//no daría error al estar vacía, solo se estaría redundando...
             primerNodo = ultimoNodo = null;
             tamanioLista = 0;
         }
