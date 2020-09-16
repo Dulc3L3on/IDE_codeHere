@@ -8,6 +8,9 @@ C:\Phily\Carpeta de estudios\CUARTO SEMESTRE\LENGUAJES\PROYECTOS\Proyecto1_IDE\p
 C:\Phily\Carpeta de estudios\CUARTO SEMESTRE\LENGUAJES\PROYECTOS\Proyecto1_IDE\proyecto_IDE\obj\Debug\proyecto_IDE.csproj.CoreCompileInputs.cache
 C:\Phily\Carpeta de estudios\CUARTO SEMESTRE\LENGUAJES\PROYECTOS\Proyecto1_IDE\proyecto_IDE\obj\Debug\proyecto_IDE.exe
 C:\Phily\Carpeta de estudios\CUARTO SEMESTRE\LENGUAJES\PROYECTOS\Proyecto1_IDE\proyecto_IDE\obj\Debug\proyecto_IDE.pdb
+C:\Phily\Carpeta de estudios\CUARTO SEMESTRE\LENGUAJES\PROYECTOS\Proyecto1_IDE\IDE_codeHere\proyecto_IDE\bin\Debug\proyecto_IDE.exe.config
+C:\Phily\Carpeta de estudios\CUARTO SEMESTRE\LENGUAJES\PROYECTOS\Proyecto1_IDE\IDE_codeHere\proyecto_IDE\bin\Debug\proyecto_IDE.exe
+C:\Phily\Carpeta de estudios\CUARTO SEMESTRE\LENGUAJES\PROYECTOS\Proyecto1_IDE\IDE_codeHere\proyecto_IDE\bin\Debug\proyecto_IDE.pdb
 C:\Phily\Carpeta de estudios\CUARTO SEMESTRE\LENGUAJES\PROYECTOS\Proyecto1_IDE\IDE_codeHere\proyecto_IDE\obj\Debug\proyecto_IDE.csprojAssemblyReference.cache
 C:\Phily\Carpeta de estudios\CUARTO SEMESTRE\LENGUAJES\PROYECTOS\Proyecto1_IDE\IDE_codeHere\proyecto_IDE\obj\Debug\proyecto_IDE.IDE.resources
 C:\Phily\Carpeta de estudios\CUARTO SEMESTRE\LENGUAJES\PROYECTOS\Proyecto1_IDE\IDE_codeHere\proyecto_IDE\obj\Debug\proyecto_IDE.Properties.Resources.resources
@@ -15,6 +18,3 @@ C:\Phily\Carpeta de estudios\CUARTO SEMESTRE\LENGUAJES\PROYECTOS\Proyecto1_IDE\I
 C:\Phily\Carpeta de estudios\CUARTO SEMESTRE\LENGUAJES\PROYECTOS\Proyecto1_IDE\IDE_codeHere\proyecto_IDE\obj\Debug\proyecto_IDE.csproj.CoreCompileInputs.cache
 C:\Phily\Carpeta de estudios\CUARTO SEMESTRE\LENGUAJES\PROYECTOS\Proyecto1_IDE\IDE_codeHere\proyecto_IDE\obj\Debug\proyecto_IDE.exe
 C:\Phily\Carpeta de estudios\CUARTO SEMESTRE\LENGUAJES\PROYECTOS\Proyecto1_IDE\IDE_codeHere\proyecto_IDE\obj\Debug\proyecto_IDE.pdb
-C:\Phily\Carpeta de estudios\CUARTO SEMESTRE\LENGUAJES\PROYECTOS\Proyecto1_IDE\IDE_codeHere\proyecto_IDE\bin\Debug\proyecto_IDE.exe.config
-C:\Phily\Carpeta de estudios\CUARTO SEMESTRE\LENGUAJES\PROYECTOS\Proyecto1_IDE\IDE_codeHere\proyecto_IDE\bin\Debug\proyecto_IDE.exe
-C:\Phily\Carpeta de estudios\CUARTO SEMESTRE\LENGUAJES\PROYECTOS\Proyecto1_IDE\IDE_codeHere\proyecto_IDE\bin\Debug\proyecto_IDE.pdb

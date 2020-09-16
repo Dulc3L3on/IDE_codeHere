@@ -79,16 +79,16 @@ namespace proyecto_IDE.Complementos_analizadores
 
 
                 case "comentarioLinea"://para este y los demás el objeto resultado será generado hasta haber finalizado con el análisis
-                    listadoNoCerrados.anadirAlFinal("//" + "," + Convert.ToString(numeroLinea) + "," + Convert.ToString(caracterActual));                    
+                    listadoNoCerrados.anadirAlFinal("//" + "," + Convert.ToString(numeroLinea) + "," + Convert.ToString(caracterActual));
                     //quite lo del nombre del nodo por el hecho de que realmente tendría que ser el tamño de la lista de RESULTADOS no esta, pues ese número lo requiero para buscar y localizar el elemento de apertura para poder así insertarle su respectivo fin...
                     break;
-                
+
                 case "comentarioMultiLinea":
                     listadoNoCerrados.anadirAlFinal("/*" + "," + Convert.ToString(numeroLinea) + "," + Convert.ToString(caracterActual));//esto será útil para cuando se haya hallado el cierre, pues de manera fácil se podrá establecer los valores de RESULTADO...               
                     break;
 
                 case "cadena":
-                    listadoNoCerrados.anadirAlFinal(Convert.ToString((int)34) + "," + Convert.ToString(numeroLinea) + "," + Convert.ToString(caracterActual));
+                    listadoNoCerrados.anadirAlFinal((char)34 + "," + Convert.ToString(numeroLinea) + "," + Convert.ToString(caracterActual));
                     break;               
 
                 default://Sería el caso de la división, porque no puede existir ningún otro tipo de excepción
@@ -103,7 +103,7 @@ namespace proyecto_IDE.Complementos_analizadores
         private Resultado analizarTipoAgrupacion(char[] lineaDesglosada, int caracterInicial, int numeroLinea) { //obvidamente aquí no se incluye a los paréntesis puesto que ni siquiera son tomados en cuenta para poder acceder a este método, esto por el if exterior...
             String[] tipoAnalisis = listadoNoCerrados.darContenidoUltimoNodo().Split(',');//como ya se agrego el caracter especial a la lista, entonces puede procederse libremente a analizar de esta manera...
 
-            if (tipoAnalisis[0].Equals("\"")) {
+            if ((int)Convert.ToChar(tipoAnalisis[0])==34) {
                 return establecerCadena(numeroLinea, lineaDesglosada, caracterInicial);
             }
 
@@ -123,7 +123,7 @@ namespace proyecto_IDE.Complementos_analizadores
             tipoCategoria = "cadena";//recuerda que media vez entra a estos métodos, es porque si o sí son de esta categoría, lo único que podría suceder es que no se "cierre" dicha categoría, sino que siga líneas después... por lo tanto estaba pensando que cuando esto suceda, no debería eliminar la lista de Resultados de la línea sino hasta que se obtnega a este cierre... pero eso lo dictaminará el sintáctico...
             for (int caracterActual = caracterInicial; caracterActual< lineaDesglosada.Length; caracterActual++) {               
 
-                if (caracterActual != caracterInicial && lineaDesglosada[caracterActual].Equals("\"")) {
+                if (caracterActual != caracterInicial && lineaDesglosada[caracterActual].Equals('"')) {
 
                     //auí se establece en RESULTADO de una vez el espacio para el de apertura y cierre, puesto que no puede haber ninguna otra clasificación en medio de ellos... y ya se tienen todos los datos a partir de 
                     //la lista de necesaitados de cierre y se completa al obtner la columnaFin aquí... recuerda que la pareja tendrá la misma col de ini y fin, para que se hagan "referencia" a sí mismas... aunque por el hecho de que 
@@ -169,7 +169,7 @@ namespace proyecto_IDE.Complementos_analizadores
             for (int caracterActual = caracterInicial; caracterActual < (lineaDesglosada.Length-1); caracterActual++) {//no puedeo ir de 2 en 2 por el hechod de que puede que haya un solo caracter luego de signos de apertura, o puede que no haya nada y por ello surgir el hecho de que justamente en la posición 1 que se saltó estucvera el asterisco y por lo tanto solo tomaría a la barra y por ello parasría de largo al símbolo de cierre...
                 //Se manda a llamar el método para colorear
 
-                if (lineaDesglosada[caracterActual].Equals("*") && lineaDesglosada[caracterActual+1].Equals("/")) {//puesto que el valor del caracter actual se quedará un valor antes del último, entonces no habrá problema al analizar el siguiente a él...
+                if (lineaDesglosada[caracterActual].Equals('*') && lineaDesglosada[caracterActual+1].Equals('/')) {//puesto que el valor del caracter actual se quedará un valor antes del último, entonces no habrá problema al analizar el siguiente a él...
                     String[] datosNecistadoCerrado = listadoNoCerrados.darUltimoNodo().contenido.Split(',');
 
                     //se elimina el nodo que corresponde a este símbolo en el listado de espera de cierre...
