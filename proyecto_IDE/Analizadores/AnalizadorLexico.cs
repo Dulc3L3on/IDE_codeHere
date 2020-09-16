@@ -46,7 +46,7 @@ namespace proyecto_IDE.Analizadores
         }
 
         private int analizarAgrupadores(char[] lineaDesglosada, int numeroLinea, int caracterActual) {
-            if (herramienta.determinarTipoCaracter(lineaDesglosada[caracterActual]).Equals('c') || !controlCierre.darListaEsperaCierre().estaVacia()) {//si pues solo al inicio será necesaria la primera condi, de ahi en adelante con solo saber que no está vacía basta para entrar a este método...
+            if (!lineaDesglosada[caracterActual].Equals(')') && (herramienta.determinarTipoCaracter(lineaDesglosada[caracterActual]).Equals('c') || !controlCierre.darListaEsperaCierre().estaVacia())) {//si pues solo al inicio será necesaria la primera condi, de ahi en adelante con solo saber que no está vacía basta para entrar a este método...
                 resultadosHallados = controlCierre.analizarAgrupaciones(lineaDesglosada, caracterActual, numeroLinea);
                 tipoAgrupacion = controlCierre.darTipoClasificacion();
                 //se manda a llamar el método para colorear... para acceder de forma más directa a los valores... auqnue si no quieres repetir puedes hacerlo por medio de la obtención de los datos desde la lista 
@@ -296,6 +296,9 @@ namespace proyecto_IDE.Analizadores
                     else {
                         tipoAgrupacion = "simbolo";
                     }
+                    if (datosSimboloSimple[1].Equals("parentesis_Cierre") && controlCierre.darListaEsperaCierre().darContenidoUltimoNodo().StartsWith("(")) {
+                        controlCierre.darListaEsperaCierre().eliminarUltimoNodo();
+                    }
 
                     return datosSimboloSimple;//Retorno aquí para saber que si salgo del for es porque no hallé nada...
                 }
@@ -341,7 +344,7 @@ namespace proyecto_IDE.Analizadores
             Resultado resultado;
             String[] resultadosObtenidos;
 
-            if (posicionInicialAnalisis< (lineaDeEstudio.Length-1) && herramienta.determinarTipoCaracter(lineaDeEstudio[posicionInicialAnalisis + 1]) == 'o')
+            if (posicionInicialAnalisis< (lineaDeEstudio.Length-1) && (int)(lineaDeEstudio[posicionInicialAnalisis + 1])!=32 && herramienta.determinarTipoCaracter(lineaDeEstudio[posicionInicialAnalisis + 1]) == 'o')//para saber si minimo tiene otro caracter que corresponda a lo desconocido uuuu xD
             {
                 resultadosObtenidos = analizarSimbolosCompuestos(numeroLinea, posicionInicialAnalisis, lineaDeEstudio.Length, lineaDeEstudio[posicionInicialAnalisis], lineaDeEstudio[posicionInicialAnalisis + 1]);                
             }

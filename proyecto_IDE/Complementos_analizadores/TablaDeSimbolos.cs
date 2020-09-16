@@ -55,14 +55,16 @@ namespace proyecto_IDE.Complementos_analizadores
         }
         
         private void establecerListadoSimbolosSimples() {
+            listaSimbolosSimples.anadirAlFinal(")");
+            listaSimbolosSimples.establecerNombreNodoCreado("parentesis_Cierre");
             listaSimbolosSimples.anadirAlFinal("+");
             listaSimbolosSimples.establecerNombreNodoCreado("aritmetico_mas");
             listaSimbolosSimples.anadirAlFinal("-");
             listaSimbolosSimples.establecerNombreNodoCreado("aritmetico_menos");
             listaSimbolosSimples.anadirAlFinal("*");
             listaSimbolosSimples.establecerNombreNodoCreado("aritmetico_multiplicaion");
-            listaSimbolosSimples.anadirAlFinal("/");
-          /*listaSimbolosSimples.establecerNombreNodoCreado("aritmetico_division");//aunque este ya se contempla en nec cierre, pero talvez si serí mejor */
+          /*listaSimbolosSimples.anadirAlFinal("/");
+            listaSimbolosSimples.establecerNombreNodoCreado("aritmetico_division");//aunque este ya se contempla en nec cierre, pero talvez si serí mejor */
             listaSimbolosSimples.anadirAlFinal("<");
             listaSimbolosSimples.establecerNombreNodoCreado("relacional_menorQue");
             listaSimbolosSimples.anadirAlFinal(">");
@@ -137,10 +139,10 @@ namespace proyecto_IDE.Complementos_analizadores
 
         public String buscarEnValoresBooleanos(String palabraABuscar) {
             if (palabraABuscar.Equals("verdadero")) {
-                return "booleano";//después debería agregársele _ y su valor para saber a cual de los dos se refiere
+                return "Tipado_booleano";//después debería agregársele _ y su valor para saber a cual de los dos se refiere
             }
             if(palabraABuscar.Equals("falso")) {
-                return "booleano";
+                return "Tipado_booleano";
             }
 
             return "erronea";

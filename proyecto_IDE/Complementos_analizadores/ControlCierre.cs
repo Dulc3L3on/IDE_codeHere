@@ -41,15 +41,7 @@ namespace proyecto_IDE.Complementos_analizadores
                 {//media vez exiten en la listaEnlazada, " ó /* es porque no se ha terminado el proceso...  si está un paréntesis, es porque se acaba de add, pues reucerda que si entra a este bloque si o sí debe hacer algo en él...
                  //se mandan a llamar el método donde converge el análisis de los comentarios y cadenas...
                     return analizarTipoAgrupacion(lineaDesglosada, caracterActual, numeroLinea);//aquí se devolvería el resultado como tal... sin importar si es null o no, allá en el léxico se contempla esto...
-                }
-                else if(listadoNoCerrados.darUltimoNodo().contenido.StartsWith("(") && lineaDesglosada[caracterActual].Equals(')'))
-                {
-                    resultadoParentesisODivsion = new Resultado(")", "parentesis_Cierre", numeroLinea, caracterActual, caracterActual);
-                    ultimoCaracterAnalizado = caracterActual;
-                    listadoNoCerrados.eliminarUltimoNodo();
-
-                    return resultadoParentesisODivsion;
-                }
+                }               
             }
 
             return resultadoParentesisODivsion;
@@ -78,12 +70,13 @@ namespace proyecto_IDE.Complementos_analizadores
                     //si es que al terminar de analizar no se encuentra dicha pareja]]
 
                     ultimoCaracterAnalizado = caracterActual;
-                    listadoNoCerrados.anadirAlFinal("(" + "," + Convert.ToString(numeroLinea) +"," + Convert.ToString(caracterActual));//Esto será útil para las excepciones que se manejan en el cuerpo del estudio de lo que hay dentro... pero para el caso de los paréntesis, tendría que ir en otro lado o informarlo de una vez, pero esto se solucionaría si hallaras la manera en que al borrar cualquiera de os dos se borrara el otro
+                    listadoNoCerrados.anadirAlFinal("(" + "," + Convert.ToString(numeroLinea) + "," + Convert.ToString(caracterActual));//Esto será útil para las excepciones que se manejan en el cuerpo del estudio de lo que hay dentro... pero para el caso de los paréntesis, tendría que ir en otro lado o informarlo de una vez, pero esto se solucionaría si hallaras la manera en que al borrar cualquiera de os dos se borrara el otro
                     //en el método especial, después de esto estaría la add del tipo a la otra lista... de la cual los tipos primitivos irían extayendo su tipo de agrupación a partir de la obtención del contenido del último nodo...
                     listadoNoCerrados.establecerNombreNodoCreado(Convert.ToString(listadoNoCerrados.darTamanio()));//de esta manera podré hacer referencia al nodo al cual le quiero
                     //Agregar su posición final... esto sería en si método propio, en el que se estblece el respectivo signo de cierre, como en los demás y se porcede a eliminar el tipo de agrupación del listado...
                     //pero aquí habría problema por el hecho de que la lista de los resultados es solamente para la línea actual... deplano que tendrá que dejarse la lista de la fila a la que le hace falta el cierre, pero eso ya lo verás cuando andes en análisis sintáctico...
                     break;//falta establecerle su respectivo color azul y ver dónde es que se colocará el métod para los cierres, puest que habías pensado separarlos, pero debes ver si realmetne es necesario o puedes tener esa acción junto en el nloque donde se haga la asignación de su respectivo inicio...
+
 
                 case "comentarioLinea"://para este y los demás el objeto resultado será generado hasta haber finalizado con el análisis
                     listadoNoCerrados.anadirAlFinal("//" + "," + Convert.ToString(numeroLinea) + "," + Convert.ToString(caracterActual));                    
@@ -182,7 +175,7 @@ namespace proyecto_IDE.Complementos_analizadores
                     //se elimina el nodo que corresponde a este símbolo en el listado de espera de cierre...
                     listadoNoCerrados.eliminarUltimoNodo();
 
-                    ultimoCaracterAnalizado = caracterActual;//pues es un acuerdo que esta varibale como su nombre lo dice almacenará EL ULTIMO ESTUDIADO!!!
+                    ultimoCaracterAnalizado = caracterActual+1;//puesto que el carcater actual está atrasado 1 para así analizar de 2 en 2 por ello es necesario +1 para que vaya conforme el acuerdo DEVOLVER EL ÚLTIMO ANALIZADO...
                     return resultado = new Resultado(datosNecistadoCerrado[0], "comentarioMultiLinea", Convert.ToInt32(datosNecistadoCerrado[1]), Convert.ToInt32(datosNecistadoCerrado[2]), ultimoCaracterAnalizado);
                 }
                 
@@ -197,7 +190,7 @@ namespace proyecto_IDE.Complementos_analizadores
 
         public bool hayQueAnalizarPrimitivos()
         {
-            if (listadoNoCerrados.estaVacia() || listadoNoCerrados.darContenidoUltimoNodo().Equals('('))//aquí no puedes decirle si siga el a´nálisis dependiendo de lo que tenga el siguiente porque sino tendrías que recibir como parám la línea... y no sería muy estético xD
+            if (listadoNoCerrados.estaVacia() || listadoNoCerrados.darContenidoUltimoNodo().StartsWith("("))//aquí no puedes decirle si siga el a´nálisis dependiendo de lo que tenga el siguiente porque sino tendrías que recibir como parám la línea... y no sería muy estético xD
             {//ajá exacto xD, porque eso quiere decir, que no se tiene nada y por ello debe irse de una vez con los prims
                 return true;
             }//la unica situacióne en la que no esté vacía  no tenga a un ( es porque no ha terminado el análisis de un comentario...
