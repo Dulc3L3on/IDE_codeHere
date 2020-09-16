@@ -42,27 +42,39 @@ namespace proyecto_IDE.Herramientas
 
             return 'o';//De otros, que hasta el momento no se sabe si correponden o no al alfabeto...
         }
+/*
+        public bool esSimboloCierre() {
+            if ((int)caracterInicial == 41 ((int)lineaDesglosada[caracterActual] == 47 && (int)lineaDesglosada[caracterActual + 1] == 47) || (int)lineaDesglosada[caracterActual] == 47 && (int)lineaDesglosada[caracterActual + 1] == 42) {
+                return true;
+            }
+        }
+        */
 
         /*
          Este método será empleado específicamente cuando se sepa que si debe analizarse la
          agrupación y que debe hacerse el agregado a la lista de espera del signo de cierre
          que le corresponde
          */
-        public String determinarTipoEncierro(char caracterActual, char caracterSiguiente) { //me refiero a si es agrupacion, cadena o comentrio xD... es que encierran xD
-            if ((int)caracterActual == 47 && (int)caracterSiguiente == 47) {
-                return "comentarioLinea";
-            }
+        public String determinarTipoEncierro(char[] lineaDesglosada, int caracterActual) { //me refiero a si es agrupacion, cadena o comentrio xD... es que encierran xD
 
-            if ((int)caracterActual == 47 && (int)caracterSiguiente == 42) {
-                return "comentarioMultiLinea";
-            }
+            if ((caracterActual+1)<lineaDesglosada.Length) {
+                if ((int)lineaDesglosada[caracterActual] == 47 && (int)lineaDesglosada[caracterActual + 1] == 47)
+                {
+                    return "comentarioLinea";
+                }
 
-            if ((int)caracterActual == 34) {
-                return "comilla";//por la manera de trabajar esta comilla siempre será la de apertura...
+                if ((int)lineaDesglosada[caracterActual] == 47 && (int)lineaDesglosada[caracterActual + 1] == 42)
+                {
+                    return "comentarioMultiLinea";
+                }
+            }           
+
+            if ((int)lineaDesglosada[caracterActual] == 34) {
+                return "cadena";//por la manera de trabajar esta comilla siempre será la de apertura...
             }
-            if ((int) caracterActual == 40) {
-                return "parentesis";
-            }
+            if ((int)lineaDesglosada[caracterActual] == 40) {
+                return "parentesisApertura";
+            }//no puede agregarse el paréntesis de cierre porque sino se estaría poneindo en desacuerdo el hecho de permitir entrar a este método SSi tiene estos caracteres de apertura ó aún no ha cerrado el ciclo           
 
             //Por el contexto en el que se emplea este método, cuando devulva null, será un hecho de que se trata del signo para dividir...
             return "division";//Es decir que no es ninguno y por ello deberé de clasiicar la barra como de división de una vez en el control de cierre, porque para qué estar revisando toda la enumeración si ya sé que es...
@@ -114,12 +126,10 @@ namespace proyecto_IDE.Herramientas
         {
             areaDesarrollo.Select(areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + numeroColumnaFinal));//así obtnego la columna general, no relativa :v xD
             areaDesarrollo.SelectionColor = System.Drawing.Color.PeachPuff;
-            areaDesarrollo.Select(0, 0);
-
-            mostrarError(listaErrores);
+            areaDesarrollo.Select(0, 0);            
         }
 
-        private void mostrarError(ListaEnlazada<String> listaDeErrores) {//recuerda que aún no has contemplado eliminar el error cuando la línea se modifique... creo que tendrías que hacer un reemplazo o modificación... bueno eso habías dicho antes...
+        public void mostrarError(ListaEnlazada<String> listaDeErrores) {//recuerda que aún no has contemplado eliminar el error cuando la línea se modifique... creo que tendrías que hacer un reemplazo o modificación... bueno eso habías dicho antes...
             Nodo<String> nodoAuxiliar = listaDeErrores.darPrimerNodo();
 
             for (int errorActual=0; errorActual< listaDeErrores.darTamanio(); errorActual++) {
@@ -133,64 +143,71 @@ namespace proyecto_IDE.Herramientas
             switch (tipoAgrupacion)
             {
                 case "entero":
-                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea)+columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea)+columnaFin));
+                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea)+columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea)+columnaFin)+1);
                     areaDesarrollo.SelectionColor = System.Drawing.Color.DarkViolet;
                     areaDesarrollo.SelectionStart = areaDesarrollo.Text.Length;
 
                     break;
 
                 case "cadena"://hace falta que agregues esto...
-                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin));
+                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin)+1);
                     areaDesarrollo.SelectionColor = System.Drawing.Color.DimGray;//sino mystiRose xD
                     areaDesarrollo.SelectionStart = areaDesarrollo.Text.Length;
 
                     break;
 
-                case "reservada_Tipado"://si app lo que explico 2 lineas abajo, entonces este caso desaparecerá xD
-                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin));
+                case "Funcional"://si app lo que explico 2 lineas abajo, entonces este caso desaparecerá xD
+                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin)+1);
                     areaDesarrollo.SelectionColor = System.Drawing.Color.DarkOliveGreen;//mientras tanto... en lo que averiguo si tengo que app el mismo color que sus elemntos a la reservada, si e así lo que deberá hacer es terminar el método de abajo para colorearla según ello Ó hacer que la var que se revisa para esto, guarde el nombre de su tipo correspondiente así aunque sea la palabra reservada o su contenido en sí tengan el mismo color... esto me gusta más xD, auqneu eso implicaría add un if donde si es reservada_Tipado el tipo :v del conjunto estudiado entonce que se coloque el 2do nombre para que así concuerde... xD muajajajaj xD
                     areaDesarrollo.SelectionStart = areaDesarrollo.Text.Length;
 
                     break;
 
                 case "decimal":
-                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin));
-                    areaDesarrollo.SelectionColor = System.Drawing.Color.LemonChiffon;
+                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin)+1);
+                    areaDesarrollo.SelectionColor = System.Drawing.Color.DarkCyan;
                     areaDesarrollo.SelectionStart = areaDesarrollo.Text.Length;
 
                     break;
 
                 case "booleano":
-                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin));
-                    areaDesarrollo.SelectionColor = System.Drawing.Color.PapayaWhip;
+                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin)+1);
+                    areaDesarrollo.SelectionColor = System.Drawing.Color.Orange;
                     areaDesarrollo.SelectionStart = areaDesarrollo.Text.Length;
 
                     break;
 
                 case "caracter":
-                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin));
+                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin)+1);
                     areaDesarrollo.SelectionColor = System.Drawing.Color.Chocolate;
                     areaDesarrollo.SelectionStart = areaDesarrollo.Text.Length;
 
                     break;
 
                 case "finAsignacion":
-                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin));
-                    areaDesarrollo.SelectionColor = System.Drawing.Color.PeachPuff;//sino mystiRose xD
+                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin)+1);
+                    areaDesarrollo.SelectionColor = System.Drawing.Color.DeepPink;//sino mystiRose xD
                     areaDesarrollo.SelectionStart = areaDesarrollo.Text.Length;
 
                     break;
 
                 case "comentario":
-                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin));
+                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin)+1);
                     areaDesarrollo.SelectionColor = System.Drawing.Color.Tomato;//sino mystiRose xD
                     areaDesarrollo.SelectionStart = areaDesarrollo.Text.Length;
 
                     break;                
 
                 case "simbolo"://hace falta que agregues esto...
-                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin));
-                    areaDesarrollo.SelectionColor = System.Drawing.Color.DarkBlue;//sino mystiRose xD
+                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin)+1);
+                    areaDesarrollo.SelectionColor = System.Drawing.Color.Blue;
+                    areaDesarrollo.SelectionStart = areaDesarrollo.Text.Length;
+
+                    break;
+
+                default:
+                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin)+1);
+                    areaDesarrollo.SelectionColor = System.Drawing.Color.White;//sino mystiRose xD
                     areaDesarrollo.SelectionStart = areaDesarrollo.Text.Length;
 
                     break;

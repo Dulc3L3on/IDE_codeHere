@@ -21,23 +21,26 @@ namespace proyecto_IDE.Excepciones
 
         public String excepcionPalabra(int numeroFila, int columnaExcepcion, char[] lineaCompleta)
         {//puesto que aún no han sido solicitados los identificadores, entones no agrego la parte donde si es un # ó _ entonces lo paso a identificador de lo contrario a lista de errores...
-            String mensajeError = "Error en la linea "+Convert.ToString(numeroFila)+"la palabra caracteres incorrectos\n";
-
-            if (herramienta.determinarTipoCaracter(lineaCompleta[columnaExcepcion]) == 'n' || lineaCompleta[columnaExcepcion] == '_')
-            {
-                mensajeError += Convert.ToString(columnaExcepcion);
-                anadirError(numeroFila, lineaCompleta.Length, mensajeError);
-
-
-                return "erronea";//en este caso se traduciría como "debe seguir concatenando la palabra aunque tenga errores"
+            
+            if (herramienta.determinarTipoCaracter(lineaCompleta[columnaExcepcion]) == 'd' || lineaCompleta[columnaExcepcion] == '_')
+            {              
+                return "posible_identificador";//en este caso se traduciría como "debe seguir concatenando la palabra aunque tenga errores"
             }//esto es lo que se adaptará al indetificador cuando ya soliciten incluirlo...
 
             return "primitiva_palabra";//debe parar por el hecho de que está presente otro tipo de caracter el cual puede estar definido en el alfabeto...
         }//listo xD
 
+        public String excepcionIdentificador(int numeroFila, int columnaExcepcion, char[] lineaCompleta) {
+          
+            String mensajeError = "hay caracteres incorrectos en en el conjunto de la columna \n" + Convert.ToString(columnaExcepcion);
+            anadirError(numeroFila, lineaCompleta.Length, mensajeError);           
+
+            return "primitiva_palabra";//esto por lo mismo que identificador aún no es una clasificación formal... caundo ya sea así, seguramente esto pasará a tener otro if y a devolver algo diferente para cada situación...
+        }
+
         public String excepcionNumero(int numeroFila, int columnaExcepcion, char[] lineaCompleta)//es que no es un error como tal, sino que se empleó para hacer el cambio a decimal...
         {
-            if (herramienta.determinarTipoCaracter(lineaCompleta[columnaExcepcion]) == 'p' && herramienta.determinarTipoCaracter(lineaCompleta[columnaExcepcion+1]) == 'n')//pue sí, ya que estoy viendo las excepciones por qué no matar 2 pájaros de 1 tiro... esto lo digo porque si al entrar a analizar el decimal sabiendo solamente lo del punto, puede que el siguiente al punto no sea un número, así que tronitos xD
+            if ((columnaExcepcion+1)< lineaCompleta.Length && herramienta.determinarTipoCaracter(lineaCompleta[columnaExcepcion]) == 'p' && herramienta.determinarTipoCaracter(lineaCompleta[columnaExcepcion+1]) == 'd')//pue sí, ya que estoy viendo las excepciones por qué no matar 2 pájaros de 1 tiro... esto lo digo porque si al entrar a analizar el decimal sabiendo solamente lo del punto, puede que el siguiente al punto no sea un número, así que tronitos xD
             {
                 return "primitiva_decimal";
             }//allá en el métoodo de decimal se revisará al sigueinte y estrictamente si no hay un número en el espacio que corresponde -> erronea            
@@ -57,8 +60,7 @@ namespace proyecto_IDE.Excepciones
         {
             if (herramienta.determinarTipoCaracter(lineaCompleta[columnaExcepcion]) == 'p')
             {
-
-                String mensajeError = "Error en la fila "+ Convert.ToString(numeroFila)+" el decimal debe tener únicamente un . \n";
+                String mensajeError = " el tipo decimal debe tener únicamente un . \n";
                 anadirError(numeroFila, lineaCompleta.Length, mensajeError);
                 return "erronea";
             }//allá en el métoodo de decimal se revisará al sigueinte y estrictamente si no hay un número en el espacio que corresponde -> erronea            
@@ -90,6 +92,10 @@ namespace proyecto_IDE.Excepciones
 
         public void limpiarListadoErrores() {
             listaErrores.limpiarLista();
+        }
+
+        public ListaEnlazada<String> darListadoErrores() {
+            return listaErrores;
         }
 
         //RECUERDA: que cuando elimines los errores de la lista, deberá ser el de la línea que fue corregido, así que pienso que deberás apoyarte de los evt dericht text box,para que puedas obtener la línea que fue corregida, pero, aquí hay algo, que el hecho de modificar o borrar una fila no impica que haya arreglado el error... 

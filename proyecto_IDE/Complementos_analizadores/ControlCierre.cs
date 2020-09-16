@@ -30,7 +30,7 @@ namespace proyecto_IDE.Complementos_analizadores
             herramientas = kitHerramientas;
         }       
 
-        public Resultado analizarAgrupaciones(char[] lineaDesglosada,int numeroLinea, int caracterActual) {            
+        public Resultado analizarAgrupaciones(char[] lineaDesglosada,int caracterActual, int numeroLinea) {            
 
             if (listadoNoCerrados.estaVacia() || (listadoNoCerrados.darContenidoUltimoNodo().Equals('(') && herramientas.determinarTipoCaracter(lineaDesglosada[caracterActual]).Equals('c'))) {
                  agregarNecesitado(lineaDesglosada, caracterActual, caracterActual+1, numeroLinea);//se manda a llamar el método para hacer la debida agregación del caracter, si es que pertenece a los necesitados de cierre...
@@ -41,6 +41,14 @@ namespace proyecto_IDE.Complementos_analizadores
                 {//media vez exiten en la listaEnlazada, " ó /* es porque no se ha terminado el proceso...  si está un paréntesis, es porque se acaba de add, pues reucerda que si entra a este bloque si o sí debe hacer algo en él...
                  //se mandan a llamar el método donde converge el análisis de los comentarios y cadenas...
                     return analizarTipoAgrupacion(lineaDesglosada, caracterActual, numeroLinea);//aquí se devolvería el resultado como tal... sin importar si es null o no, allá en el léxico se contempla esto...
+                }
+                else if(listadoNoCerrados.darUltimoNodo().contenido.StartsWith("(") && lineaDesglosada[caracterActual].Equals(')'))
+                {
+                    resultadoParentesisODivsion = new Resultado(")", "parentesis_Cierre", numeroLinea, caracterActual, caracterActual);
+                    ultimoCaracterAnalizado = caracterActual;
+                    listadoNoCerrados.eliminarUltimoNodo();
+
+                    return resultadoParentesisODivsion;
                 }
             }
 
@@ -56,10 +64,10 @@ namespace proyecto_IDE.Complementos_analizadores
          */
         private void agregarNecesitado(char[] lineaDesglosada, int caracterActual, int caracterSiguiente , int numeroLinea) {            
 
-            String tipoDeNecesitado = herramientas.determinarTipoEncierro(lineaDesglosada[caracterActual], lineaDesglosada[caracterSiguiente]);
+            String tipoDeNecesitado = herramientas.determinarTipoEncierro(lineaDesglosada, caracterActual);
 
             switch (tipoDeNecesitado) {
-                case "parentesis":
+                case "parentesisApertura":
                     resultadoParentesisODivsion = new Resultado("(", "parentesis_Apertura", numeroLinea, caracterActual, caracterActual);//puede ponerse así la columna o dejar vacío este campo, ya que el siguiente paréntesis sería el fin [y por ello no tendría columna inicio...]
                     //esto realmente no debería ser así, sino que debería de estblces su final hasta que se hallara el de cierre cuando este fuera el último nodo de la lista y que el primero del cierre fuera el número de este nodo...
 
@@ -86,12 +94,13 @@ namespace proyecto_IDE.Complementos_analizadores
                     listadoNoCerrados.anadirAlFinal("/*" + "," + Convert.ToString(numeroLinea) + "," + Convert.ToString(caracterActual));//esto será útil para cuando se haya hallado el cierre, pues de manera fácil se podrá establecer los valores de RESULTADO...               
                     break;
 
-                case "comilla":
+                case "cadena":
                     listadoNoCerrados.anadirAlFinal(Convert.ToString((int)34) + "," + Convert.ToString(numeroLinea) + "," + Convert.ToString(caracterActual));
-                    break;
+                    break;               
 
                 default://Sería el caso de la división, porque no puede existir ningún otro tipo de excepción
-                    resultadoParentesisODivsion = new Resultado("/", "division", numeroLinea, caracterActual, caracterActual);//pero aún no seá útil...                    
+                    resultadoParentesisODivsion = new Resultado("/", "division", numeroLinea, caracterActual, caracterActual);//pero aún no seá útil... 
+                    ultimoCaracterAnalizado = caracterActual;
                     //se manda a llamar de una vez el método para colorear... o se retornará el tipo, para al final saber de que color... no, de una vez
                     break;
             }//hasta que sea necesario se considerará el proceso con el tipo de resultado... mmm creo que el dilema de como haberle para enviar el obj Resultado si requiero tambipen devovler elnúmero de línea se resulve en el método que llama a este, puesto que haya se manda a llamar a los métodos para aeguir con el análisis entonces allá debería ser donde se envíe al exterior el número con el que debe continuar el for y aquí se haga la única add al listado de resultado.. pero ese istado no está aquí... bueno eso lo verás después...            
@@ -173,8 +182,8 @@ namespace proyecto_IDE.Complementos_analizadores
                     //se elimina el nodo que corresponde a este símbolo en el listado de espera de cierre...
                     listadoNoCerrados.eliminarUltimoNodo();
 
-                    ultimoCaracterAnalizado = (caracterActual+1);
-                    return resultado = new Resultado(datosNecistadoCerrado[0], "comentarioMultiLinea", Convert.ToInt32(datosNecistadoCerrado[1]), Convert.ToInt32(datosNecistadoCerrado[2]), (caracterActual+1));
+                    ultimoCaracterAnalizado = caracterActual;//pues es un acuerdo que esta varibale como su nombre lo dice almacenará EL ULTIMO ESTUDIADO!!!
+                    return resultado = new Resultado(datosNecistadoCerrado[0], "comentarioMultiLinea", Convert.ToInt32(datosNecistadoCerrado[1]), Convert.ToInt32(datosNecistadoCerrado[2]), ultimoCaracterAnalizado);
                 }
                 
             }
@@ -188,9 +197,10 @@ namespace proyecto_IDE.Complementos_analizadores
 
         public bool hayQueAnalizarPrimitivos()
         {
-            if (listadoNoCerrados.estaVacia() || listadoNoCerrados.darContenidoUltimoNodo().Equals('(')){//ajá exacto xD, porque eso quiere decir, que no se tiene nada y por ello debe irse de una vez con los prims
+            if (listadoNoCerrados.estaVacia() || listadoNoCerrados.darContenidoUltimoNodo().Equals('('))//aquí no puedes decirle si siga el a´nálisis dependiendo de lo que tenga el siguiente porque sino tendrías que recibir como parám la línea... y no sería muy estético xD
+            {//ajá exacto xD, porque eso quiere decir, que no se tiene nada y por ello debe irse de una vez con los prims
                 return true;
-            }
+            }//la unica situacióne en la que no esté vacía  no tenga a un ( es porque no ha terminado el análisis de un comentario...
 
             return false;
         }

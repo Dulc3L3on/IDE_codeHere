@@ -99,31 +99,44 @@ namespace proyecto_IDE
         private void compilarToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             String[] lineasAAnalizar = areaDesarrollo.Lines;
-            txtBx_mensajero.Clear();
-            txtBx_mensajero.Text = Convert.ToString(lineasAAnalizar.Length);
+            limpiarLog();
             analizadorLexico.darExcepcionLexico().limpiarListadoErrores();
 
             for (int numeroLinea=0; numeroLinea< lineasAAnalizar.Length; numeroLinea++) {
-                analizadorLexico.analizarLinea(lineasAAnalizar[numeroLinea].ToCharArray(), numeroLinea);//pero recuerda que para trabajar con los datos del rich, debido a esta suma, será necesario restarle este 1...
-
-                if (numeroLinea== (lineasAAnalizar.Length-1) && !analizadorLexico.darControlCierre().darListaEsperaCierre().estaVacia()) {
-                    Nodo<String> nododAuxiliar = analizadorLexico.darControlCierre().darListaEsperaCierre().darPrimerNodo();
-                    String[] contenidoDelActual = nododAuxiliar.contenido.Split(',');//si mal no estoy lo separé por comas...
-
-                    for (int excepcionActual =0; excepcionActual< analizadorLexico.darControlCierre().darListaEsperaCierre().darTamanio(); excepcionActual++) {
-                        if (contenidoDelActual[0].Equals('\"')) {
-                            analizadorLexico.darExcepcionLexico().excepcionNecesitadosCierre(Convert.ToInt32(contenidoDelActual[1]), Convert.ToInt32(contenidoDelActual[2]), analizadorLexico.darControlCierre().darMensajeErrorCadena());
-                        }
-
-                        if (contenidoDelActual[0].Equals("/*")) {
-                            analizadorLexico.darExcepcionLexico().excepcionNecesitadosCierre(Convert.ToInt32(contenidoDelActual[1]), Convert.ToInt32(contenidoDelActual[2]), analizadorLexico.darControlCierre().darMensajeErrorComentarioMultiLinea());
-                        }                        
-                        
-                    }//fin del for que se encarga de añadir las excepciones de los necesitados de cierre                    
-                }//fin del if que permite exe el bloque para añadir los errores de los necesitados de cierre
+                analizadorLexico.analizarLinea(lineasAAnalizar[numeroLinea].ToCharArray(), numeroLinea);//pero recuerda que para trabajar con los datos del rich, debido a esta suma, será necesario restarle este 1...               
             }
-            
+
+            if (!analizadorLexico.darControlCierre().darListaEsperaCierre().estaVacia())
+            {
+                Nodo<String> nododAuxiliar = analizadorLexico.darControlCierre().darListaEsperaCierre().darPrimerNodo();
+                String[] contenidoDelActual = nododAuxiliar.contenido.Split(',');//si mal no estoy lo separé por comas...
+
+                for (int excepcionActual = 0; excepcionActual < analizadorLexico.darControlCierre().darListaEsperaCierre().darTamanio(); excepcionActual++)
+                {
+                    if (contenidoDelActual[0].Equals('\"'))
+                    {
+                        analizadorLexico.darExcepcionLexico().excepcionNecesitadosCierre(Convert.ToInt32(contenidoDelActual[1]), Convert.ToInt32(contenidoDelActual[2]), analizadorLexico.darControlCierre().darMensajeErrorCadena());
+                    }
+
+                    if (contenidoDelActual[0].Equals("/*"))
+                    {
+                        analizadorLexico.darExcepcionLexico().excepcionNecesitadosCierre(Convert.ToInt32(contenidoDelActual[1]), Convert.ToInt32(contenidoDelActual[2]), analizadorLexico.darControlCierre().darMensajeErrorComentarioMultiLinea());
+                    }
+
+                }//fin del for que se encarga de añadir las excepciones de los necesitados de cierre                    
+
+                herramienta.mostrarError(analizadorLexico.darExcepcionLexico().darListadoErrores());//De esta manera no se acumularán los errores de los tipos primitivos en el log... olo que hice fue nada más sacar el metodo de mostrar del metodo marcar...
+
+            }//fin del if que permite exe el bloque para añadir los errores de los necesitados de cierre
+
 
         }//ya comila :3 UwU
+
+        public void limpiarLog() {
+            if (txtBx_mensajero.Text != null)
+            {
+                txtBx_mensajero.Clear();
+            }
+        }
     }
 }

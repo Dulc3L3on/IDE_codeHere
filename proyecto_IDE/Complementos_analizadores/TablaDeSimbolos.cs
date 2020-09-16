@@ -18,8 +18,7 @@ namespace proyecto_IDE.Complementos_analizadores
         //private char[] operadoresAritmeticos = { '' };//por el momento aún no he definido si se tendrá un arreglo o enum y si habrá uno por cada una de las clasificaicones que pueden almacenar o habrá solo 1 donde no haya más de 1 mismo término en una misma agrupación... pero pensándolo bien, creo que sería mejor separarlas por el hecho de que aunque sean repetidas represntar un tipo de clasificación diferente, aunque ahora creo que esto encaja bastante con la forma en que trabajaste anteriormente el analizador ya qie no estaría redundando en los caracteres, pero eso sí podría llevarte más tiempectio la pensada...
 
         private String[] reservadasFuncionales = { "SI", "SINO", "SINO_SI", "MIENTRAS", "HACER", "DESDE", "HASTA", "INCREMENTO" };
-        private String[] reservadasTipado = { "entero", "decimal", "cadena", "booleano", "caracter" };
-        private String[] reservadasValoresBooleanos = {"verdadero", "falso"};
+        private String[] reservadasTipado = { "entero", "decimal", "cadena", "booleano", "caracter" };        
 
         public TablaDeSimbolos() {
             establecerListadoSimbolosSimples();
@@ -63,8 +62,8 @@ namespace proyecto_IDE.Complementos_analizadores
             listaSimbolosSimples.anadirAlFinal("*");
             listaSimbolosSimples.establecerNombreNodoCreado("aritmetico_multiplicaion");
             listaSimbolosSimples.anadirAlFinal("/");
-          /*listaSimbolosSimples.establecerNombreNodoCreado("aritmetico_division");//aunque este ya se contempla en nec cierre, pero talvez si serí mejor 
-            listaSimbolosSimples.anadirAlFinal("<");*/
+          /*listaSimbolosSimples.establecerNombreNodoCreado("aritmetico_division");//aunque este ya se contempla en nec cierre, pero talvez si serí mejor */
+            listaSimbolosSimples.anadirAlFinal("<");
             listaSimbolosSimples.establecerNombreNodoCreado("relacional_menorQue");
             listaSimbolosSimples.anadirAlFinal(">");
             listaSimbolosSimples.establecerNombreNodoCreado("relacional_mayoQue");
@@ -116,7 +115,7 @@ namespace proyecto_IDE.Complementos_analizadores
             {
                 if (palabraABuscar.Equals(reservadasFuncionales[palabraActual]))
                 {
-                    return "reservada_Funcional" + reservadasFuncionales[palabraActual];
+                    return "Funcional_" + reservadasFuncionales[palabraActual];
                 }
             }
 
@@ -129,7 +128,7 @@ namespace proyecto_IDE.Complementos_analizadores
             {
                 if (palabraABuscar.Equals(reservadasTipado[palabraActual]))
                 {
-                    return "reservada_Tipado" + reservadasTipado[palabraActual];//Esto será útil hasta que se ensamble el analizador sintáctico
+                    return "Tipado_" + reservadasTipado[palabraActual];//Esto será útil hasta que se ensamble el analizador sintáctico
                 }
             }
 

@@ -97,10 +97,10 @@ namespace proyecto_IDE
             // 
             this.lst_lineario.BackColor = System.Drawing.SystemColors.WindowText;
             this.lst_lineario.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.lst_lineario.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lst_lineario.Font = new System.Drawing.Font("Microsoft JhengHei", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lst_lineario.ForeColor = System.Drawing.Color.Purple;
             this.lst_lineario.FormattingEnabled = true;
-            this.lst_lineario.ItemHeight = 20;
+            this.lst_lineario.ItemHeight = 22;
             this.lst_lineario.Items.AddRange(new object[] {
             "1"});
             this.lst_lineario.Location = new System.Drawing.Point(-1, 25);
@@ -108,7 +108,7 @@ namespace proyecto_IDE
             this.lst_lineario.MinimumSize = new System.Drawing.Size(39, 500);
             this.lst_lineario.Name = "lst_lineario";
             this.lst_lineario.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this.lst_lineario.Size = new System.Drawing.Size(39, 500);
+            this.lst_lineario.Size = new System.Drawing.Size(39, 484);
             this.lst_lineario.TabIndex = 1;
             this.lst_lineario.TabStop = false;
             // 
@@ -121,7 +121,7 @@ namespace proyecto_IDE
             this.compilarToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1073, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1073, 30);
             this.menuStrip1.TabIndex = 3;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -135,7 +135,7 @@ namespace proyecto_IDE
             this.guardarCambiosToolStripMenuItem,
             this.guardarYSalirToolStripMenuItem});
             this.archivoToolStripMenuItem.Name = "archivoToolStripMenuItem";
-            this.archivoToolStripMenuItem.Size = new System.Drawing.Size(73, 24);
+            this.archivoToolStripMenuItem.Size = new System.Drawing.Size(73, 26);
             this.archivoToolStripMenuItem.Text = "Archivo";
             // 
             // nuevoToolStripMenuItem
@@ -196,7 +196,7 @@ namespace proyecto_IDE
             // acercaDeToolStripMenuItem
             // 
             this.acercaDeToolStripMenuItem.Name = "acercaDeToolStripMenuItem";
-            this.acercaDeToolStripMenuItem.Size = new System.Drawing.Size(89, 24);
+            this.acercaDeToolStripMenuItem.Size = new System.Drawing.Size(89, 26);
             this.acercaDeToolStripMenuItem.Text = "Acerca de";
             // 
             // compilarToolStripMenuItem
@@ -204,7 +204,7 @@ namespace proyecto_IDE
             this.compilarToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.compilarToolStripMenuItem1});
             this.compilarToolStripMenuItem.Name = "compilarToolStripMenuItem";
-            this.compilarToolStripMenuItem.Size = new System.Drawing.Size(85, 24);
+            this.compilarToolStripMenuItem.Size = new System.Drawing.Size(85, 26);
             this.compilarToolStripMenuItem.Text = "Opciones";
             // 
             // compilarToolStripMenuItem1
