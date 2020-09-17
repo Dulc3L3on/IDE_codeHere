@@ -32,17 +32,24 @@ namespace proyecto_IDE.Excepciones
 
         public String excepcionIdentificador(int numeroFila, int columnaExcepcion, char[] lineaCompleta) {
           
-            String mensajeError = "hay caracteres incorrectos en en el conjunto de la columna \n" + Convert.ToString(columnaExcepcion);
+            String mensajeError = "hay caracteres incorrectos en en el conjunto de la columna " + Convert.ToString(columnaExcepcion);
             anadirError(numeroFila, lineaCompleta.Length, mensajeError);           
 
             return "primitiva_palabra";//esto por lo mismo que identificador aún no es una clasificación formal... caundo ya sea así, seguramente esto pasará a tener otro if y a devolver algo diferente para cada situación...
         }
 
+        public void excepcionMalformacionReservada(int numeroFila, int columnaExcepcion, String conjuntoMalFormado) { //ya sea reservada xD, identificador o método... [pero estos últimos 2 aún no se consideran
+            String mensajeError="\""+conjuntoMalFormado+"\""+" NO PERTENECE a palabras reservadas";//o se oye mejor no forma parte fmmm xD
+            
+            anadirError(numeroFila, columnaExcepcion, mensajeError);
+
+        }
+
         public String excepcionNumero(int numeroFila, int columnaExcepcion, char[] lineaCompleta)//es que no es un error como tal, sino que se empleó para hacer el cambio a decimal...
         {
-            if ((columnaExcepcion+1)< lineaCompleta.Length && herramienta.determinarTipoCaracter(lineaCompleta[columnaExcepcion]) == 'p' && herramienta.determinarTipoCaracter(lineaCompleta[columnaExcepcion+1]) == 'd')//pue sí, ya que estoy viendo las excepciones por qué no matar 2 pájaros de 1 tiro... esto lo digo porque si al entrar a analizar el decimal sabiendo solamente lo del punto, puede que el siguiente al punto no sea un número, así que tronitos xD
+            if ((columnaExcepcion+1)< lineaCompleta.Length && herramienta.determinarTipoCaracter(lineaCompleta[columnaExcepcion]) == 'p')//pue sí, ya que estoy viendo las excepciones por qué no matar 2 pájaros de 1 tiro... esto lo digo porque si al entrar a analizar el decimal sabiendo solamente lo del punto, puede que el siguiente al punto no sea un número, así que tronitos xD
             {
-                return "primitiva_decimal";
+                return "posible_decimal";
             }//allá en el métoodo de decimal se revisará al sigueinte y estrictamente si no hay un número en el espacio que corresponde -> erronea            
 
             return "primitiva_entero";//pues se tienen otros caracteres, que posiblemente sean de comparación o que no estén en el alfabeto, donde esto últmi será un error, lo cual estará contemplado en el switch...
@@ -56,34 +63,58 @@ namespace proyecto_IDE.Excepciones
             //no retorno nada porque no he guardado nada en RESULTADO aún, sino que lo hago hasta que encuentre el cierre...
         }//listo xD
 
-        public String excepcionDecimal(int numeroFila, int columnaExcepcion, char[] lineaCompleta)
+        public String[] excepcionDecimal(String[] datosDecimal, int numeroFila, int columnaExcepcion, char[] lineaCompleta)
         {
             if (herramienta.determinarTipoCaracter(lineaCompleta[columnaExcepcion]) == 'p')
             {
-                String mensajeError = " el tipo decimal debe tener únicamente un . \n";
+                String mensajeError = " el tipo decimal debe tener únicamente un PUNTO";
                 anadirError(numeroFila, lineaCompleta.Length, mensajeError);
-                return "erronea";
+                return excepcionPorPuntoExtraEnDecimal(datosDecimal, lineaCompleta, columnaExcepcion);
             }//allá en el métoodo de decimal se revisará al sigueinte y estrictamente si no hay un número en el espacio que corresponde -> erronea            
 
-            return "primitiva_decimal";//pues se tienen otros caracteres, que posiblemente estén sintácticamente correctos [por ser de comparación, identificadores, aritmeticos, fianlizacion y así xD] por ello será mejor analizar para determinar su validez léxica y posterior a ello la sintáctica
+            datosDecimal[0] = "primitiva_decimal";
+            return datosDecimal;//pues se tienen otros caracteres, que posiblemente estén sintácticamente correctos [por ser de comparación, identificadores, aritmeticos, fianlizacion y así xD] por ello será mejor analizar para determinar su validez léxica y posterior a ello la sintáctica
         }//LISTO XD
 
-        public String excepcionSimbolo(int numeroFila, int numeroColumnaFinal, String caracterErroneo) {
 
-            String mensajeError = "La utilizacion de "+ caracterErroneo + " no está permitida\n";//Aquí de una vez se muestra el error, porque si entró como "otros" y esos otros no están definido, entonces de una vez Strike y fueraaa! xD
+        /*
+         Método llamado al hallarse un punto extra en el decimal... puesto que si es 
+        otro caracter que no sea punto [y por supuesto dígito...] se pasará la batuta 
+        al que le corresponda
+         */
+        private String[] excepcionPorPuntoExtraEnDecimal(String[] datosDecimalErrado, char[] lineaDesglosada, int posicion) {//Esta el posición donde se encontró el punto mal ubicado xD
+            datosDecimalErrado[1] = "erronea";
+
+            while (posicion<lineaDesglosada.Length && (herramienta.determinarTipoCaracter(lineaDesglosada[posicion])== 'd' || herramienta.determinarTipoCaracter(lineaDesglosada[posicion]) == 'p')) {
+                datosDecimalErrado[2] +=lineaDesglosada[posicion];
+
+                posicion++;//así de esta manera se seguirá cumpliendo el acuerdo de devolver una posición más allá...
+            }
+
+            datosDecimalErrado[0] = Convert.ToString(posicion);
+            return datosDecimalErrado;
+        }
+
+        public String excepcionSimbolo(int numeroFila, int numeroColumnaFinal, String caracterErroneo) {
+            String mensajeError = "La utilizacion de "+"\"" +caracterErroneo+"\"" + " no está permitida";//Aquí de una vez se muestra el error, porque si entró como "otros" y esos otros no están definido, entonces de una vez Strike y fueraaa! xD
             anadirError(numeroFila, numeroColumnaFinal, mensajeError);
             return "erronea";
         }//listo xD
 
-
-        private void anadirError(int numeroLinea, int numeroColumaFinal, String mensaje)//no habrá problema que con los primitivos muestre de una vez el error...
+        public void puntoDesubicado(int numeroFila, int numeroColumna)
         {
-            String mensajeError = "Error en la linea "+ Convert.ToString(numeroLinea+1) + "   " + mensaje;//para que el mínimo indice de la línea sea 1...
+            String mensajeError = "Tienes un punto mal ubicado...";//Aquí de una vez se muestra el error, porque si entró como "otros" y esos otros no están definido, entonces de una vez Strike y fueraaa! xD
+            anadirError(numeroFila, numeroColumna, mensajeError);            
+        }
+
+
+        public void anadirError(int numeroLinea, int numeroColumaFinal, String mensaje)//no habrá problema que con los primitivos muestre de una vez el error...
+        {
+            String mensajeError = "Error en la linea: "+ Convert.ToString(numeroLinea+1) + " >>> " + mensaje;//para que el mínimo indice de la línea sea 1...
             listaErrores.anadirAlFinal(mensajeError);
 
-
             //se manda a llamar el método para colorear la fila de corinto...
-            herramienta.marcarError(numeroLinea, numeroColumaFinal, listaErrores);//te hace falta mandar el número de columna donde termina la línea... deplano que lo recibirás de cada mpetodo desde díonde se llama
+            //herramienta.marcarError(numeroLinea, numeroColumaFinal);//te hace falta mandar el número de columna donde termina la línea... deplano que lo recibirás de cada mpetodo desde díonde se llama
         }
 
         public void establecerControlCierre(ControlCierre controlDeCierre) {

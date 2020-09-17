@@ -103,7 +103,7 @@ namespace proyecto_IDE.Complementos_analizadores
         private Resultado analizarTipoAgrupacion(char[] lineaDesglosada, int caracterInicial, int numeroLinea) { //obvidamente aquí no se incluye a los paréntesis puesto que ni siquiera son tomados en cuenta para poder acceder a este método, esto por el if exterior...
             String[] tipoAnalisis = listadoNoCerrados.darContenidoUltimoNodo().Split(',');//como ya se agrego el caracter especial a la lista, entonces puede procederse libremente a analizar de esta manera...
 
-            if ((int)Convert.ToChar(tipoAnalisis[0])==34) {
+            if (tipoAnalisis[0].Length==1 && (int)Convert.ToChar(tipoAnalisis[0])==34) {
                 return establecerCadena(numeroLinea, lineaDesglosada, caracterInicial);
             }
 
@@ -214,6 +214,10 @@ namespace proyecto_IDE.Complementos_analizadores
 
         public String darTipoClasificacion() { //para colorear correctamente xD
             return tipoCategoria;
+        }
+
+        public void reiniciarListadoNoCerrados() {
+            listadoNoCerrados.limpiarLista();
         }
 
         public String darMensajeErrorCadena() {

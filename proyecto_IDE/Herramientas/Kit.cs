@@ -122,18 +122,18 @@ namespace proyecto_IDE.Herramientas
             return 0;//DE TODOS MODOS SI FUERAN IGUALES EL RESULTADO SERÍA 0...
         }
 
-        public void marcarError(int numeroLinea, int numeroColumnaFinal, ListaEnlazada<String> listaErrores)
+      /*  public void marcarError(int numeroLinea, int numeroColumnaFinalDeLinea)
         {
-            areaDesarrollo.Select(areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + numeroColumnaFinal));//así obtnego la columna general, no relativa :v xD
-            areaDesarrollo.SelectionColor = System.Drawing.Color.PeachPuff;
-            areaDesarrollo.Select(0, 0);            
-        }
+            areaDesarrollo.Select(areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea), numeroColumnaFinalDeLinea);//así obtnego la columna general, no relativa :v xD y de esa manera marco toda la línea xD
+            areaDesarrollo.SelectionBackColor = System.Drawing.Color.PeachPuff;
+            areaDesarrollo.Select(0, 0);//Esto es para ubicar al cursor de intercalado...
+        }*/
 
         public void mostrarError(ListaEnlazada<String> listaDeErrores) {//recuerda que aún no has contemplado eliminar el error cuando la línea se modifique... creo que tendrías que hacer un reemplazo o modificación... bueno eso habías dicho antes...
             Nodo<String> nodoAuxiliar = listaDeErrores.darPrimerNodo();
 
             for (int errorActual=0; errorActual< listaDeErrores.darTamanio(); errorActual++) {
-                txtBx_mensajero.Text += nodoAuxiliar.contenido;
+                txtBx_mensajero.AppendText(nodoAuxiliar.contenido);
 
                 nodoAuxiliar = nodoAuxiliar.nodoSiguiente;
             }            
@@ -215,10 +215,21 @@ namespace proyecto_IDE.Herramientas
                     //De lo contraio, blanco xD
             }//fin del switch
 
+        }        
+
+        public void reiniciarColorLetra() {//este será empleado al terminar de compilar, puesto que debería seguir escriiendo con letras color blanco...
+            areaDesarrollo.Select(areaDesarrollo.Text.Length, areaDesarrollo.Text.Length);
+            areaDesarrollo.SelectionColor = System.Drawing.Color.White;//sino mystiRose xD
+            areaDesarrollo.SelectionStart = areaDesarrollo.Text.Length;
         }
 
-        public void llevarControlCambios(int numeroLineaAfectada) {
-            numeroLineaCambiada.anadirAlFinal(numeroLineaAfectada);
-        }//deprecated xD
+        public void quitarSubrayado() { //este se usará al compilar nuevamente por ello se pondrá todo el rich con fondo negro, poque qué trabajal desmarcar solo las líneas :v xD
+            areaDesarrollo.Select(0, areaDesarrollo.Text.Length);//así obtnego la columna general, no relativa :v xD y de esa manera marco toda la línea xD
+            areaDesarrollo.SelectionBackColor = System.Drawing.Color.Black;
+            areaDesarrollo.Select(0, 0);//Esto es para ubicar al cursor de intercalado...
+
+        }
+
+        
     }
 }

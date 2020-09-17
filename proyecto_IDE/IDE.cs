@@ -99,8 +99,7 @@ namespace proyecto_IDE
         private void compilarToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             String[] lineasAAnalizar = areaDesarrollo.Lines;
-            limpiarLog();
-            analizadorLexico.darExcepcionLexico().limpiarListadoErrores();
+            dejarTodoComoAlPrincipio();
 
             for (int numeroLinea=0; numeroLinea< lineasAAnalizar.Length; numeroLinea++) {
                 analizadorLexico.analizarLinea(lineasAAnalizar[numeroLinea].ToCharArray(), numeroLinea);//pero recuerda que para trabajar con los datos del rich, debido a esta suma, será necesario restarle este 1...               
@@ -113,24 +112,34 @@ namespace proyecto_IDE
 
                 for (int excepcionActual = 0; excepcionActual < analizadorLexico.darControlCierre().darListaEsperaCierre().darTamanio(); excepcionActual++)
                 {
-                    if (contenidoDelActual[0].Equals('\"'))
+                    if (contenidoDelActual[0].Length==1 && (int)Convert.ToChar(contenidoDelActual[0]) == 34)
                     {
-                        analizadorLexico.darExcepcionLexico().excepcionNecesitadosCierre(Convert.ToInt32(contenidoDelActual[1]), Convert.ToInt32(contenidoDelActual[2]), analizadorLexico.darControlCierre().darMensajeErrorCadena());
+                        analizadorLexico.darExcepcionLexico().excepcionNecesitadosCierre(Convert.ToInt32(contenidoDelActual[1]), 0, analizadorLexico.darControlCierre().darMensajeErrorCadena());//hago esto porque cuando un comentario no se cierra, no se colorea todo ello :v, solo se ondica el hecho con el msjin xD
                     }
 
                     if (contenidoDelActual[0].Equals("/*"))
                     {
-                        analizadorLexico.darExcepcionLexico().excepcionNecesitadosCierre(Convert.ToInt32(contenidoDelActual[1]), Convert.ToInt32(contenidoDelActual[2]), analizadorLexico.darControlCierre().darMensajeErrorComentarioMultiLinea());
-                    }
+                        analizadorLexico.darExcepcionLexico().excepcionNecesitadosCierre(Convert.ToInt32(contenidoDelActual[1]),0, analizadorLexico.darControlCierre().darMensajeErrorComentarioMultiLinea());//lo mismo app para este xD, pues el número de columna solo es útil para marcar el error...
+                    }//Recuerda que el comentario 1 linea xD no tiene errores... y tampoco caracter... a menos que sea uno inválido...
 
-                }//fin del for que se encarga de añadir las excepciones de los necesitados de cierre                    
-
-                herramienta.mostrarError(analizadorLexico.darExcepcionLexico().darListadoErrores());//De esta manera no se acumularán los errores de los tipos primitivos en el log... olo que hice fue nada más sacar el metodo de mostrar del metodo marcar...
+                }//fin del for que se encarga de añadir las excepciones de los necesitados de cierre                                
 
             }//fin del if que permite exe el bloque para añadir los errores de los necesitados de cierre
 
+            if (!analizadorLexico.darExcepcionLexico().darListadoErrores().estaVacia()) {//así se podrán mostrar los errores de los primitivos y/o necesitados de cierre de una sola vez...
+                herramienta.mostrarError(analizadorLexico.darExcepcionLexico().darListadoErrores());//De esta manera no se acumularán los errores de los tipos primitivos en el log... olo que hice fue nada más sacar el metodo de mostrar del metodo marcar...
+            }
+
+            //analizadorLexico.darHerramienta().reiniciarColorLetra();
 
         }//ya comila :3 UwU
+
+        private void dejarTodoComoAlPrincipio() {
+            limpiarLog();
+            analizadorLexico.darExcepcionLexico().limpiarListadoErrores();
+            analizadorLexico.darControlCierre().reiniciarListadoNoCerrados();            
+            //analizadorLexico.darHerramienta().quitarSubrayado();
+        }
 
         public void limpiarLog() {
             if (txtBx_mensajero.Text != null)
@@ -138,5 +147,6 @@ namespace proyecto_IDE
                 txtBx_mensajero.Clear();
             }
         }
+        
     }
 }
