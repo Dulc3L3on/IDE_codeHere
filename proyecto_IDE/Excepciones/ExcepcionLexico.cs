@@ -8,12 +8,13 @@ using proyecto_IDE.Herramientas;
 
 namespace proyecto_IDE.Excepciones
 {
+    [Serializable]
     class ExcepcionLexico
     {
         ListaEnlazada<String> listaErrores = new ListaEnlazada<String>();//los nombre de los nodos tendrán el número de fila y el contenido del nodo será la palabra...
                 
         Kit herramienta;
-        ControlCierre controlCierre;
+        
 
         public ExcepcionLexico(Kit kitHerramientas) {
             herramienta = kitHerramientas;           
@@ -115,11 +116,7 @@ namespace proyecto_IDE.Excepciones
 
             //se manda a llamar el método para colorear la fila de corinto...
             //herramienta.marcarError(numeroLinea, numeroColumaFinal);//te hace falta mandar el número de columna donde termina la línea... deplano que lo recibirás de cada mpetodo desde díonde se llama
-        }
-
-        public void establecerControlCierre(ControlCierre controlDeCierre) {
-            controlCierre = controlDeCierre;
-        }
+        }       
 
         public void limpiarListadoErrores() {
             listaErrores.limpiarLista();

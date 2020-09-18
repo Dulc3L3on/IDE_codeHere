@@ -7,6 +7,7 @@ using proyecto_IDE.Herramientas;
 
 namespace proyecto_IDE
 {
+    [Serializable]
     class ListaEnlazada<T>
     {
         private Nodo<T> primerNodo;//posee el primero objeto puesto que así se sabe de donde partir

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace proyecto_IDE.Herramientas
 {
+    [Serializable]
     class Nodo<E>
     {
         public E contenido;

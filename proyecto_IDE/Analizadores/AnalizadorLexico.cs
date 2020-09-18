@@ -9,6 +9,7 @@ using proyecto_IDE.Herramientas;
 
 namespace proyecto_IDE.Analizadores
 {
+    [Serializable]
     class AnalizadorLexico
     {
         String tipoAgrupacion = "erronea";
@@ -141,7 +142,7 @@ namespace proyecto_IDE.Analizadores
                 {
                     detallesPalabra[1] = "primitiva_palabra";
                 }
-                if (herramienta.determinarTipoCaracter(lineaAEstudiar[posicionAnalisis]) != 'l' || herramienta.determinarTipoCaracter(lineaAEstudiar[posicionAnalisis]) != 'd')//esto por el hecho de que un identificador puede tenerlos... si miras que altera algo auqnue lo dudo entonces solo coméntalo,pues ello esperarían si no les explicas xD que lo cataloge como el número que corresponde [ent o deci]...
+                if (herramienta.determinarTipoCaracter(lineaAEstudiar[posicionAnalisis]) != 'l' /*&& herramienta.determinarTipoCaracter(lineaAEstudiar[posicionAnalisis]) != 'd'*/)//esto por el hecho de que un identificador puede tenerlos... si miras que altera algo auqnue lo dudo entonces solo coméntalo,pues ello esperarían si no les explicas xD que lo cataloge como el número que corresponde [ent o deci]...
                 {
                     detallesPalabra[1] = excepcionLexico.excepcionPalabra(numeroLinea, posicionAnalisis, lineaAEstudiar);
                     if (!detallesPalabra[1].Equals("primitiva_palabra"))

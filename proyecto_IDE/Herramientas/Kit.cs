@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace proyecto_IDE.Herramientas
-{
+{ 
+    [Serializable]
     class Kit
     {
         RichTextBox areaDesarrollo;

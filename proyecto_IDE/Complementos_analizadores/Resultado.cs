@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace proyecto_IDE.Complementos_analizadores
 {
+    [Serializable]
     class Resultado//por el hecho de guardarse en una lista enlazada, se tendría el orden de aparicion, puesto que el primero en aparecer en la lista también sería el primero de la linea...
     {
         String elementoEstudiado;

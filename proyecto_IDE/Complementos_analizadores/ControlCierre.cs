@@ -9,6 +9,7 @@ using proyecto_IDE.Herramientas;
 
 namespace proyecto_IDE.Complementos_analizadores
 {
+    [Serializable]
     class ControlCierre//estaa clase será empleada para llevar el control xD de aquellos elementos que requieren de su compañero para ser cerrados y pasar a otro análisis
                       //entre los participantes se tiene a la cadena, el comentario y a los paréntesis, pero no del todo por el hecho de que aún no clasifico su agrupación interna
                       //como debe, sino que solo verifico que esté debidamente cerrado...

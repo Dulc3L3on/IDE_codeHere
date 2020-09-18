@@ -7,6 +7,7 @@ using proyecto_IDE.Objetos_Estudio;
 
 namespace proyecto_IDE.Complementos_analizadores
 {
+    [Serializable]
     class TablaDeSimbolos
     {
         private ListaEnlazada<Variable> listaIdentificadores = new ListaEnlazada<Variable>();
