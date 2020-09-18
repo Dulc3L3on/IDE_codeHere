@@ -43,13 +43,6 @@ namespace proyecto_IDE.Herramientas
 
             return 'o';//De otros, que hasta el momento no se sabe si correponden o no al alfabeto...
         }
-/*
-        public bool esSimboloCierre() {
-            if ((int)caracterInicial == 41 ((int)lineaDesglosada[caracterActual] == 47 && (int)lineaDesglosada[caracterActual + 1] == 47) || (int)lineaDesglosada[caracterActual] == 47 && (int)lineaDesglosada[caracterActual + 1] == 42) {
-                return true;
-            }
-        }
-        */
 
         /*
          Este método será empleado específicamente cuando se sepa que si debe analizarse la
@@ -134,7 +127,7 @@ namespace proyecto_IDE.Herramientas
             Nodo<String> nodoAuxiliar = listaDeErrores.darPrimerNodo();
 
             for (int errorActual=0; errorActual< listaDeErrores.darTamanio(); errorActual++) {
-                txtBx_mensajero.AppendText(nodoAuxiliar.contenido);
+                txtBx_mensajero.AppendText(nodoAuxiliar.contenido + String.Format(Environment.NewLine));
 
                 nodoAuxiliar = nodoAuxiliar.nodoSiguiente;
             }            
@@ -187,7 +180,7 @@ namespace proyecto_IDE.Herramientas
 
                 case "finAsignacion":
                     areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin)+1);
-                    areaDesarrollo.SelectionColor = System.Drawing.Color.DeepPink;//sino mystiRose xD
+                    areaDesarrollo.SelectionColor = System.Drawing.Color.Pink;//sino mystiRose xD
                     areaDesarrollo.SelectionStart = areaDesarrollo.Text.Length;
 
                     break;

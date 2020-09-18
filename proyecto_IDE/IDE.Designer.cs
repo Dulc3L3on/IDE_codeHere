@@ -92,6 +92,7 @@ namespace proyecto_IDE
             this.txtBx_mensajero.Location = new System.Drawing.Point(-1, 543);
             this.txtBx_mensajero.Multiline = true;
             this.txtBx_mensajero.Name = "txtBx_mensajero";
+            this.txtBx_mensajero.ReadOnly = true;
             this.txtBx_mensajero.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtBx_mensajero.Size = new System.Drawing.Size(1075, 163);
             this.txtBx_mensajero.TabIndex = 2;

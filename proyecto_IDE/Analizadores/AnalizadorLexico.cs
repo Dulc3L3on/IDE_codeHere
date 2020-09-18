@@ -315,10 +315,10 @@ namespace proyecto_IDE.Analizadores
             String conjuntoEstudio = Convert.ToString(caracterActual) + Convert.ToString(caracterSiguiente);
             String[] datosSimboloCompuesto = { Convert.ToString(posicionInicialAnalisis + 1), "", conjuntoEstudio };//0 -> numeroColumnaFinal, 1-> tipo, 2-> el simbolo en sí
 
-            Nodo<String> nodoAuxiliar = tablaSimbolos.darListadoSimbolosSimples().darPrimerNodo();
+            Nodo<String> nodoAuxiliar = tablaSimbolos.darListadoSimbolosCompuestos().darPrimerNodo();
 
 
-            for (int simboloActual = 1; simboloActual <= tablaSimbolos.darListadoSimbolosSimples().darTamanio(); simboloActual++)
+            for (int simboloActual = 1; simboloActual <= tablaSimbolos.darListadoSimbolosCompuestos().darTamanio(); simboloActual++)
             {
                 String simboloCompuesto = nodoAuxiliar.contenido;
 
