@@ -47,11 +47,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analizadores\AnalizadorLexico.cs" />
+    <Compile Include="Analizadores\AnalizadorSintactico.cs" />
     <Compile Include="Complementos_analizadores\ControlCierre.cs" />
     <Compile Include="Complementos_analizadores\ManejadorArchivo.cs" />
     <Compile Include="Complementos_analizadores\Resultado.cs" />
     <Compile Include="Complementos_analizadores\TablaDeSimbolos.cs" />
     <Compile Include="Excepciones\ExcepcionLexico.cs" />
+    <Compile Include="Herramientas\Buscador.cs" />
     <Compile Include="Herramientas\Kit.cs" />
     <Compile Include="Herramientas\Nodo.cs" />
     <Compile Include="IDE.cs">

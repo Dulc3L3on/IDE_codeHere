@@ -269,8 +269,7 @@ namespace proyecto_IDE.Analizadores
             {
                 tipoAgrupacion = "decimal";
                 detallesDecimal[0] = Convert.ToString(posicionAnalisis);//esta es la pos que le corresponde al for dar, es decir 1 por más alla de donde se tiene clasificado como decimal en este caso...
-            }
-
+            }                           
             return detallesDecimal;
         }//listo :3
 

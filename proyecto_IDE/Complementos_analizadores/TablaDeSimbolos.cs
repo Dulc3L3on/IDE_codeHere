@@ -19,7 +19,8 @@ namespace proyecto_IDE.Complementos_analizadores
         //private char[] operadoresAritmeticos = { '' };//por el momento aún no he definido si se tendrá un arreglo o enum y si habrá uno por cada una de las clasificaicones que pueden almacenar o habrá solo 1 donde no haya más de 1 mismo término en una misma agrupación... pero pensándolo bien, creo que sería mejor separarlas por el hecho de que aunque sean repetidas represntar un tipo de clasificación diferente, aunque ahora creo que esto encaja bastante con la forma en que trabajaste anteriormente el analizador ya qie no estaría redundando en los caracteres, pero eso sí podría llevarte más tiempectio la pensada...
 
         private String[] reservadasFuncionales = { "SI", "SINO", "SINO_SI", "MIENTRAS", "HACER", "DESDE", "HASTA", "INCREMENTO" };
-        private String[] reservadasTipado = { "entero", "decimal", "cadena", "booleano", "caracter" };        
+        private String[] reservadasTipado = { "entero", "decimal", "cadena", "booleano", "caracter" };
+        private String[] reservadasBooleanas = { "verdadero", "falso"};
 
         public TablaDeSimbolos() {
             establecerListadoSimbolosSimples();
@@ -139,11 +140,10 @@ namespace proyecto_IDE.Complementos_analizadores
         }
 
         public String buscarEnValoresBooleanos(String palabraABuscar) {
-            if (palabraABuscar.Equals("verdadero")) {
-                return "Tipado_booleano";//después debería agregársele _ y su valor para saber a cual de los dos se refiere
-            }
-            if(palabraABuscar.Equals("falso")) {
-                return "Tipado_booleano";
+            for (int valorActual = 0; valorActual < reservadasBooleanas.Length; valorActual++) {
+                if (palabraABuscar.Equals(reservadasBooleanas[valorActual])) {
+                    return "Tipado_booleano";//después debería agregársele _ y su valor para saber a cual de los dos se refiere
+                }
             }
 
             return "erronea";
@@ -157,6 +157,17 @@ namespace proyecto_IDE.Complementos_analizadores
             return listaSimbolosCompuestos;
         }
 
+        public String[] darTipos() {
+            return reservadasTipado;
+        }
+
+        public String[] darBooleanos() {
+            return reservadasBooleanas;
+        }
+
+        public String[] darFuncionales() {
+            return reservadasFuncionales;
+        }
     }
 
 
