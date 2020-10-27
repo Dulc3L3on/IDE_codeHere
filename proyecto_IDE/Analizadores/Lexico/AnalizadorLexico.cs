@@ -16,7 +16,7 @@ namespace proyecto_IDE.Analizadores
 
         Kit herramienta;
         ExcepcionLexico excepcionLexico;
-        TablaDeSimbolos tablaSimbolos = new TablaDeSimbolos();
+        Simbolos simbolos = new Simbolos();
         ControlCierre controlCierre;
         Resultado resultadosHallados;//ahí decides si será local o no, puesto que lo que realmente nec el sintác es el listado de la fila...
         ListaEnlazada<Resultado> listaResutadosDeFilaActual = new ListaEnlazada<Resultado>();//Esta será necesaria en la fase siguiente
@@ -72,7 +72,11 @@ namespace proyecto_IDE.Analizadores
             switch (tipoCaracter)
             {
                 case 'l'://problemas con los identificadores no habrá... por el hecho de que DEBE empezar con un caracter y por ello caerá al método que tiene como primero una letra ya después conforme se vaya desarrollando el proceso xD se decidirá si el método que debe seguir con la revisión se debe cambiar o no...
-                    resultadosHallados = analizarOcurrenciaConLetras(numeroLinea, caracterActual, lineaDesglosada);
+                    resultadosHallados = analizarOcurrenciaConLetras(numeroLinea, caracterActual, lineaDesglosada);//si, pues podría ser un caracter o una palabra reservada...
+                    break;
+
+                case '_':
+                    resultadosHallados = analizarID(numeroLinea, caracterActual, lineaDesglosada);
                     break;
 
                 case 'd':
@@ -102,9 +106,9 @@ namespace proyecto_IDE.Analizadores
             datosHallados = analizarPalabra(numeroLinea, inicioAnalisis, lineaAEstudiar);
 
             //al final se manda a llamar al método para buscar en la tabla de símbolos
-            if (!datosHallados[1].Equals("erronea") && !datosHallados[1].Equals("primitiva_caracter"))
+            if (!datosHallados[1].Equals("valor_caracter"))
             {
-                String tipo = tablaSimbolos.buscarEnPalabrasReservadas(datosHallados[2]);
+                String tipo = simbolos.buscarEnPalabrasReservadas(datosHallados[2]);
 
                 if (!tipo.Equals("erronea"))
                 {//si pues si no reviso esto me desplegará un error...
@@ -132,38 +136,31 @@ namespace proyecto_IDE.Analizadores
 
         private String[] analizarPalabra(int numeroLinea, int posicionInicialAnalisis, char[] lineaAEstudiar)
         {//recuerda que por el hecho de recibir la línea almacenada en un arr, entonces si el número que corresponda a las col será uno menos a lo ordinario, pero debes averiguar como trabaja con las col el richTextBox... para que cuando necesites hacer manipulaciones alguna vez, no surgan problemas...
-            int posicionAnalisis = posicionInicialAnalisis + 1;//esto es así por el análisisi del for el cual permitió entrar a este método, en este caso...
-            String[] detallesPalabra = { "", "primitiva_caracter", Convert.ToString(lineaAEstudiar[posicionInicialAnalisis]) };//al solo tener un caracter no se entraría a la parte para                     
+            int posicionAnalisis = posicionInicialAnalisis +1 ;//esto es así por el análisisi del for el cual permitió entrar a este método, en este caso...
+            String[] detallesPalabra = { "", "valor_caracter", Convert.ToString(lineaAEstudiar[posicionInicialAnalisis]) };//al solo tener un caracter no se entraría a la parte para                     
             bool parar = false;
 
             while ((posicionAnalisis < lineaAEstudiar.Length) && (int)lineaAEstudiar[posicionAnalisis] != 32 && (parar == false))
-            {//Es decir mientras no halle un espacio en blanco...      para cuando ya se agregue el identificador esta condi de !palabra deberá cambiar puesto que sin importar que sea palabra o identificador, deberá parar... ahi si deberá usarse un bool, que cb de val para que ya no siga, media vez entre al if para usar el método de Excepción...
-                if (posicionAnalisis == (posicionInicialAnalisis + 1))
+            {//Es decir mientras no halle un espacio en blanco...      para cuando ya se agregue el identificador esta condi de !palabra deberá cambiar puesto que sin importar que sea palabra o identificador, deberá parar... ahi si deberá usarse un bool, que cb de val para que ya no siga, media vez entre al if para usar el método de Excepción...                
+                if (herramienta.determinarTipoCaracter(lineaAEstudiar[posicionAnalisis]) != 'l')
                 {
-                    detallesPalabra[1] = "primitiva_palabra";
-                }
-                if (herramienta.determinarTipoCaracter(lineaAEstudiar[posicionAnalisis]) != 'l' /*&& herramienta.determinarTipoCaracter(lineaAEstudiar[posicionAnalisis]) != 'd'*/)//esto por el hecho de que un identificador puede tenerlos... si miras que altera algo auqnue lo dudo entonces solo coméntalo,pues ello esperarían si no les explicas xD que lo cataloge como el número que corresponde [ent o deci]...
-                {
-                    detallesPalabra[1] = excepcionLexico.excepcionPalabra(numeroLinea, posicionAnalisis, lineaAEstudiar);
-                    if (!detallesPalabra[1].Equals("primitiva_palabra"))
-                    {
-                        return analizarIdentficador(numeroLinea, posicionAnalisis, detallesPalabra[2], lineaAEstudiar);
-                    }
-                    else {//hago de una vez esto, porque de todos modos en algún punto tendré que considerar al identificador
-                        parar = true;//esto por el hecho de que se clasifica como erronea al tener caracteres válidos para un identificador
-                    }
-                }
+                        parar = true;//esto por el hecho de que se clasifica como erronea al tener caracteres válidos para un identificador                 
+                }                
                 if (parar == false)
                 {
-                    //inconsitencia al estar bien formado el grupo, pues se devolvería 1 pos más allá de la que se analizó
+                 //inconsitencia al estar bien formado el grupo, pues se devolvería 1 pos más allá de la que se analizó, NOP, no existe incos, porque aunque sea un caracter diferete a uno aceptado, se halla llegado a un espacio [y por ello estuviera bien formada la palabra] se devolverá 1 pos más allá de la que se analizó por eso al restar, no habrá desacuerdo de parte de ninguno...
                     detallesPalabra[2] += lineaAEstudiar[posicionAnalisis];
                     posicionAnalisis++;//1 pos más alla de lo que se concatenó por este método, por lo cual al enviar los datos a resultado es nec restarle 1 pues no se quedó en esta col la concat, sino en la any
+
+                    if (posicionAnalisis == (posicionInicialAnalisis + 1))
+                    {
+                        detallesPalabra[1] = "primitiva_palabra";
+                    }
                 }//esto desaperecerá al tener al identificador, porque independientemente de lo que se tenga se debe parar
             }
 
             if (detallesPalabra[2].Length == 1) {
-                tipoAgrupacion = "caracter";//con caracter y con comentario de una sola línea, no hay excepciones xD
-                detallesPalabra[1] = "primitiva_caracter";//también hubiera podido poner el if para colocar la agrupación como palabra luego de ver que no era "l"[letrar], pero de todos modos tendría que haber hecho el cb cuando yo supiera que se trataba de un carcater, esto por medio de observación e imaginación... +o tb hubiera podido encesaar todo el while en un if, como en decimal, solo que en este caso por no ser directo el envío de la columna a estudiar sí debía revisar si no era una más alla del tamaño, así que para facilitar el trabajao para mí xD, mejor hacer esto que hice xD, lo de corroborar tamño de lo concatenado y listo xD
+                tipoAgrupacion = "caracter";//con caracter y con comentario de una sola línea, no hay excepciones xD                
             }
 
             detallesPalabra[0] = Convert.ToString(posicionAnalisis);//la posición es justo 1 espacio más allá de donde se quedó a analizando, lo cual es exactamente donde el for debe estar para así asginar ese espacio al método que le corresponda...
@@ -172,35 +169,50 @@ namespace proyecto_IDE.Analizadores
         }//por el momento puesto que no se tiene que clasificar a los identificadores, mandará de una vez a la lista de Resultados el tipo de dicha palabra como erronea
         //listo
 
-        private String[] analizarIdentficador(int numeroLinea, int posicionInicialAnalisis, String concatenadoHastaElMomento, char[] lineaAEstudiar)
+        private Resultado analizarID(int numeroLinea, int posicionInicialAnalisis, char[] lineaAEstudiar) {
+            String[] datosHallados = new String[3];
+
+            datosHallados = analizarIdentficador(numeroLinea, posicionInicialAnalisis, lineaAEstudiar);
+
+            //al final se manda a llamar al método para buscar en la tabla de símbolos
+            //posiblemente este método me sirva para tornar todo a mi favor xd, mas que todo por los tipos y porque algunas veces es var o el tipo especifico [como boolena] lo que se revisa en las producciones
+            Resultado resultado = new Resultado(datosHallados[2], datosHallados[1], numeroLinea, posicionInicialAnalisis, (Convert.ToInt32(datosHallados[0]) - 1));//por el momento no me es útil, pero aún así devolveré este elemento para que pueda ser agregado a la lista que almacena en cada nodo un objeto resultado...            
+            resultado.establecerFilaFin(numeroLinea);
+
+            return resultado;
+        }
+
+        private String[] analizarIdentficador(int numeroLinea, int posicionInicialAnalisis, char[] lineaAEstudiar)
         {
             int posicionAnalisis = posicionInicialAnalisis + 1;//pues ya te hicieron el favor de analizar el primero...
-            String[] detallesPalabra = { "", "primitiva_palabra", (concatenadoHastaElMomento + Convert.ToString(lineaAEstudiar[posicionInicialAnalisis])) };//lo dejo como palabra porque aunque tenga la apariencia de identificador, aún no se si ya está registrado o no...
-            bool parar = false;
+            String[] detallesPalabra = { "", "erronea", Convert.ToString(lineaAEstudiar[posicionInicialAnalisis]) };
+            bool parar = false;//el tipo a var se agregará al leer su tipo... sería hasta llegar al semi sem xd ó en el sintac... pero eso haría que tuviera que eliminar la prod para va# y val #... porque no sabría su tipo...
 
             while ((posicionAnalisis < lineaAEstudiar.Length) && (int)lineaAEstudiar[posicionAnalisis] != 32 && (parar == false))
             {//Es decir mientras no halle un espacio en blanco...      para cuando ya se agregue el identificador esta condi de !palabra deberá cambiar puesto que sin importar que sea palabra o identificador, deberá parar... ahi si deberá usarse un bool, que cb de val para que ya no siga, media vez entre al if para usar el método de Excepción...
 
-                if (herramienta.determinarTipoCaracter(lineaAEstudiar[posicionAnalisis]) != 'l' || herramienta.determinarTipoCaracter(lineaAEstudiar[posicionAnalisis]) != 'd' || lineaAEstudiar[posicionAnalisis] != '_')
+                if (herramienta.determinarTipoCaracter(lineaAEstudiar[posicionAnalisis]) != 'l' || herramienta.determinarTipoCaracter(lineaAEstudiar[posicionAnalisis]) != 'd')//como no restringieron que viniera una letra después del "_"...
                 {
-                    detallesPalabra[1] = excepcionLexico.excepcionIdentificador(numeroLinea, posicionAnalisis, lineaAEstudiar);
+                    detallesPalabra[1] = excepcionLexico.excepcionIdentificador(numeroLinea, posicionAnalisis, lineaAEstudiar, detallesPalabra[2].Length);
                     parar = true;
                 }
                 if (parar == false)
                 {
                     detallesPalabra[2] += lineaAEstudiar[posicionAnalisis];
                     posicionAnalisis++;//1 pos más alla de lo que se concatenó por este método, por lo cual al enviar los datos a resultado es nec restarle 1 pues no se quedó en esta col la concat, sino en la any
+
+                    if (posicionAnalisis == (posicionInicialAnalisis+1)) {
+                        detallesPalabra[1] = "var";
+                    }
                 }//esto desaperecerá al tener al identificador, porque independientemente de lo que se tenga se debe parar
             }
 
-            tipoAgrupacion = "palabra";//esto por el hecho de no considerar aun a los id como otra clasificación...
+            if (!detallesPalabra[1].Equals("erronea")) {
+                tipoAgrupacion = "var";//esto por el hecho de no considerar aun a los id como otra clasificación...
+            }            
 
             detallesPalabra[0] = Convert.ToString(posicionAnalisis);//la posición es justo 1 espacio más allá de donde se quedó a analizando, lo cual es exactamente donde el for debe estar para así asginar ese espacio al método que le corresponda...
             return detallesPalabra;
-
-            //sería llamado en el método de análisisPalabra cuando en la palabra se encontrara con un caracter de valor != a cualquiera de las letras
-            //aquí se revisaría si es uno permitido sino a erroneas se iría... esto si es que se acepta algo más que el _
-
         }//Esto será empleado hasta la 2da fase, creo :v xD
 
         private Resultado analizarNumero(int numeroLinea, int posicionInicialAnalisis, char[] lineaAEstudiar)
@@ -277,9 +289,9 @@ namespace proyecto_IDE.Analizadores
         private String[] analizarSimbolosSimples(int numeroLinea, int posicionInicialAnalisis, int tamanioDeFila, char caracterAEstudiar)
         {//Se mnada un arreglo por hecho de que no siempre se podrá generar un objeto resultado, pues puede que el símbolo buscado no se encuentre en el alfabeto...        
             String[] datosSimboloSimple = { Convert.ToString(posicionInicialAnalisis), "", Convert.ToString(caracterAEstudiar) };//0 -> numeroColumnaFinal, 1-> tipo, 2-> el simbolo en sí
-            Nodo<String> nodoAuxiliar = tablaSimbolos.darListadoSimbolosSimples().darPrimerNodo();
+            Nodo<String> nodoAuxiliar = simbolos.darListadoSimbolosSimples().darPrimerNodo();
 
-            for (int simboloActual = 1; simboloActual <= tablaSimbolos.darListadoSimbolosSimples().darTamanio(); simboloActual++)
+            for (int simboloActual = 1; simboloActual <= simbolos.darListadoSimbolosSimples().darTamanio(); simboloActual++)
             {
                 String simboloSimple = nodoAuxiliar.contenido;
 
@@ -314,10 +326,10 @@ namespace proyecto_IDE.Analizadores
             String conjuntoEstudio = Convert.ToString(caracterActual) + Convert.ToString(caracterSiguiente);
             String[] datosSimboloCompuesto = { Convert.ToString(posicionInicialAnalisis + 1), "", conjuntoEstudio };//0 -> numeroColumnaFinal, 1-> tipo, 2-> el simbolo en sí
 
-            Nodo<String> nodoAuxiliar = tablaSimbolos.darListadoSimbolosCompuestos().darPrimerNodo();
+            Nodo<String> nodoAuxiliar = simbolos.darListadoSimbolosCompuestos().darPrimerNodo();
 
 
-            for (int simboloActual = 1; simboloActual <= tablaSimbolos.darListadoSimbolosCompuestos().darTamanio(); simboloActual++)
+            for (int simboloActual = 1; simboloActual <= simbolos.darListadoSimbolosCompuestos().darTamanio(); simboloActual++)
             {
                 String simboloCompuesto = nodoAuxiliar.contenido;
 

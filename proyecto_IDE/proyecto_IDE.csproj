@@ -46,12 +46,46 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Analizadores\AnalizadorLexico.cs" />
-    <Compile Include="Analizadores\AnalizadorSintactico.cs" />
-    <Compile Include="Complementos_analizadores\ControlCierre.cs" />
-    <Compile Include="Complementos_analizadores\ManejadorArchivo.cs" />
-    <Compile Include="Complementos_analizadores\Resultado.cs" />
-    <Compile Include="Complementos_analizadores\TablaDeSimbolos.cs" />
+    <Compile Include="Analizadores\Lexico\AnalizadorLexico.cs" />
+    <Compile Include="Analizadores\Sintactico\AnalizadorSintactico.cs" />
+    <Compile Include="Automatas\AutomataDePila.cs" />
+    <Compile Include="Complementos_analizadores\Generales\TablaDeSimbolos.cs" />
+    <Compile Include="Complementos_analizadores\Lexico\ControlCierre.cs" />
+    <Compile Include="Complementos_analizadores\Generales\ManejadorArchivo.cs" />
+    <Compile Include="Complementos_analizadores\Generales\Resultado.cs" />
+    <Compile Include="Complementos_analizadores\Generales\Simbolos.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\A.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\C.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\D.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\E%27.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\E.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\F%27.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\F.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\G.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\H.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\I.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\J.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\L.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\N.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\O%27.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\O.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\R.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\S.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\T%27.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\T.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\U.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\V.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\W.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\X%27.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\X.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\Y.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Produccion.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\B.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\B%27.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\M.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\Estado.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\TablaTransiciones.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Transicion.cs" />
     <Compile Include="Excepciones\ExcepcionLexico.cs" />
     <Compile Include="Herramientas\Buscador.cs" />
     <Compile Include="Herramientas\Kit.cs" />
@@ -67,6 +101,7 @@
     <Compile Include="Objetos_Estudio\Variable.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Z.cs" />
     <EmbeddedResource Include="IDE.resx">
       <DependentUpon>IDE.cs</DependentUpon>
     </EmbeddedResource>

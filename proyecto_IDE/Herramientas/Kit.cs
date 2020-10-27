@@ -136,6 +136,13 @@ namespace proyecto_IDE.Herramientas
         public void colorearConjuntoCaracteres(String tipoAgrupacion,int numeroLinea,  int columnaInicio, int columnaFin) {//recuerda que en realidad este número de cols es la posición del caracter en el arreglo de caracteres obtenido, es decir es su ubucacion relativa, puesto que es en base a la línea actual...
             switch (tipoAgrupacion)
             {
+                case "var":
+                    areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin) + 1);
+                    areaDesarrollo.SelectionColor = System.Drawing.Color.LightGray;
+                    areaDesarrollo.SelectionStart = areaDesarrollo.Text.Length;
+
+                    break;
+
                 case "entero":
                     areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea)+columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea)+columnaFin)+1);
                     areaDesarrollo.SelectionColor = System.Drawing.Color.DarkViolet;
@@ -194,7 +201,7 @@ namespace proyecto_IDE.Herramientas
 
                 case "simbolo"://hace falta que agregues esto...
                     areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin)+1);
-                    areaDesarrollo.SelectionColor = System.Drawing.Color.Blue;
+                    areaDesarrollo.SelectionColor = System.Drawing.Color.SlateBlue;
                     areaDesarrollo.SelectionStart = areaDesarrollo.Text.Length;
 
                     break;

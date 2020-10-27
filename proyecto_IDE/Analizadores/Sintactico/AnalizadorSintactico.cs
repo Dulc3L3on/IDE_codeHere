@@ -11,7 +11,18 @@ namespace proyecto_IDE.Analizadores
     {
         // String[] matrizTrancisiones = new String { };
         Buscador buscador = new Buscador();
+        
 
+        public void solicitarTokens() { 
+        
+        }
+
+        public void analizarCodigo() { 
+        
+        }
+        
+        
+        
         public String[] darSugerencias(String porcion) {            
             ListaEnlazada<String> listadoCoincidentes = buscador.hallarCoincidentes(porcion);
             String[] coincidencias = new String[listadoCoincidentes.darTamanio()];

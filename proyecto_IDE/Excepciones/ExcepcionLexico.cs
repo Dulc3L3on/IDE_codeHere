@@ -18,25 +18,19 @@ namespace proyecto_IDE.Excepciones
 
         public ExcepcionLexico(Kit kitHerramientas) {
             herramienta = kitHerramientas;           
-        }
+        }      
 
-        public String excepcionPalabra(int numeroFila, int columnaExcepcion, char[] lineaCompleta)
-        {//puesto que aún no han sido solicitados los identificadores, entones no agrego la parte donde si es un # ó _ entonces lo paso a identificador de lo contrario a lista de errores...
-            
-            if (herramienta.determinarTipoCaracter(lineaCompleta[columnaExcepcion]) == 'd' || lineaCompleta[columnaExcepcion] == '_')
-            {              
-                return "posible_identificador";//en este caso se traduciría como "debe seguir concatenando la palabra aunque tenga errores"
-            }//esto es lo que se adaptará al indetificador cuando ya soliciten incluirlo...
+        //no existirá una excepción para palabra, ya que se sabe  que solo deben haber letras [por la haber separado el análisis de identificador, por tener que llevar _ antes de su nombre...] por ello al toparse con algo diferente, se terminará el análisis de palabra para cedercelo a quien corresponda, según el tipo...
 
-            return "primitiva_palabra";//debe parar por el hecho de que está presente otro tipo de caracter el cual puede estar definido en el alfabeto...
-        }//listo xD
+        public String excepcionIdentificador(int numeroFila, int columnaExcepcion, char[] lineaCompleta, int tamanioRecabado) {//si vas a agregar el número de columna y fila, debe sera antes del msje... y en el string del msje error correspodiente...
 
-        public String excepcionIdentificador(int numeroFila, int columnaExcepcion, char[] lineaCompleta) {
-          
-            String mensajeError = "hay caracteres incorrectos en en el conjunto de la columna " + Convert.ToString(columnaExcepcion);
-            anadirError(numeroFila, lineaCompleta.Length, mensajeError);           
+            if (tamanioRecabado == 1) {//pues si, porque si entró aquí es porque el caracter que venía no era ni letra ni número... y además de ello sólo colocaron el _, lo cual sí está mal [lo demás lo sabré al revisarlo...]
+                String mensajeError = "Un identificador consta de un _ al principio y letras o números a la par";
+                anadirError(numeroFila, columnaExcepcion, mensajeError);
+                return "erronea";
+            }
 
-            return "primitiva_palabra";//esto por lo mismo que identificador aún no es una clasificación formal... caundo ya sea así, seguramente esto pasará a tener otro if y a devolver algo diferente para cada situación...
+            return "var";//puesto que estoy segurísima de que el tamaño o es 1 o > a él... xD
         }
 
         public void excepcionMalformacionReservada(int numeroFila, int columnaExcepcion, String conjuntoMalFormado) { //ya sea reservada xD, identificador o método... [pero estos últimos 2 aún no se consideran
@@ -111,7 +105,7 @@ namespace proyecto_IDE.Excepciones
 
         public void anadirError(int numeroLinea, int numeroColumaFinal, String mensaje)//no habrá problema que con los primitivos muestre de una vez el error...
         {
-            String mensajeError = "Error en la linea: "+ Convert.ToString(numeroLinea+1) + " >>> " + mensaje;//para que el mínimo indice de la línea sea 1...
+            String mensajeError = "Error en: linea "+ Convert.ToString(numeroLinea+1) + "columna"+ numeroColumaFinal + " >>> " + mensaje;//para que el mínimo indice de la línea sea 1...
             listaErrores.anadirAlFinal(mensajeError);
 
             //se manda a llamar el método para colorear la fila de corinto...
