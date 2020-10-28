@@ -7,7 +7,7 @@ using proyecto_IDE.Complementos_analizadores.Sintactico.Simbolos;
 
 namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
 {
-    class V : Estado
+    class V : NoTerminal
     {
         Produccion produccion1;
         Produccion produccion2;
@@ -15,6 +15,8 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
         public V() {
             producciones = new Produccion[2];
             definirProducciones();
+            soyGeneral = false;
+            contengoCuerpo = false;
         }
 
         public override void definirProducciones()

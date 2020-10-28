@@ -18,8 +18,8 @@ namespace proyecto_IDE.Analizadores
         ExcepcionLexico excepcionLexico;
         Simbolos simbolos = new Simbolos();
         ControlCierre controlCierre;
-        Resultado resultadosHallados;//ahí decides si será local o no, puesto que lo que realmente nec el sintác es el listado de la fila...
-        ListaEnlazada<Resultado> listaResutadosDeFilaActual = new ListaEnlazada<Resultado>();//Esta será necesaria en la fase siguiente
+        Token resultadosHallados;//ahí decides si será local o no, puesto que lo que realmente nec el sintác es el listado de la fila...
+        ListaEnlazada<Token> listaResutadosDeFilaActual = new ListaEnlazada<Token>();//Esta será necesaria en la fase siguiente
 
         public AnalizadorLexico(Kit kitHerramientas) {
 
@@ -47,7 +47,7 @@ namespace proyecto_IDE.Analizadores
         }
 
         private int analizarAgrupadores(char[] lineaDesglosada, int numeroLinea, int caracterActual) {
-            if (!lineaDesglosada[caracterActual].Equals(')') && (herramienta.determinarTipoCaracter(lineaDesglosada[caracterActual]).Equals('c') || !controlCierre.darListaEsperaCierre().estaVacia())) {//si pues solo al inicio será necesaria la primera condi, de ahi en adelante con solo saber que no está vacía basta para entrar a este método...
+            if (herramienta.determinarTipoCaracter(lineaDesglosada[caracterActual]).Equals('c') || !controlCierre.darListaEsperaCierre().estaVacia()) {//si pues solo al inicio será necesaria la primera condi, de ahi en adelante con solo saber que no está vacía basta para entrar a este método...
                 resultadosHallados = controlCierre.analizarAgrupaciones(lineaDesglosada, caracterActual, numeroLinea);
                 tipoAgrupacion = controlCierre.darTipoClasificacion();
                 //se manda a llamar el método para colorear... para acceder de forma más directa a los valores... auqnue si no quieres repetir puedes hacerlo por medio de la obtención de los datos desde la lista 
@@ -99,7 +99,7 @@ namespace proyecto_IDE.Analizadores
             //o bien odrías ponerlo en cada uno de los switch, da lo mismo...
         }
 
-        private Resultado analizarOcurrenciaConLetras(int numeroLinea, int inicioAnalisis, char[] lineaAEstudiar)
+        private Token analizarOcurrenciaConLetras(int numeroLinea, int inicioAnalisis, char[] lineaAEstudiar)
         {
             String[] datosHallados = new String[3];
 
@@ -114,9 +114,9 @@ namespace proyecto_IDE.Analizadores
                 {//si pues si no reviso esto me desplegará un error...
                     String[] tipoNuevo = tipo.Split('_');
 
-                    if (tipoNuevo[0].Equals("Funcional"))
+                    if (tipoNuevo[0].Equals("Estructural"))
                     {
-                        tipoAgrupacion = "Funcional";
+                        tipoAgrupacion = "Estructural";
                     }else{
                         tipoAgrupacion = tipoNuevo[1];//recuerda que no es nec almacenar palabra como tal por el hecho de que eso no está definido como válido, solo es una división para auxiliar la revisión...                    
                     }
@@ -128,7 +128,7 @@ namespace proyecto_IDE.Analizadores
                 datosHallados[1] = tipo;//pues debe mandarse las cosas tal y como salieron... esta parte aún no m es útil puesto que para colorear empleo la vr tipoAgrup este dato que se alamacena en resultado, me será útil cuando ya tenga el sintác a quien le interesa saber con qué tipo de agrupación está tratando...
             }
 
-            Resultado resultado = new Resultado(datosHallados[2], datosHallados[1], numeroLinea, inicioAnalisis, (Convert.ToInt32(datosHallados[0]) - 1));//por el momento no me es útil, pero aún así devolveré este elemento para que pueda ser agregado a la lista que almacena en cada nodo un objeto resultado...            
+            Token resultado = new Token(datosHallados[2], datosHallados[1], numeroLinea, inicioAnalisis, (Convert.ToInt32(datosHallados[0]) - 1));//por el momento no me es útil, pero aún así devolveré este elemento para que pueda ser agregado a la lista que almacena en cada nodo un objeto resultado...            
             resultado.establecerFilaFin(numeroLinea);
 
             return resultado;
@@ -169,14 +169,14 @@ namespace proyecto_IDE.Analizadores
         }//por el momento puesto que no se tiene que clasificar a los identificadores, mandará de una vez a la lista de Resultados el tipo de dicha palabra como erronea
         //listo
 
-        private Resultado analizarID(int numeroLinea, int posicionInicialAnalisis, char[] lineaAEstudiar) {
+        private Token analizarID(int numeroLinea, int posicionInicialAnalisis, char[] lineaAEstudiar) {
             String[] datosHallados = new String[3];
 
             datosHallados = analizarIdentficador(numeroLinea, posicionInicialAnalisis, lineaAEstudiar);
 
             //al final se manda a llamar al método para buscar en la tabla de símbolos
             //posiblemente este método me sirva para tornar todo a mi favor xd, mas que todo por los tipos y porque algunas veces es var o el tipo especifico [como boolena] lo que se revisa en las producciones
-            Resultado resultado = new Resultado(datosHallados[2], datosHallados[1], numeroLinea, posicionInicialAnalisis, (Convert.ToInt32(datosHallados[0]) - 1));//por el momento no me es útil, pero aún así devolveré este elemento para que pueda ser agregado a la lista que almacena en cada nodo un objeto resultado...            
+            Token resultado = new Token(datosHallados[2], datosHallados[1], numeroLinea, posicionInicialAnalisis, (Convert.ToInt32(datosHallados[0]) - 1));//por el momento no me es útil, pero aún así devolveré este elemento para que pueda ser agregado a la lista que almacena en cada nodo un objeto resultado...            
             resultado.establecerFilaFin(numeroLinea);
 
             return resultado;
@@ -215,11 +215,11 @@ namespace proyecto_IDE.Analizadores
             return detallesPalabra;
         }//Esto será empleado hasta la 2da fase, creo :v xD
 
-        private Resultado analizarNumero(int numeroLinea, int posicionInicialAnalisis, char[] lineaAEstudiar)
+        private Token analizarNumero(int numeroLinea, int posicionInicialAnalisis, char[] lineaAEstudiar)
         {
             String[] hallazgos = analizarEntero(numeroLinea, posicionInicialAnalisis, lineaAEstudiar);
 
-            Resultado resultado = new Resultado(hallazgos[2], hallazgos[1], numeroLinea, posicionInicialAnalisis, (Convert.ToInt32(hallazgos[0]) - 1));//le resto 1 por quedarse 1 más allá el valor del caracter actual, en cualquiera de los casos...         
+            Token resultado = new Token(hallazgos[2], hallazgos[1], numeroLinea, posicionInicialAnalisis, (Convert.ToInt32(hallazgos[0]) - 1));//le resto 1 por quedarse 1 más allá el valor del caracter actual, en cualquiera de los casos...         
 
             resultado.establecerFilaFin(numeroLinea);
             return resultado;//recuerda que por medio de esto se puede avanzar a partir del indice siguiente al último que terminó de analizar el método
@@ -228,7 +228,7 @@ namespace proyecto_IDE.Analizadores
         private String[] analizarEntero(int numeroLinea, int posicionInicialAnalisis, char[] lineaAEstudiar)
         {
             int posicionAnalisis = posicionInicialAnalisis + 1;//Si debe ser así, pue el for analizó el que le seguía al últio caracter estudiado y por ello pude entrar a este método, entonces en este y los demás de los métodos para primitivos, deben empezar por el siguiente... creo que tb debe app a los demás métodos y creo que no lo aplicaste ni a "otros" ni a los necesitadosDeCierre
-            String[] detallesEntero = { "", "primitiva_entero", Convert.ToString(lineaAEstudiar[posicionInicialAnalisis]) };//al solo tener un caracter no se entraría a la parte para                     
+            String[] detallesEntero = { "", "valor_entero", Convert.ToString(lineaAEstudiar[posicionInicialAnalisis]) };//al solo tener un caracter no se entraría a la parte para                     
             bool parar = false;
 
             while ((posicionAnalisis < lineaAEstudiar.Length) && (int)lineaAEstudiar[posicionAnalisis] != 32 && (parar == false))
@@ -263,7 +263,7 @@ namespace proyecto_IDE.Analizadores
         private String[] analizarDecimal(int numeroLinea, int posicionInicialAnalisis, String concatenadoHastaElMomento, char[] lineaAEstudiar)
         {
             int posicionAnalisis = posicionInicialAnalisis + 1;//le sumo 2 por el hecho de que la posición dada corresponde al punto y la siguiente al número por el cual se permitió entrar a este método, entonces es nece analizar el sigueinte a dicho punto que se obtiene al suarle 2
-            String[] detallesDecimal = { "", "primitiva_decimal", concatenadoHastaElMomento + Convert.ToString(lineaAEstudiar[posicionInicialAnalisis]) };//default erronea porque si no viene un número no entraría a un bloque específico y no tendría donde nombrarle de esta manera, por ello mejor cuando se encuentra que todo esta bien, catalogo respecto a ese bienestar...                                     
+            String[] detallesDecimal = { "", "valor_decimal", concatenadoHastaElMomento + Convert.ToString(lineaAEstudiar[posicionInicialAnalisis]) };//default erronea porque si no viene un número no entraría a un bloque específico y no tendría donde nombrarle de esta manera, por ello mejor cuando se encuentra que todo esta bien, catalogo respecto a ese bienestar...                                     
 
             while ((posicionAnalisis < lineaAEstudiar.Length) && (int)lineaAEstudiar[posicionAnalisis] != 32)
             {//Es decir mientras no halle un espacio en blanco...      para cuando ya se agregue el identificador esta condi de !palabra deberá cambiar puesto que sin importar que sea palabra o identificador, deberá parar... ahi si deberá usarse un bool, que cb de val para que ya no siga, media vez entre al if para usar el método de Excepción...
@@ -277,7 +277,7 @@ namespace proyecto_IDE.Analizadores
                 posicionAnalisis++;//debe estar aquí porque sino estaría entregando al for 2 passo adelante hasta donde tiene concatenados los caracteres como el tipo que le corresponde al método, en este caso decimal...                              
             }
 
-            if (detallesDecimal[1].Equals("primitiva_decimal"))
+            if (detallesDecimal[1].Equals("valor_decimal"))
             {
                 tipoAgrupacion = "decimal";
                 detallesDecimal[0] = Convert.ToString(posicionAnalisis);//esta es la pos que le corresponde al for dar, es decir 1 por más alla de donde se tiene clasificado como decimal en este caso...
@@ -306,10 +306,7 @@ namespace proyecto_IDE.Analizadores
                     }
                     else {
                         tipoAgrupacion = "simbolo";
-                    }
-                    if (datosSimboloSimple[1].Equals("parentesis_Cierre") && controlCierre.darListaEsperaCierre().darContenidoUltimoNodo().StartsWith("(")) {
-                        controlCierre.darListaEsperaCierre().eliminarUltimoNodo();
-                    }
+                    }                
 
                     return datosSimboloSimple;//Retorno aquí para saber que si salgo del for es porque no hallé nada...
                 }
@@ -350,9 +347,9 @@ namespace proyecto_IDE.Analizadores
             return datosSimboloCompuesto;
         }
 
-        private Resultado analizarDemasCaracteres(int numeroLinea, int posicionInicialAnalisis, char[] lineaDeEstudio)//Metod de CONVERGENCIA para los símbolos en el alfabeto
+        private Token analizarDemasCaracteres(int numeroLinea, int posicionInicialAnalisis, char[] lineaDeEstudio)//Metod de CONVERGENCIA para los símbolos en el alfabeto
         {
-            Resultado resultado;
+            Token resultado;
             String[] resultadosObtenidos;
 
             if (herramienta.determinarTipoCaracter(lineaDeEstudio[posicionInicialAnalisis]) == 'p')
@@ -368,24 +365,24 @@ namespace proyecto_IDE.Analizadores
                 resultadosObtenidos = analizarSimbolosSimples(numeroLinea, posicionInicialAnalisis, lineaDeEstudio.Length, lineaDeEstudio[posicionInicialAnalisis]);
             }                        
 
-            resultado = new Resultado(resultadosObtenidos[2], resultadosObtenidos[1], numeroLinea, posicionInicialAnalisis, Convert.ToInt32(resultadosObtenidos[0]));
+            resultado = new Token(resultadosObtenidos[2], resultadosObtenidos[1], numeroLinea, posicionInicialAnalisis, Convert.ToInt32(resultadosObtenidos[0]));
 
             resultado.establecerFilaFin(numeroLinea);
             return resultado;
         }//listo :3 xD
 
-        private Resultado analizarPunto(int numeroLinea, int posicionInicialAnalisis, char[] lineaAEstudiar) {
-            Resultado resultado;
+        private Token analizarPunto(int numeroLinea, int posicionInicialAnalisis, char[] lineaAEstudiar) {
+            Token resultado;
             String[] resultadosObtenidos;
 
             if (herramienta.determinarTipoCaracter(lineaAEstudiar[posicionInicialAnalisis + 1]) == 'd')
             {
                 resultadosObtenidos = analizarDecimal(numeroLinea, posicionInicialAnalisis, "", lineaAEstudiar);
-                resultado = new Resultado(resultadosObtenidos[2], resultadosObtenidos[1], numeroLinea, posicionInicialAnalisis, (Convert.ToInt32(resultadosObtenidos[0]) - 1));
+                resultado = new Token(resultadosObtenidos[2], resultadosObtenidos[1], numeroLinea, posicionInicialAnalisis, (Convert.ToInt32(resultadosObtenidos[0]) - 1));
             }//Recuerda que si ves que al momento de operar [esto será muuucho después...] se complican las cosas por darle a entender que al principio tiene un 0 [0 es igual a nada entonces cabal :0 xD]
             else
             {
-                resultado = new Resultado(".", "erronea", numeroLinea, posicionInicialAnalisis, posicionInicialAnalisis);
+                resultado = new Token(".", "erronea", numeroLinea, posicionInicialAnalisis, posicionInicialAnalisis);
                 excepcionLexico.puntoDesubicado(numeroLinea, posicionInicialAnalisis);
             }//Esto podría variar... por la existencia de los métodso, pero, auqneu fuera una llamada a un método si solo viene el punto al principio estaría mal el punto y por ello tendría que seguir analizándose lo siguiente...
 

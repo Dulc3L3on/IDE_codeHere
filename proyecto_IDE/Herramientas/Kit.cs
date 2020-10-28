@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace proyecto_IDE.Herramientas
-{ 
-    [Serializable]
+{     
     class Kit
     {
         RichTextBox areaDesarrollo;
@@ -66,12 +65,9 @@ namespace proyecto_IDE.Herramientas
             if ((int)lineaDesglosada[caracterActual] == 34) {
                 return "cadena";//por la manera de trabajar esta comilla siempre será la de apertura...
             }
-            if ((int)lineaDesglosada[caracterActual] == 40) {
-                return "parentesisApertura";
-            }//no puede agregarse el paréntesis de cierre porque sino se estaría poneindo en desacuerdo el hecho de permitir entrar a este método SSi tiene estos caracteres de apertura ó aún no ha cerrado el ciclo           
-
+          
             //Por el contexto en el que se emplea este método, cuando devulva null, será un hecho de que se trata del signo para dividir...
-            return "division";//Es decir que no es ninguno y por ello deberé de clasiicar la barra como de división de una vez en el control de cierre, porque para qué estar revisando toda la enumeración si ya sé que es...
+            return "signo_division";//Es decir que no es ninguno y por ello deberé de clasiicar la barra como de división de una vez en el control de cierre, porque para qué estar revisando toda la enumeración si ya sé que es...
         }
 
         public String cerrarComentario(char caracaterAnterior, char caracterPosterior)
@@ -98,7 +94,7 @@ namespace proyecto_IDE.Herramientas
 
             return (char)32;//devuelve un espacio en blanco...
 
-        }
+        }//Esto era para app en el momento en el que estuviera escribiendo...
 
         public int agregarNumeroLineas(int lineaPosicion, int lineaMostrada) {//la posición es dada por el rich y la linea mostrada por la lista...
             if (lineaPosicion> lineaMostrada) {
@@ -157,7 +153,7 @@ namespace proyecto_IDE.Herramientas
 
                     break;
 
-                case "Funcional"://si app lo que explico 2 lineas abajo, entonces este caso desaparecerá xD
+                case "Estructural"://si app lo que explico 2 lineas abajo, entonces este caso desaparecerá xD
                     areaDesarrollo.Select((areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaInicio), (areaDesarrollo.GetFirstCharIndexFromLine(numeroLinea) + columnaFin)+1);
                     areaDesarrollo.SelectionColor = System.Drawing.Color.DarkOliveGreen;//mientras tanto... en lo que averiguo si tengo que app el mismo color que sus elemntos a la reservada, si e así lo que deberá hacer es terminar el método de abajo para colorearla según ello Ó hacer que la var que se revisa para esto, guarde el nombre de su tipo correspondiente así aunque sea la palabra reservada o su contenido en sí tengan el mismo color... esto me gusta más xD, auqneu eso implicaría add un if donde si es reservada_Tipado el tipo :v del conjunto estudiado entonce que se coloque el 2do nombre para que así concuerde... xD muajajajaj xD
                     areaDesarrollo.SelectionStart = areaDesarrollo.Text.Length;

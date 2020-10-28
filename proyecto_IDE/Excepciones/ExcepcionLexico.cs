@@ -47,7 +47,7 @@ namespace proyecto_IDE.Excepciones
                 return "posible_decimal";
             }//allá en el métoodo de decimal se revisará al sigueinte y estrictamente si no hay un número en el espacio que corresponde -> erronea            
 
-            return "primitiva_entero";//pues se tienen otros caracteres, que posiblemente sean de comparación o que no estén en el alfabeto, donde esto últmi será un error, lo cual estará contemplado en el switch...
+            return "valor_entero";//pues se tienen otros caracteres, que posiblemente sean de comparación o que no estén en el alfabeto, donde esto últmi será un error, lo cual estará contemplado en el switch...
         }//listo xD
              
 
@@ -67,7 +67,7 @@ namespace proyecto_IDE.Excepciones
                 return excepcionPorPuntoExtraEnDecimal(datosDecimal, lineaCompleta, columnaExcepcion);
             }//allá en el métoodo de decimal se revisará al sigueinte y estrictamente si no hay un número en el espacio que corresponde -> erronea            
 
-            datosDecimal[1] = "primitiva_decimal";//a mi parecer debe ser en [1] pero funciona bien... eso quiere decir que la condición de == primitiva_deciaml, entonces asigna dicho valor a la var... para colorear...
+            datosDecimal[1] = "valor_decimal";//a mi parecer debe ser en [1] pero funciona bien... eso quiere decir que la condición de == primitiva_deciaml, entonces asigna dicho valor a la var... para colorear...
             return datosDecimal;//pues se tienen otros caracteres, que posiblemente estén sintácticamente correctos [por ser de comparación, identificadores, aritmeticos, fianlizacion y así xD] por ello será mejor analizar para determinar su validez léxica y posterior a ello la sintáctica
         }//LISTO XD
 

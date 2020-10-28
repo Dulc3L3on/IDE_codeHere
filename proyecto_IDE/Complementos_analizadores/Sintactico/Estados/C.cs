@@ -7,7 +7,7 @@ using proyecto_IDE.Complementos_analizadores.Sintactico.Simbolos;
 
 namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
 {
-    class C : Estado
+    class C : NoTerminal
     {
         Produccion declaracion;
         Produccion asignacion;
@@ -20,6 +20,8 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
         public C() {
             producciones = new Produccion[7];
             definirProducciones();
+            soyGeneral = true;
+            contengoCuerpo = false;
         }
                
         public override void definirProducciones()
@@ -34,11 +36,16 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
             lectura = new Produccion();
 
             declaracion.agregarNoTerminal("D");
+
             asignacion.agregarNoTerminal("A");
+
             operacion.agregarNoTerminal("I");
-            operacion.agregarTerminal(";");
+            operacion.agregarTerminal("asignacion_fin");
+
             ciclo.agregarNoTerminal("L");
+
             escritura.agregarNoTerminal("W");
+
             lectura.agregarNoTerminal("R");
 
             producciones[0] = declaracion;

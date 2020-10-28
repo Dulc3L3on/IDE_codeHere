@@ -6,14 +6,16 @@ using System.Threading.Tasks;
 
 namespace proyecto_IDE.Complementos_analizadores.Sintactico.Simbolos
 {
-    class C: Estado
+    class B_: NoTerminal
     {
         Produccion repetida;
         Produccion produccion2;
 
-        public C() {
+        public B_() {
             producciones = new Produccion[2];
             definirProducciones();
+            soyGeneral = true;
+            contengoCuerpo = false;
         }
 
         public override void definirProducciones()

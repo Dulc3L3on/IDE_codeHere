@@ -7,18 +7,19 @@ using System.Threading.Tasks;
 namespace proyecto_IDE.Complementos_analizadores
 {
     [Serializable]
-    class Resultado//por el hecho de guardarse en una lista enlazada, se tendría el orden de aparicion, puesto que el primero en aparecer en la lista también sería el primero de la linea...
+    class Token//por el hecho de guardarse en una lista enlazada, se tendría el orden de aparicion, puesto que el primero en aparecer en la lista también sería el primero de la linea...
     {
         String elementoEstudiado;
         String clasificacion;//esta es la clasificación del conjunto de caracteres mismo
         String tipoAgrupacion;//esta es la agrupación que será determinada a partir de donde se encuentre su debido agrupador [los parentesis]... le será establecida mientras no encuentre el signo de cierre, cuando no se haya encontrado ninguno, esta var no será empleada, porque basta con la clasificacion inidividual... entre los tipos de agrupaciones está -> condicion, ->opMatematica, -> conversion y así xd...
+        //Creo que este valor será establecido por el sintác... los tkns que pertenezcan a la misma agrupación tendrán el mismo valor... así que deberá ser eli, porque esto irá en el lexema...
         int filaInicio, columnaInicio, columnaFin, filaFin;
 
-        public Resultado()
+        public Token()
         {
         }
 
-        public Resultado(String elemento, String tipo, int numeroFilaInicio, int numeroColumnaInicio, int numeroColumnaFin)
+        public Token(String elemento, String tipo, int numeroFilaInicio, int numeroColumnaInicio, int numeroColumnaFin)
         {
             elementoEstudiado = elemento;
             clasificacion = tipo;
@@ -28,7 +29,7 @@ namespace proyecto_IDE.Complementos_analizadores
             columnaFin = numeroColumnaFin;
         }
 
-        public String darElemento()
+        public String darToken()
         {
             return elementoEstudiado;
         }
@@ -66,9 +67,7 @@ namespace proyecto_IDE.Complementos_analizadores
             tipoAgrupacion = tipoDeAgrupacion;
         }
 
-
-
-        public String darMembresia() {//xD
+        public String darMembresia() {//será emeplado por el semi o totalmente emán.. puesto que el sent+ac se encargará de llenar eso... pero esto iría en el obj lexema, ahora que recuerdo, sip porque este alamacena el token y los datos como la agrupación que determinó el sintac...
             return tipoAgrupacion;
         }
     }

@@ -7,10 +7,10 @@ using proyecto_IDE.Complementos_analizadores;
 
 namespace proyecto_IDE.Herramientas
 {
-    class Buscador
+    class Buscador//Esto ya es para encargarte de revisar los tipos de os identificadores... pero esto ya es parte del semi semán
     {
         ListaEnlazada<String> listadoCoincidentes = new ListaEnlazada<String>();
-        TablaDeSimbolos tabla = new TablaDeSimbolos();
+        Simbolos tabla = new Simbolos();
 
         public ListaEnlazada<String> hallarCoincidentes(String porcion)
         {

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using proyecto_IDE.Complementos_analizadores.Sintactico;
 using proyecto_IDE.Complementos_analizadores.Sintactico.Simbolos;
 
-namespace proyecto_IDE
+namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
 {
-    class Z : Estado
+    class Z : NoTerminal
     {
         Produccion produccion1;
         Produccion produccion2;
@@ -22,17 +22,17 @@ namespace proyecto_IDE
         public override void definirProducciones()
         {
             base.definirProducciones();
-            produccion1.agregarTerminal("boolean");
+            produccion1.agregarTerminal("booleano");
 
             produccion2.agregarNoTerminal("H");
-            produccion2.agregarTerminal("comp");
+            produccion2.agregarTerminal("comparacion");
             produccion2.agregarNoTerminal("H");
 
-            produccion2.agregarTerminal(")");
+            produccion2.agregarTerminal("parentesis_Cierre");
             produccion2.agregarNoTerminal("H");
-            produccion2.agregarTerminal("comp");
+            produccion2.agregarTerminal("comparacion");
             produccion2.agregarNoTerminal("H");
-            produccion2.agregarTerminal("(");
+            produccion2.agregarTerminal("parentesis_Apertura");
 
             producciones[0] = produccion1;
             producciones[1] = produccion2;

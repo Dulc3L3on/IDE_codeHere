@@ -33,16 +33,12 @@ namespace proyecto_IDE.Complementos_analizadores
 
         public Resultado analizarAgrupaciones(char[] lineaDesglosada,int caracterActual, int numeroLinea) {            
 
-            if (listadoNoCerrados.estaVacia() || (listadoNoCerrados.darContenidoUltimoNodo().Equals('(') && herramientas.determinarTipoCaracter(lineaDesglosada[caracterActual]).Equals('c'))) {
+            if (herramientas.determinarTipoCaracter(lineaDesglosada[caracterActual]).Equals('c')) {//no se por qué tendría que revisar esto, si es un hecho  que entró porque había un signo de estos...
                  agregarNecesitado(lineaDesglosada, caracterActual, caracterActual+1, numeroLinea);//se manda a llamar el método para hacer la debida agregación del caracter, si es que pertenece a los necesitados de cierre...
             }//fin del if donde se establecen los caracteres iniciales... es necesario hacer esto ya que así no hbrá confusión, al averiguar en el caso de las " y comentarios si se debe colocar o no este signo a la ista...
 
-            if (!listadoNoCerrados.estaVacia()) {//no es lógico tener que revisar esto, porque media vez entró a este método, es porque tiene mas de algun carcater necesitado o es porque tiene un trabajo que continuar...
-                if (!listadoNoCerrados.darUltimoNodo().contenido.StartsWith("("))
-                {//media vez exiten en la listaEnlazada, " ó /* es porque no se ha terminado el proceso...  si está un paréntesis, es porque se acaba de add, pues reucerda que si entra a este bloque si o sí debe hacer algo en él...
-                 //se mandan a llamar el método donde converge el análisis de los comentarios y cadenas...
-                    return analizarTipoAgrupacion(lineaDesglosada, caracterActual, numeroLinea);//aquí se devolvería el resultado como tal... sin importar si es null o no, allá en el léxico se contempla esto...
-                }               
+            if (!listadoNoCerrados.estaVacia()) {//no es lógico tener que revisar esto, porque media vez entró a este método, es porque tiene mas de algun carcater necesitado o es porque tiene un trabajo que continuar...              
+                    return analizarTipoAgrupacion(lineaDesglosada, caracterActual, numeroLinea);//aquí se devolvería el resultado como tal... sin importar si es null o no, allá en el léxico se contempla esto...              
             }
 
             return resultadoParentesisODivsion;
@@ -59,25 +55,7 @@ namespace proyecto_IDE.Complementos_analizadores
 
             String tipoDeNecesitado = herramientas.determinarTipoEncierro(lineaDesglosada, caracterActual);
 
-            switch (tipoDeNecesitado) {
-                case "parentesisApertura":
-                    resultadoParentesisODivsion = new Resultado("(", "parentesis_Apertura", numeroLinea, caracterActual, caracterActual);//puede ponerse así la columna o dejar vacío este campo, ya que el siguiente paréntesis sería el fin [y por ello no tendría columna inicio...]
-                    //esto realmente no debería ser así, sino que debería de estblces su final hasta que se hallara el de cierre cuando este fuera el último nodo de la lista y que el primero del cierre fuera el número de este nodo...
-
-                    //no habrá confusión cuando se agregue el objeto resultado del 
-                    //paréntesis de cierre por el hecho de que tendrá ligado el tipo, [que se encuentra en el listado de tipos 
-                    //[de aquí] en el nodo que corresponde a su respectivo paréntesis de apertura... y como se tomará que el paréntesis 
-                    //de cierre que se encuentre le pertenece al último de apertura, entonces cabal se obtiene la correspondencia y la excepción
-                    //si es que al terminar de analizar no se encuentra dicha pareja]]
-
-                    ultimoCaracterAnalizado = caracterActual;
-                    listadoNoCerrados.anadirAlFinal("(" + "," + Convert.ToString(numeroLinea) + "," + Convert.ToString(caracterActual));//Esto será útil para las excepciones que se manejan en el cuerpo del estudio de lo que hay dentro... pero para el caso de los paréntesis, tendría que ir en otro lado o informarlo de una vez, pero esto se solucionaría si hallaras la manera en que al borrar cualquiera de os dos se borrara el otro
-                    //en el método especial, después de esto estaría la add del tipo a la otra lista... de la cual los tipos primitivos irían extayendo su tipo de agrupación a partir de la obtención del contenido del último nodo...
-                    listadoNoCerrados.establecerNombreNodoCreado(Convert.ToString(listadoNoCerrados.darTamanio()));//de esta manera podré hacer referencia al nodo al cual le quiero
-                    //Agregar su posición final... esto sería en si método propio, en el que se estblece el respectivo signo de cierre, como en los demás y se porcede a eliminar el tipo de agrupación del listado...
-                    //pero aquí habría problema por el hecho de que la lista de los resultados es solamente para la línea actual... deplano que tendrá que dejarse la lista de la fila a la que le hace falta el cierre, pero eso ya lo verás cuando andes en análisis sintáctico...
-                    break;//falta establecerle su respectivo color azul y ver dónde es que se colocará el métod para los cierres, puest que habías pensado separarlos, pero debes ver si realmetne es necesario o puedes tener esa acción junto en el nloque donde se haga la asignación de su respectivo inicio...
-
+            switch (tipoDeNecesitado) {               
 
                 case "comentarioLinea"://para este y los demás el objeto resultado será generado hasta haber finalizado con el análisis
                     listadoNoCerrados.anadirAlFinal("//" + "," + Convert.ToString(numeroLinea) + "," + Convert.ToString(caracterActual));
@@ -93,7 +71,7 @@ namespace proyecto_IDE.Complementos_analizadores
                     break;               
 
                 default://Sería el caso de la división, porque no puede existir ningún otro tipo de excepción
-                    resultadoParentesisODivsion = new Resultado("/", "division", numeroLinea, caracterActual, caracterActual);//pero aún no seá útil... 
+                    resultadoParentesisODivsion = new Resultado("/", "signo_division", numeroLinea, caracterActual, caracterActual);//pero aún no seá útil... 
                     ultimoCaracterAnalizado = caracterActual;
                     //se manda a llamar de una vez el método para colorear... o se retornará el tipo, para al final saber de que color... no, de una vez
                     break;
@@ -191,7 +169,7 @@ namespace proyecto_IDE.Complementos_analizadores
 
         public bool hayQueAnalizarPrimitivos()
         {
-            if (listadoNoCerrados.estaVacia() || listadoNoCerrados.darContenidoUltimoNodo().StartsWith("("))//aquí no puedes decirle si siga el a´nálisis dependiendo de lo que tenga el siguiente porque sino tendrías que recibir como parám la línea... y no sería muy estético xD
+       /*^*/if (listadoNoCerrados.estaVacia())//pues si no auqnue esté en un comentario tomarías lo demás como el tipo que realmente es, cuando no debe ser así...
             {//ajá exacto xD, porque eso quiere decir, que no se tiene nada y por ello debe irse de una vez con los prims
                 return true;
             }//la unica situacióne en la que no esté vacía  no tenga a un ( es porque no ha terminado el análisis de un comentario...

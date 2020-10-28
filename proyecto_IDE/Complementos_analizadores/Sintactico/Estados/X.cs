@@ -7,13 +7,15 @@ using proyecto_IDE.Complementos_analizadores.Sintactico.Simbolos;
 
 namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
 {
-    class X : Estado
+    class X : NoTerminal
     {
         Produccion unica;
 
         public X() {
             producciones = new Produccion[1];
             definirProducciones();
+            soyGeneral = false;
+            contengoCuerpo = false;
         }
 
         public override void definirProducciones()

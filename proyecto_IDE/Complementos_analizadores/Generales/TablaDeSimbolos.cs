@@ -40,5 +40,7 @@ namespace proyecto_IDE.Complementos_analizadores.Generales
             return null;
         }
 
+        //crea un método para aceptar la variable, donde si es igual no podrá aceptarse...
+
     }
 }

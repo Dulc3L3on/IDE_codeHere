@@ -7,13 +7,15 @@ using proyecto_IDE.Complementos_analizadores.Sintactico.Simbolos;
 
 namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
 {
-    class N : Estado
+    class N : NoTerminal
     {
         Produccion fusionada;
 
         public N() {
             producciones = new Produccion[1];
             definirProducciones();
+            soyGeneral = false;
+            contengoCuerpo = false;
         }
 
         public override void definirProducciones()
@@ -21,7 +23,7 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
             base.definirProducciones();
 
             fusionada.agregarNoTerminal("N");
-            fusionada.agregarTerminal("simb_logico");
+            fusionada.agregarTerminal("logico");
             fusionada.agregarNoTerminal("Z");
             fusionada.agregarNoTerminal("G");
 

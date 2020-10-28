@@ -7,7 +7,7 @@ using proyecto_IDE.Complementos_analizadores.Sintactico.Simbolos;
 
 namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
 {
-    class F_: Estado
+    class F_: NoTerminal
     {
 
         Produccion produccion1;
@@ -16,6 +16,8 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
         public F_() {
             producciones = new Produccion[2];
             definirProducciones();
+            soyGeneral = false;
+            contengoCuerpo = false;
         }
 
         public override void definirProducciones()
@@ -24,7 +26,7 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
 
             produccion1.agregarNoTerminal("F'");
             produccion1.agregarNoTerminal("V");
-            produccion1.agregarNoTerminal("+");
+            produccion1.agregarNoTerminal("signo_mas");
 
             produccion2.agregarTerminal("e");
 

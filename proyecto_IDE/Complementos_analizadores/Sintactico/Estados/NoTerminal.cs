@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace proyecto_IDE.Complementos_analizadores.Sintactico.Simbolos
 {
-    class Estado
+    class NoTerminal
     {
-        public Produccion[] producciones;             
+        public Produccion[] producciones;
+        
+        public bool contengoCuerpo = false;//permite agregar la lista el NT en cuestión a la más rec y posteriormente leerla por el semi SEMÁNTICO...
+        public bool soyGeneral = false;//Esto es para que pueda ser agregado a la lista de NT creada por bloque
 
         public virtual void definirProducciones() { }
 
@@ -34,6 +37,12 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Simbolos
             return producciones[numeroProduccion];
         }
 
+        public bool darGeneralidad() {
+            return soyGeneral;
+        }
 
+        public bool darCapacidadContenedor() {
+            return contengoCuerpo;
+        }     
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace proyecto_IDE.Complementos_analizadores.Sintactico.Simbolos
 {
-    class M : Estado
+    class M : NoTerminal
     {
         Produccion produccion1;
         Produccion produccion2;
@@ -14,6 +14,8 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Simbolos
         public M() {
             producciones = new Produccion[2];
             definirProducciones();
+            soyGeneral = false;
+            contengoCuerpo = false;
         }
 
         public override void definirProducciones()
@@ -23,9 +25,9 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Simbolos
             produccion2 = new Produccion();
 
             produccion1.agregarNoTerminal("B");
-            produccion1.agregarTerminal(")");
-            produccion1.agregarTerminal("(");
-            produccion1.agregarTerminal("principal");                                   
+            produccion1.agregarTerminal("parentesis_Apertura");
+            produccion1.agregarTerminal("parentesis_Cierre");
+            produccion1.agregarTerminal("Estructura_principal");                                   
 
             produccion2.agregarTerminal("e");//recuerda que con este se hace un reduce de inmediato...
 
