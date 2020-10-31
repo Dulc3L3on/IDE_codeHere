@@ -9,9 +9,6 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
 {
     class O_: NoTerminal
     {
-        Produccion produccion1;
-        Produccion produccion2;
-        Produccion produccion3;
         B bloque;
 
         public O_() {
@@ -20,31 +17,33 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
             soyGeneral = false;
             contengoCuerpo = true;
             bloque = new B(true);
+            nombre = "O'";
+            nombreCompleto = "Condicional";
         }
 
         public override void definirProducciones()
         {
             base.definirProducciones();
 
-            produccion1.agregarTerminal("e");
+            producciones[0] = new Produccion();
+            producciones[1] = new Produccion();
+            producciones[2] = new Produccion();
 
-            produccion2.agregarNoTerminal("O'");
-            produccion2.agregarNoTerminal("B");
-            produccion2.agregarTerminal("parentesis_Cierre");
-            produccion2.agregarNoTerminal("N");
-            produccion2.agregarTerminal("parentesis_Apertura");
-            produccion2.agregarTerminal("Funcional_SI");//tendré que agregarle la alternativa???
+            producciones[0].agregarTerminal("e");
 
-            produccion2.agregarNoTerminal("O'");
-            produccion2.agregarNoTerminal("B");
-            produccion2.agregarTerminal("parentesis_Cierre");
-            produccion2.agregarNoTerminal("N");
-            produccion2.agregarTerminal("parentesis_Apertura");
-            produccion2.agregarTerminal("Funcional_SINO_SI");
+            producciones[1].agregarNoTerminal("O'");
+            producciones[1].agregarNoTerminal("B");
+            producciones[1].agregarTerminal("parentesis_Cierre");
+            producciones[1].agregarNoTerminal("N");
+            producciones[1].agregarTerminal("parentesis_Apertura");
+            producciones[1].agregarTerminal("Funcional_SI");//tendré que agregarle la alternativa???
 
-            producciones[0] = produccion1;
-            producciones[1] = produccion2;
-            producciones[2] = produccion3;
+            producciones[2].agregarNoTerminal("O'");
+            producciones[2].agregarNoTerminal("B");
+            producciones[2].agregarTerminal("parentesis_Cierre");
+            producciones[2].agregarNoTerminal("N");
+            producciones[2].agregarTerminal("parentesis_Apertura");
+            producciones[2].agregarTerminal("Funcional_SINO_SI");
         }
 
         public B darBloque() {

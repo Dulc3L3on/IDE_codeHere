@@ -80,6 +80,7 @@
     <Compile Include="Complementos_analizadores\Sintactico\Estados\X%27.cs" />
     <Compile Include="Complementos_analizadores\Sintactico\Estados\X.cs" />
     <Compile Include="Complementos_analizadores\Sintactico\Estados\Y.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Peculiaridad.cs" />
     <Compile Include="Complementos_analizadores\Sintactico\Produccion.cs" />
     <Compile Include="Complementos_analizadores\Sintactico\Estados\B.cs" />
     <Compile Include="Complementos_analizadores\Sintactico\Estados\B%27.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Complementos_analizadores\Sintactico\TablaTransiciones.cs" />
     <Compile Include="Complementos_analizadores\Sintactico\Transicion.cs" />
     <Compile Include="Excepciones\ExcepcionLexico.cs" />
+    <Compile Include="Excepciones\ExcepcionSintactico.cs" />
     <Compile Include="Herramientas\Buscador.cs" />
     <Compile Include="Herramientas\Kit.cs" />
     <Compile Include="Herramientas\ListaDoblementeEnlazada.cs" />

@@ -50,12 +50,13 @@ namespace proyecto_IDE.Analizadores
             if (herramienta.determinarTipoCaracter(lineaDesglosada[caracterActual]).Equals('c') || !controlCierre.darListaEsperaCierre().estaVacia()) {//si pues solo al inicio será necesaria la primera condi, de ahi en adelante con solo saber que no está vacía basta para entrar a este método...
                 resultadosHallados = controlCierre.analizarAgrupaciones(lineaDesglosada, caracterActual, numeroLinea);
                 tipoAgrupacion = controlCierre.darTipoClasificacion();
-                //se manda a llamar el método para colorear... para acceder de forma más directa a los valores... auqnue si no quieres repetir puedes hacerlo por medio de la obtención de los datos desde la lista 
 
-                //                if (resultadosHallados!=null) {
+                if (resultadosHallados != null) {
+                    listaResutadosDeFilaActual.anadirAlFinal(resultadosHallados);//pues si xd, porque si es null, puede que sea comentario o la cadena siga en la siguiente línea, pero la cuestión es que en ambas situaciones, no debería agregarse al listado de resultados xD.. LISTO Xd
+                }              
+                
                 herramienta.colorearConjuntoCaracteres(tipoAgrupacion, numeroLinea, caracterActual, controlCierre.darUltimaLineaAnalizada());//se colorea :3 UwU xD                    
-                tipoAgrupacion = "erronea";//Est porque es necesario que vuelva la variable a su normalidad... esto no afecta si llegara a ser necesario analizar los primitivos, por el hecho de que cuendo no se entrara al análisisi de los necesitados, ese sería su valor default...
-                                           //              }//quito el if, porque sin importar que haya o no terminado su trabajo, debo de colorear... creo que estaba por la forma anterior de trabajar, pero ahora ese if solo se nec para saber si debo add a la lista de resultados este en particular ó si fuese null, esperar hasta que temrine de reuinir sus datos...si es que logra hacerlo [esto lo digo por las fallas o "idas" xD que puede tener el desarrollador al estar programando xD]
+                tipoAgrupacion = "erronea";//Est porque es necesario que vuelva la variable a su normalidad... esto no afecta si llegara a ser necesario analizar los primitivos, por el hecho de que cuendo no se entrara al análisisi de los necesitados, ese sería su valor default...                               
 
                 return controlCierre.darUltimaLineaAnalizada() + 1;//debe devovler +1 puesto que abajo tiene a alguien que trabaja o no a partir de lo que haya sucedido aquí y como no se lo da directamente al for a menos que sea un número que termine con el ciclo mismo, entonces NO HAY PROBLEMA XD
             }//fin del if que permite entrar al análisis de los que requeren cierre, ya sea para agergar y empezar el análisis O para seguir con el análisis en el que se quedó...
@@ -129,6 +130,7 @@ namespace proyecto_IDE.Analizadores
             }
 
             Token resultado = new Token(datosHallados[2], datosHallados[1], numeroLinea, inicioAnalisis, (Convert.ToInt32(datosHallados[0]) - 1));//por el momento no me es útil, pero aún así devolveré este elemento para que pueda ser agregado a la lista que almacena en cada nodo un objeto resultado...            
+            listaResutadosDeFilaActual.anadirAlFinal(resultado);
             resultado.establecerFilaFin(numeroLinea);
 
             return resultado;
@@ -152,7 +154,7 @@ namespace proyecto_IDE.Analizadores
                     detallesPalabra[2] += lineaAEstudiar[posicionAnalisis];
                     posicionAnalisis++;//1 pos más alla de lo que se concatenó por este método, por lo cual al enviar los datos a resultado es nec restarle 1 pues no se quedó en esta col la concat, sino en la any
 
-                    if (posicionAnalisis == (posicionInicialAnalisis + 1))
+                    if (posicionAnalisis > (posicionInicialAnalisis + 1))
                     {
                         detallesPalabra[1] = "primitiva_palabra";
                     }
@@ -177,6 +179,7 @@ namespace proyecto_IDE.Analizadores
             //al final se manda a llamar al método para buscar en la tabla de símbolos
             //posiblemente este método me sirva para tornar todo a mi favor xd, mas que todo por los tipos y porque algunas veces es var o el tipo especifico [como boolena] lo que se revisa en las producciones
             Token resultado = new Token(datosHallados[2], datosHallados[1], numeroLinea, posicionInicialAnalisis, (Convert.ToInt32(datosHallados[0]) - 1));//por el momento no me es útil, pero aún así devolveré este elemento para que pueda ser agregado a la lista que almacena en cada nodo un objeto resultado...            
+            listaResutadosDeFilaActual.anadirAlFinal(resultado);
             resultado.establecerFilaFin(numeroLinea);
 
             return resultado;
@@ -218,10 +221,11 @@ namespace proyecto_IDE.Analizadores
         private Token analizarNumero(int numeroLinea, int posicionInicialAnalisis, char[] lineaAEstudiar)
         {
             String[] hallazgos = analizarEntero(numeroLinea, posicionInicialAnalisis, lineaAEstudiar);
-
+           
             Token resultado = new Token(hallazgos[2], hallazgos[1], numeroLinea, posicionInicialAnalisis, (Convert.ToInt32(hallazgos[0]) - 1));//le resto 1 por quedarse 1 más allá el valor del caracter actual, en cualquiera de los casos...         
-
+            listaResutadosDeFilaActual.anadirAlFinal(resultado);
             resultado.establecerFilaFin(numeroLinea);
+            
             return resultado;//recuerda que por medio de esto se puede avanzar a partir del indice siguiente al último que terminó de analizar el método
         }//lsito
 
@@ -257,8 +261,6 @@ namespace proyecto_IDE.Analizadores
             return detallesEntero;
 
         }//listo
-
-
 
         private String[] analizarDecimal(int numeroLinea, int posicionInicialAnalisis, String concatenadoHastaElMomento, char[] lineaAEstudiar)
         {
@@ -319,32 +321,33 @@ namespace proyecto_IDE.Analizadores
             return datosSimboloSimple;
         }
 
-        private String[] analizarSimbolosCompuestos(int numeroLinea, int posicionInicialAnalisis, int tamanioFila, char caracterActual, char caracterSiguiente) {
-            String conjuntoEstudio = Convert.ToString(caracterActual) + Convert.ToString(caracterSiguiente);
-            String[] datosSimboloCompuesto = { Convert.ToString(posicionInicialAnalisis + 1), "", conjuntoEstudio };//0 -> numeroColumnaFinal, 1-> tipo, 2-> el simbolo en sí
+        private String[] analizarSimbolosCompuestos(int numeroLinea, int posicionInicialAnalisis, int tamanioFila, char caracterActual, char[] lineaDeEstudio) {
+            String conjuntoEstudio;
+            String[] datosSimboloCompuesto = new string[3];            
 
-            Nodo<String> nodoAuxiliar = simbolos.darListadoSimbolosCompuestos().darPrimerNodo();
+            if (posicionInicialAnalisis+1 < lineaDeEstudio.Length ) {
+                conjuntoEstudio = Convert.ToString(caracterActual) + Convert.ToString(lineaDeEstudio[posicionInicialAnalisis+1]);
 
-
-            for (int simboloActual = 1; simboloActual <= simbolos.darListadoSimbolosCompuestos().darTamanio(); simboloActual++)
-            {
-                String simboloCompuesto = nodoAuxiliar.contenido;
-
-                if (conjuntoEstudio.Equals(simboloCompuesto))
+                Nodo<String> nodoAuxiliar = simbolos.darListadoSimbolosCompuestos().darPrimerNodo();
+                for (int simboloActual = 1; simboloActual <= simbolos.darListadoSimbolosCompuestos().darTamanio(); simboloActual++)
                 {
-                    datosSimboloCompuesto[1] = nodoAuxiliar.darNombre();
-                    tipoAgrupacion = "simbolo";//aunque sea compuesto no importa porque es el mismísimo color xD
+                    String simboloCompuesto = nodoAuxiliar.contenido;
 
-                    return datosSimboloCompuesto;
-                }
+                    if (conjuntoEstudio.Equals(simboloCompuesto))
+                    {
+                        datosSimboloCompuesto[0] = Convert.ToString(posicionInicialAnalisis + 1);
+                        datosSimboloCompuesto[1] = nodoAuxiliar.darNombre();
+                        datosSimboloCompuesto[2] = conjuntoEstudio;//0 -> numeroColumnaFinal, 1-> tipo, 2-> el simbolo en sí                        
+                        tipoAgrupacion = "simbolo";//aunque sea compuesto no importa porque es el mismísimo color xD
 
-                nodoAuxiliar = nodoAuxiliar.nodoSiguiente;
-            }//fin del for que se encarga de recorrer el listado que contiene a los símbolos simples...
+                        return datosSimboloCompuesto;
+                    }
 
-            //se manda a llamar al método para informar de la excepción...
-            datosSimboloCompuesto[1] = excepcionLexico.excepcionSimbolo(numeroLinea, tamanioFila, conjuntoEstudio);
-
-            return datosSimboloCompuesto;
+                    nodoAuxiliar = nodoAuxiliar.nodoSiguiente;
+                }//fin del for que se encarga de recorrer el listado que contiene a los símbolos simples...
+            }
+            //no debo llamar a una excepción puesto que al no concordar con ninguna pareja lo que se hará es que se cederá analizarán por separado, esto hará que cuando vengan simbolos juntos que no solo deberían venir individualmente, se analicen por separado, y por tanto el error se hallaría hasta llegar al sintác, lo cual pienso que es lo correcto, porque concuerda con el trabajo que tiene asignado...
+            return null;
         }
 
         private Token analizarDemasCaracteres(int numeroLinea, int posicionInicialAnalisis, char[] lineaDeEstudio)//Metod de CONVERGENCIA para los símbolos en el alfabeto
@@ -355,18 +358,16 @@ namespace proyecto_IDE.Analizadores
             if (herramienta.determinarTipoCaracter(lineaDeEstudio[posicionInicialAnalisis]) == 'p')
             {
                return analizarPunto(numeroLinea, posicionInicialAnalisis, lineaDeEstudio);
-            }            
-            if (posicionInicialAnalisis < (lineaDeEstudio.Length - 1) && (int)(lineaDeEstudio[posicionInicialAnalisis + 1]) != 32 && herramienta.determinarTipoCaracter(lineaDeEstudio[posicionInicialAnalisis + 1]) == 'o')//para saber si minimo tiene otro caracter que corresponda a lo desconocido uuuu xD
-            {
-                resultadosObtenidos = analizarSimbolosCompuestos(numeroLinea, posicionInicialAnalisis, lineaDeEstudio.Length, lineaDeEstudio[posicionInicialAnalisis], lineaDeEstudio[posicionInicialAnalisis + 1]);
             }
-            else
-            {
+
+            resultadosObtenidos = analizarSimbolosCompuestos(numeroLinea, posicionInicialAnalisis, lineaDeEstudio.Length, lineaDeEstudio[posicionInicialAnalisis], lineaDeEstudio);
+
+            if (resultadosObtenidos==null) {
                 resultadosObtenidos = analizarSimbolosSimples(numeroLinea, posicionInicialAnalisis, lineaDeEstudio.Length, lineaDeEstudio[posicionInicialAnalisis]);
-            }                        
+            }//pues si, porque si no era el caso de compuesto, a anlizar simple se ha dicho xD, sino, pues ya está xD jajaja xD                     
 
             resultado = new Token(resultadosObtenidos[2], resultadosObtenidos[1], numeroLinea, posicionInicialAnalisis, Convert.ToInt32(resultadosObtenidos[0]));
-
+            listaResutadosDeFilaActual.anadirAlFinal(resultado);
             resultado.establecerFilaFin(numeroLinea);
             return resultado;
         }//listo :3 xD
@@ -382,11 +383,17 @@ namespace proyecto_IDE.Analizadores
             }//Recuerda que si ves que al momento de operar [esto será muuucho después...] se complican las cosas por darle a entender que al principio tiene un 0 [0 es igual a nada entonces cabal :0 xD]
             else
             {
-                resultado = new Token(".", "erronea", numeroLinea, posicionInicialAnalisis, posicionInicialAnalisis);
+                resultado = new Token(".", "erronea", numeroLinea, posicionInicialAnalisis, posicionInicialAnalisis);                
                 excepcionLexico.puntoDesubicado(numeroLinea, posicionInicialAnalisis);
             }//Esto podría variar... por la existencia de los métodso, pero, auqneu fuera una llamada a un método si solo viene el punto al principio estaría mal el punto y por ello tendría que seguir analizándose lo siguiente...
 
+            listaResutadosDeFilaActual.anadirAlFinal(resultado);//esto es para un decimal "modificado"
             return resultado;
+        }
+
+        public void finalizarResultados(int numeroFila) {
+            Token tokenFin = new Token("$", "fin", numeroFila, 0, 0);//puesto que realmente no ocupa un lugar en el código...
+            listaResutadosDeFilaActual.anadirAlFinal(tokenFin);
         }
 
         public ControlCierre darControlCierre() {
@@ -399,6 +406,10 @@ namespace proyecto_IDE.Analizadores
 
         public Kit darHerramienta() {
             return herramienta;
+        }
+
+        public ListaEnlazada<Token> darListaTokensClasificados() {
+            return listaResutadosDeFilaActual;
         }
 
     }

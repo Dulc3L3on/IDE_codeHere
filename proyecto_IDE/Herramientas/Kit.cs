@@ -35,9 +35,9 @@ namespace proyecto_IDE.Herramientas
                 return 'p';//de punto
             }
 
-            if ((int)caracterInicial == 34 || (int) caracterInicial == 40 || (int)caracterInicial == 47)//cuando la c se hay devueto por el hecho de ser 47, tendrá que analizarse inmediatamente su siguiente en el método qie determina las agrupaciones, para saber si se sigue analizando ahí o no...
+            if ((int)caracterInicial == 34 || (int)caracterInicial == 47)//cuando la c se hay devueto por el hecho de ser 47, tendrá que analizarse inmediatamente su siguiente en el método qie determina las agrupaciones, para saber si se sigue analizando ahí o no...
             {
-                return 'c';//De necesita cierre -> "", (,  / [en este caso no pero por el hecho de colorear todo lo que dentro de él esté] /**/
+                return 'c';//De necesita cierre -> "", / [en este caso no pero por el hecho de colorear todo lo que dentro de él esté] /**/
             }
 
             return 'o';//De otros, que hasta el momento no se sabe si correponden o no al alfabeto...

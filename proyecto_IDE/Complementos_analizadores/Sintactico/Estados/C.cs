@@ -9,54 +9,42 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
 {
     class C : NoTerminal
     {
-        Produccion declaracion;
-        Produccion asignacion;
-        Produccion operacion;
-        Produccion ciclo;
-        Produccion condicional;
-        Produccion escritura;
-        Produccion lectura;
-
         public C() {
             producciones = new Produccion[7];
             definirProducciones();
             soyGeneral = true;
             contengoCuerpo = false;
+            nombre = "C";
+            nombreCompleto = "Cuerpo";
         }
                
         public override void definirProducciones()
         {
             base.definirProducciones();
-            declaracion = new Produccion();
-            asignacion = new Produccion();
-            operacion = new Produccion();
-            ciclo = new Produccion();
-            condicional = new Produccion();
-            escritura = new Produccion();
-            lectura = new Produccion();
 
-            declaracion.agregarNoTerminal("D");
+            producciones[0] = new Produccion();//declaración
+            producciones[1] = new Produccion();//Asignacion
+            producciones[2] = new Produccion();//operacion
+            producciones[3] = new Produccion();//ciclo
+            producciones[4] = new Produccion();//estructuraCondicional
+            producciones[5] = new Produccion();//escritura
+            producciones[6] = new Produccion();//lectura
 
-            asignacion.agregarNoTerminal("A");
+            producciones[0].agregarNoTerminal("D");
 
-            operacion.agregarNoTerminal("I");
-            operacion.agregarTerminal("asignacion_fin");
+            producciones[1].agregarNoTerminal("A");
 
-            ciclo.agregarNoTerminal("L");
+            producciones[2].agregarNoTerminal("I");
+            producciones[2].agregarTerminal("asignacion_fin");
 
-            escritura.agregarNoTerminal("W");
+            producciones[3].agregarNoTerminal("L");
 
-            lectura.agregarNoTerminal("R");
+            producciones[4].agregarNoTerminal("E");
 
-            producciones[0] = declaracion;
-            producciones[1] = asignacion;
-            producciones[2] = operacion;
-            producciones[3] = ciclo;
-            producciones[4] = condicional;
-            producciones[5] = escritura;
-            producciones[6] = lectura;
+            producciones[5].agregarNoTerminal("W");
+
+            producciones[6].agregarNoTerminal("R");
         }
-
 
     }
 }

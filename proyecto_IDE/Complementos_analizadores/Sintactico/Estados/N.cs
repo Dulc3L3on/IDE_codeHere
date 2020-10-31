@@ -9,25 +9,25 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
 {
     class N : NoTerminal
     {
-        Produccion fusionada;
-
         public N() {
             producciones = new Produccion[1];
             definirProducciones();
             soyGeneral = false;
             contengoCuerpo = false;
+            nombre = "N";
+            nombreCompleto = "Condicion";
         }
 
         public override void definirProducciones()
         {
             base.definirProducciones();
 
-            fusionada.agregarNoTerminal("N");
-            fusionada.agregarTerminal("logico");
-            fusionada.agregarNoTerminal("Z");
-            fusionada.agregarNoTerminal("G");
+            producciones[0] = new Produccion();//fusionada xD
 
-            producciones[0] = fusionada;
+            producciones[0].agregarNoTerminal("N");
+            producciones[0].agregarTerminal("logico");
+            producciones[0].agregarNoTerminal("Z");
+            producciones[0].agregarNoTerminal("G");
         }
     }
 }

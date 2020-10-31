@@ -9,23 +9,23 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
 {
     class F: NoTerminal
     {
-        Produccion unica;
-
         public F() {
             producciones = new Produccion[1];
             definirProducciones();
             soyGeneral = false;
             contengoCuerpo = false;
+            nombre = "F";
+            nombreCompleto = "Concatenacion";
         }
 
         public override void definirProducciones()
         {
             base.definirProducciones();
 
-            unica.agregarNoTerminal("F'");
-            unica.agregarNoTerminal("V");
+            producciones[0] = new Produccion();
 
-            producciones[0] = unica;
+            producciones[0].agregarNoTerminal("F'");
+            producciones[0].agregarNoTerminal("V");
         }
 
     }

@@ -9,31 +9,30 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
 {
     class T_: NoTerminal
     {
-        Produccion produccion1;
-        Produccion produccion2;
-        Produccion produccion3;
-
         public T_() {
             producciones = new Produccion[3];
             definirProducciones();
             soyGeneral = false;
             contengoCuerpo = false;
+            nombre = "T_";
+            nombreCompleto = "Operacion";
         }
 
         public override void definirProducciones()
         {
             base.definirProducciones();
-            produccion1.agregarTerminal("U");
-            produccion1.agregarNoTerminal("signo_multiplicacion");
 
-            produccion2.agregarTerminal("U");
-            produccion2.agregarNoTerminal("signo_division");
+            producciones[0] = new Produccion();
+            producciones[1] = new Produccion();
+            producciones[2] = new Produccion();
 
-            produccion3.agregarTerminal("e");
+            producciones[0].agregarTerminal("U");
+            producciones[0].agregarNoTerminal("signo_multiplicacion");
 
-            producciones[0] = produccion1;
-            producciones[1] = produccion2;
-            producciones[2] = produccion3;
+            producciones[1].agregarTerminal("U");
+            producciones[1].agregarNoTerminal("signo_division");
+
+            producciones[2].agregarTerminal("e");
         }
 
 

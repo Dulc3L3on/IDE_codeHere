@@ -17,6 +17,7 @@ namespace proyecto_IDE
     {
         Kit herramienta;
         AnalizadorLexico analizadorLexico;
+        AnalizadorSintactico analizadorSintactico;
         ManejadorArchivo manejadorArchivo = new ManejadorArchivo();
 
         private int[] lineaCambiada = new int[2];//cuando el 2 tenga un valor !=0 se mandará a llamar la métood para analizar...
@@ -25,7 +26,7 @@ namespace proyecto_IDE
         {
             InitializeComponent();
             herramienta = new Kit(areaDesarrollo, txtBx_mensajero);
-            analizadorLexico = new AnalizadorLexico(herramienta);
+            analizadorLexico = new AnalizadorLexico(herramienta);            
         }
 
         private void areaDesarrollo_textChanged(object sender, EventArgs e)
@@ -120,8 +121,13 @@ namespace proyecto_IDE
 
             for (int numeroLinea = 0; numeroLinea < lineasAAnalizar.Length; numeroLinea++)
             {
-                analizadorLexico.analizarLinea(lineasAAnalizar[numeroLinea].ToCharArray(), numeroLinea);//pero recuerda que para trabajar con los datos del rich, debido a esta suma, será necesario restarle este 1...               
-            }
+                analizadorLexico.analizarLinea(lineasAAnalizar[numeroLinea].ToCharArray(), numeroLinea);//pero recuerda que para trabajar con los datos del rich, debido a esta suma, será necesario restarle este 1...                               
+                if (numeroLinea == (lineasAAnalizar.Length-1)) {
+                    analizadorLexico.finalizarResultados(numeroLinea);
+                    analizadorSintactico = new AnalizadorSintactico(analizadorLexico.darListaTokensClasificados(), herramienta);
+                    analizadorSintactico.analizarCodigo();
+                }
+            }            
 
             if (!analizadorLexico.darControlCierre().darListaEsperaCierre().estaVacia())
             {
@@ -155,7 +161,8 @@ namespace proyecto_IDE
         private void dejarTodoComoAlPrincipio() {
             limpiarLog();
             analizadorLexico.darExcepcionLexico().limpiarListadoErrores();
-            analizadorLexico.darControlCierre().reiniciarListadoNoCerrados();            
+            analizadorLexico.darControlCierre().reiniciarListadoNoCerrados();
+            analizadorLexico.darListaTokensClasificados().limpiarLista();
             //analizadorLexico.darHerramienta().quitarSubrayado();
         }
 

@@ -8,29 +8,27 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Simbolos
 {
     class B_: NoTerminal
     {
-        Produccion repetida;
-        Produccion produccion2;
-
         public B_() {
             producciones = new Produccion[2];
+
             definirProducciones();
             soyGeneral = true;
             contengoCuerpo = false;
+            nombre = "B'";
+            nombreCompleto = "Bloque";//no se colocará prima porque esto es mostrado en el log... y además no hay choque puesto que no es una opción a escoger el nombre completo, sino una opción a mostrar...
         }
 
         public override void definirProducciones()
         {
             base.definirProducciones();
-            repetida = new Produccion();
-            produccion2 = new Produccion();
 
-            repetida.agregarNoTerminal("B'");
-            repetida.agregarNoTerminal("C");            
+            producciones[0] = new Produccion();//la nombrada repetida xD...
+            producciones[1] = new Produccion();
 
-            produccion2.agregarTerminal("}");
+            producciones[0].agregarNoTerminal("B'");
+            producciones[0].agregarNoTerminal("C");
 
-            producciones[0] = repetida;
-            producciones[1] = produccion2;
+            producciones[1].agregarTerminal("fin_Bloque");
         }
 
     }

@@ -16,7 +16,7 @@ namespace proyecto_IDE.Complementos_analizadores
     {
         int ultimoCaracterAnalizado = 0;//literalemente guarda el último caracter analizado :v xD
         String tipoCategoria = "simbolo";
-        Resultado resultadoParentesisODivsion = new Resultado();        
+        Token resultadoParentesisODivsion = new Token();        
 
         ListaEnlazada<String> listadoNoCerrados = new ListaEnlazada<String>();//0 -> el elemento en sí, 1-> numeroFila [a partir de 0], 2-> columnaInicio
         //este listado será el que contenga a los signos con su respectiva columna de inicio que aún no han encontrado a su cierre, solo serán add los elementos cuando se llegue al tamaño de la linea y áún no se haya encontrado a dicho símbolo de cierre...
@@ -31,7 +31,7 @@ namespace proyecto_IDE.Complementos_analizadores
             herramientas = kitHerramientas;
         }       
 
-        public Resultado analizarAgrupaciones(char[] lineaDesglosada,int caracterActual, int numeroLinea) {            
+        public Token analizarAgrupaciones(char[] lineaDesglosada,int caracterActual, int numeroLinea) {            
 
             if (herramientas.determinarTipoCaracter(lineaDesglosada[caracterActual]).Equals('c')) {//no se por qué tendría que revisar esto, si es un hecho  que entró porque había un signo de estos...
                  agregarNecesitado(lineaDesglosada, caracterActual, caracterActual+1, numeroLinea);//se manda a llamar el método para hacer la debida agregación del caracter, si es que pertenece a los necesitados de cierre...
@@ -40,7 +40,6 @@ namespace proyecto_IDE.Complementos_analizadores
             if (!listadoNoCerrados.estaVacia()) {//no es lógico tener que revisar esto, porque media vez entró a este método, es porque tiene mas de algun carcater necesitado o es porque tiene un trabajo que continuar...              
                     return analizarTipoAgrupacion(lineaDesglosada, caracterActual, numeroLinea);//aquí se devolvería el resultado como tal... sin importar si es null o no, allá en el léxico se contempla esto...              
             }
-
             return resultadoParentesisODivsion;
         }
 
@@ -71,7 +70,7 @@ namespace proyecto_IDE.Complementos_analizadores
                     break;               
 
                 default://Sería el caso de la división, porque no puede existir ningún otro tipo de excepción
-                    resultadoParentesisODivsion = new Resultado("/", "signo_division", numeroLinea, caracterActual, caracterActual);//pero aún no seá útil... 
+                    resultadoParentesisODivsion = new Token("/", "signo_division", numeroLinea, caracterActual, caracterActual);//pero aún no seá útil... 
                     ultimoCaracterAnalizado = caracterActual;
                     //se manda a llamar de una vez el método para colorear... o se retornará el tipo, para al final saber de que color... no, de una vez
                     break;
@@ -79,7 +78,7 @@ namespace proyecto_IDE.Complementos_analizadores
 
         }
 
-        private Resultado analizarTipoAgrupacion(char[] lineaDesglosada, int caracterInicial, int numeroLinea) { //obvidamente aquí no se incluye a los paréntesis puesto que ni siquiera son tomados en cuenta para poder acceder a este método, esto por el if exterior...
+        private Token analizarTipoAgrupacion(char[] lineaDesglosada, int caracterInicial, int numeroLinea) { //obvidamente aquí no se incluye a los paréntesis puesto que ni siquiera son tomados en cuenta para poder acceder a este método, esto por el if exterior...
             String[] tipoAnalisis = listadoNoCerrados.darContenidoUltimoNodo().Split(',');//como ya se agrego el caracter especial a la lista, entonces puede procederse libremente a analizar de esta manera...
 
             if (tipoAnalisis[0].Length==1 && (int)Convert.ToChar(tipoAnalisis[0])==34) {
@@ -87,17 +86,16 @@ namespace proyecto_IDE.Complementos_analizadores
             }
 
             if (tipoAnalisis[0].Equals("//")) {
-                return establecerComentarioLinea(lineaDesglosada, caracterInicial);
+                establecerComentarioLinea(lineaDesglosada, caracterInicial);                
             }
             if (tipoAnalisis[0].Equals("/*")) {
-                return establecerComentarioMultiLinea(numeroLinea, lineaDesglosada, caracterInicial);
+                establecerComentarioMultiLinea(numeroLinea, lineaDesglosada, caracterInicial);
             }
-
-            return null;//pero nunca llegará aquí puesto que en la lista no se guarda nada más que estos caracteres incluidos los parentesis, pero como al ser estos los que se encuentren al final, se evita este método, entonces NO PROBLEM! Xd
+            return null;//pues no es de interés para el sintáctico nignuno de los tipos de comentario...
         }
 
-        private Resultado establecerCadena(int linea, char[] lineaDesglosada, int caracterInicial) {//Asumo que este valor empieza desde 0... de todos modos puedes revisarlo fácilmente por el hecho de que es mandado por el for general...
-            Resultado resultado;            
+        private Token establecerCadena(int linea, char[] lineaDesglosada, int caracterInicial) {//Asumo que este valor empieza desde 0... de todos modos puedes revisarlo fácilmente por el hecho de que es mandado por el for general...
+            Token resultado;            
 
             tipoCategoria = "cadena";//recuerda que media vez entra a estos métodos, es porque si o sí son de esta categoría, lo único que podría suceder es que no se "cierre" dicha categoría, sino que siga líneas después... por lo tanto estaba pensando que cuando esto suceda, no debería eliminar la lista de Resultados de la línea sino hasta que se obtnega a este cierre... pero eso lo dictaminará el sintáctico...
             for (int caracterActual = caracterInicial; caracterActual< lineaDesglosada.Length; caracterActual++) {               
@@ -113,9 +111,8 @@ namespace proyecto_IDE.Complementos_analizadores
                     //se elimina el nodo que corresponde a este símbolo en el listado de espera de cierre...
                     listadoNoCerrados.eliminarUltimoNodo();
 
-                    ultimoCaracterAnalizado = caracterActual;                    
-
-                    return resultado = new Resultado(datosNecistadoCerrado[0], "cadena", Convert.ToInt32(datosNecistadoCerrado[1]), Convert.ToInt32(datosNecistadoCerrado[2]), caracterActual);                                        
+                    ultimoCaracterAnalizado = caracterActual;                   
+                    return resultado = new Token(datosNecistadoCerrado[0], "cadena", Convert.ToInt32(datosNecistadoCerrado[1]), Convert.ToInt32(datosNecistadoCerrado[2]), caracterActual);                                        
                 }
             }
 
@@ -123,27 +120,21 @@ namespace proyecto_IDE.Complementos_analizadores
             //excepcionLexico.excepcionNecesitadoCierre(linea, lineaDesglosada.Length, mensajeError);
 
             ultimoCaracterAnalizado = (lineaDesglosada.Length - 1);//eso quiere decir que allá en el analizador léxico deberé sumarle 1 para ubicarme en la pos siguiente... que toca estudiar...
-
-            return null;//por esta razón tendría que ponerse un if, para que no add a RESULTADO cuando sea nulo...
+            return null;//no hay desacuerdo con esta axn puesto qué cuando devulveven un resultado nulo, es porque es un hecho que no debe agregarse, no lo hicieron para avisar que sucedió otra situación y por ello se debe hacer una axn diferente...
         }
 
-        private Resultado establecerComentarioLinea(char[] lineaDesglosada, int caracterInicial) {//realmente este no puede generar ningún tipo de excepción... ya que solo debe colorear hasta que llegue al último caracter... y por ello no importar todo lo que dentro de su dominio, esté...
-            Resultado resultado;
-
+        private void establecerComentarioLinea(char[] lineaDesglosada, int caracterInicial) {//realmente este no puede generar ningún tipo de excepción... ya que solo debe colorear hasta que llegue al último caracter... y por ello no importar todo lo que dentro de su dominio, esté...
             tipoCategoria ="comentario";//como al color solo le interesa saber qué tipo general es, mas no es tipo específico...
            
             String[] datosNecistadoCerrado = listadoNoCerrados.darUltimoNodo().contenido.Split(',');
             //se elimina el nodo que corresponde a este símbolo en el listado de espera de cierre...
             listadoNoCerrados.eliminarUltimoNodo();
 
-            ultimoCaracterAnalizado = (lineaDesglosada.Length - 1);//si llegar a dar error es porque se incluyeron también los espacios, entonces deberás pasar esta var al for y solo asignar cuando llegues al penúltimo espacio del arreglo... ó asignar el valor cada vez que sea diferente a un espacio, de tal manera que pueda asegurarse no se estén guardando datos de más e innecesarios y talvez provocadores de problemas :| xD...
-            return resultado = new Resultado(datosNecistadoCerrado[0], "comentarioLinea", Convert.ToInt32(datosNecistadoCerrado[1]), Convert.ToInt32(datosNecistadoCerrado[2]), ultimoCaracterAnalizado);            
+            ultimoCaracterAnalizado = (lineaDesglosada.Length - 1);//si llegar a dar error es porque se incluyeron también los espacios, entonces deberás pasar esta var al for y solo asignar cuando llegues al penúltimo espacio del arreglo... ó asignar el valor cada vez que sea diferente a un espacio, de tal manera que pueda asegurarse no se estén guardando datos de más e innecesarios y talvez provocadores de problemas :| xD...            
         }
 
-        private Resultado establecerComentarioMultiLinea(int linea, char[] lineaDesglosada, int caracterInicial)
-        {            
-            Resultado resultado;
-
+        private void establecerComentarioMultiLinea(int linea, char[] lineaDesglosada, int caracterInicial)
+        {
             tipoCategoria = "comentario";
             for (int caracterActual = caracterInicial; caracterActual < (lineaDesglosada.Length-1); caracterActual++) {//no puedeo ir de 2 en 2 por el hechod de que puede que haya un solo caracter luego de signos de apertura, o puede que no haya nada y por ello surgir el hecho de que justamente en la posición 1 que se saltó estucvera el asterisco y por lo tanto solo tomaría a la barra y por ello parasría de largo al símbolo de cierre...
                 //Se manda a llamar el método para colorear
@@ -154,17 +145,13 @@ namespace proyecto_IDE.Complementos_analizadores
                     //se elimina el nodo que corresponde a este símbolo en el listado de espera de cierre...
                     listadoNoCerrados.eliminarUltimoNodo();
 
-                    ultimoCaracterAnalizado = caracterActual+1;//puesto que el carcater actual está atrasado 1 para así analizar de 2 en 2 por ello es necesario +1 para que vaya conforme el acuerdo DEVOLVER EL ÚLTIMO ANALIZADO...
-                    return resultado = new Resultado(datosNecistadoCerrado[0], "comentarioMultiLinea", Convert.ToInt32(datosNecistadoCerrado[1]), Convert.ToInt32(datosNecistadoCerrado[2]), ultimoCaracterAnalizado);
-                }
-                
+                    ultimoCaracterAnalizado = caracterActual+1;//puesto que el carcater actual está atrasado 1 para así analizar de 2 en 2 por ello es necesario +1 para que vaya conforme el acuerdo DEVOLVER EL ÚLTIMO ANALIZADO...                    
+                }                
             }
-
             //llamo el método para mostrar la excepcion debida a no hallar el símbolo de cierre en la línea donde se aperturó
             //excepcionLexico.excepcionNecesitadoCierre(linea, lineaDesglosada.Length, mensajeError);//recuerda que por el hecho de accionar este método con el botón de compilar, debe hacerse esto, hasta el final, pues podremos saber fácilmente si hubieron fallos con los necesitados de cierre, y además se evitarían más errores por el hecho de no tener que averiguar en que nodod de la lista enlazada es el que debe eliminarse según la parte que fue arreglada...
 
-            ultimoCaracterAnalizado = (lineaDesglosada.Length - 1);//para este comentario y la cadena, esto indica que no se terminó el análissi...
-            return null;
+            ultimoCaracterAnalizado = (lineaDesglosada.Length - 1);//para este comentario y la cadena, esto indica que no se terminó el análissi...            
         }
 
         public bool hayQueAnalizarPrimitivos()

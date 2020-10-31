@@ -8,31 +8,28 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Simbolos
 {
     class M : NoTerminal
     {
-        Produccion produccion1;
-        Produccion produccion2;
-
         public M() {
             producciones = new Produccion[2];
             definirProducciones();
             soyGeneral = false;
             contengoCuerpo = false;
+            nombre = "M";
+            nombreCompleto = "Principal";
         }
 
         public override void definirProducciones()
         {
             base.definirProducciones();
-            produccion1 = new Produccion();
-            produccion2 = new Produccion();
 
-            produccion1.agregarNoTerminal("B");
-            produccion1.agregarTerminal("parentesis_Apertura");
-            produccion1.agregarTerminal("parentesis_Cierre");
-            produccion1.agregarTerminal("Estructura_principal");                                   
+            producciones[0] = new Produccion();
+            producciones[1] = new Produccion();
 
-            produccion2.agregarTerminal("e");//recuerda que con este se hace un reduce de inmediato...
+            producciones[0].agregarNoTerminal("B");
+            producciones[0].agregarTerminal("parentesis_Cierre");
+            producciones[0].agregarTerminal("parentesis_Apertura");            
+            producciones[0].agregarTerminal("Reservada_principal");
 
-            producciones[0] = produccion1;
-            producciones[1] = produccion2;
+            producciones[1].agregarTerminal("e");//recuerda que con este se hace un reduce de inmediato...
         }
     }
 }

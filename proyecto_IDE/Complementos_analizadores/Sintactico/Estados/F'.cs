@@ -9,29 +9,27 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
 {
     class F_: NoTerminal
     {
-
-        Produccion produccion1;
-        Produccion produccion2;
-
         public F_() {
             producciones = new Produccion[2];
             definirProducciones();
             soyGeneral = false;
             contengoCuerpo = false;
+            nombre = "F_";
+            nombreCompleto = "Concatenacion";
         }
 
         public override void definirProducciones()
         {
             base.definirProducciones();
 
-            produccion1.agregarNoTerminal("F'");
-            produccion1.agregarNoTerminal("V");
-            produccion1.agregarNoTerminal("signo_mas");
+            producciones[0] = new Produccion();
+            producciones[1] = new Produccion();
 
-            produccion2.agregarTerminal("e");
+            producciones[0].agregarNoTerminal("F'");
+            producciones[0].agregarNoTerminal("V");
+            producciones[0].agregarNoTerminal("signo_mas");
 
-            producciones[0] = produccion1;
-            producciones[1] = produccion2;
+            producciones[1].agregarTerminal("e");
         }
     }
 }

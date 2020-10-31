@@ -10,33 +10,35 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
 {
     class Z : NoTerminal
     {
-        Produccion produccion1;
-        Produccion produccion2;
-        Produccion produccion3;
-
         public Z() {
             producciones = new Produccion[3];
             definirProducciones();
+            soyGeneral = false;
+            contengoCuerpo = false;
+            nombre = "Z";
+            nombreCompleto = "Condicion";
         }
 
         public override void definirProducciones()
         {
             base.definirProducciones();
-            produccion1.agregarTerminal("booleano");
 
-            produccion2.agregarNoTerminal("H");
-            produccion2.agregarTerminal("comparacion");
-            produccion2.agregarNoTerminal("H");
+            producciones[0] = new Produccion();
+            producciones[1] = new Produccion();
+            producciones[2] = new Produccion();
 
-            produccion2.agregarTerminal("parentesis_Cierre");
-            produccion2.agregarNoTerminal("H");
-            produccion2.agregarTerminal("comparacion");
-            produccion2.agregarNoTerminal("H");
-            produccion2.agregarTerminal("parentesis_Apertura");
+            producciones[0].agregarTerminal("booleano");
 
-            producciones[0] = produccion1;
-            producciones[1] = produccion2;
-            producciones[2] = produccion3;
+            producciones[1].agregarNoTerminal("H");
+            producciones[1].agregarTerminal("comparacion");
+            producciones[1].agregarNoTerminal("H");
+
+            producciones[2].agregarTerminal("parentesis_Cierre");
+            producciones[2].agregarNoTerminal("H");
+            producciones[2].agregarTerminal("comparacion");
+            producciones[2].agregarNoTerminal("H");
+            producciones[2].agregarTerminal("parentesis_Apertura");
         }
     }
 }
+

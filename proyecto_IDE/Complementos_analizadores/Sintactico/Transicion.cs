@@ -166,7 +166,10 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico
         }//útil para el analizador sintáctico... pero, no es necesario, pues basta con recibir las producciones...
 
         public  ListaEnlazada<Elemento> darProduccion(int noTerminal, int token) {//Esto s valores los recibirá de los métodos del auto, de forma directa, luego de haber corroborado que el tope es un NT, con el correspondiente símbolo...
-            return producciones[noTerminal,token].darElementosProduccion();
+            if (producciones[noTerminal, token]!=null) {
+                return producciones[noTerminal, token].darElementosProduccion();
+            }
+            return null;//xD, es que no podría devolver nada más a menos que cree algo xD
         }
 
         public void inicializarNoTerminales()
