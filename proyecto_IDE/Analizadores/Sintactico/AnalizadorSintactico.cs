@@ -73,8 +73,8 @@ namespace proyecto_IDE.Analizadores
                     //} lo comenté por si acaso decides tratar los errores acá..
                 }
                 else {
-                    ListaEnlazada<Elemento> listaElementos = transicion.darProduccion(automataPilas.buscarEstado(automataPilas.darPila().inspeccionarTope().darContenido()), automataPilas.buscarTerminal(parteDeImportancia));
-
+                    ListaEnlazada<Elemento> listaElementos = transicion.darProduccion(automataPilas.buscarEstado(automataPilas.darPila().inspeccionarTope().darContenido()), automataPilas.buscarTerminal(parteDeImportancia, darTokenSiguiente().darToken()));
+                    tokenPorDar--;//por el siguiente que doy, que no se está analizando como se estandarizó xD
                     if (listaElementos != null)
                     {
                         automataPilas.reemplazar(listaElementos);
@@ -100,21 +100,16 @@ namespace proyecto_IDE.Analizadores
             return tokenSolicitado;
         }//recuerda que lo que debes hacer es llegar hasta el token con el que empieza la otra estructura para empezar bien el análisis con él... xD
 
-        public String darParteImportancia(String tokenTerminal)
+        private String darParteImportancia(String tokenTerminal)
         { //esto será útil para cambiar de columna y para hacer la reducción
             String[] partes;
 
-            if (((tokenTerminal.StartsWith("var") || tokenTerminal.StartsWith("valor")) && !automataPilas.darListadoNoTerminalesEnEstudio().estaVacia() && automataPilas.darListadoNoTerminalesEnEstudio().darUltimoNodo().contenido.Equals("E")) || tokenTerminal.Equals("logico_negacion"))
+            if (tokenTerminal.Equals("logico_negacion"))
             {
                 partes = tokenTerminal.Split('_');
                 return partes[1];//pues solo quiero la palabra boolean... ó la palabra negación, según sea el caso xD
             }
-            if ((tokenTerminal.StartsWith("var") || tokenTerminal.StartsWith("valor")) && !automataPilas.darListadoNoTerminalesEnEstudio().estaVacia() && (automataPilas.darListadoNoTerminalesEnEstudio().darUltimoNodo().contenido.Equals("I") ||
-                automataPilas.darListadoNoTerminalesEnEstudio().darUltimoNodo().contenido.Equals("L"))) {
-                return "valor_numero";//xD jajaja
-
-            }//puesto que un tkn se pide otra vez después de comparar al tkn recibido con con el elemento del tope de la pila que se determinó que es T, entonces no habrá problema de establecer de una vez la parte de importancia así xD, porque se mantendrá de esta forma, justo con aquellos NT que lo requieren así UwU xD
-            if(    tokenTerminal.StartsWith("logico") || tokenTerminal.StartsWith("comparacion"))
+            if(tokenTerminal.StartsWith("valor") || tokenTerminal.StartsWith("logico") || tokenTerminal.StartsWith("comparacion"))
             {
                 partes = tokenTerminal.Split('_');
                 return partes[0];//Esto porque la gramática solo requiere de var y valor para NT diferentes a I y L, y solo requiere de la palabra lógico y comparación cuando estas vengan xD
@@ -122,6 +117,8 @@ namespace proyecto_IDE.Analizadores
 
             return tokenTerminal;
         }//y así se ha logrado poner de acuerdo con el token y la columna del tkn permitido ó el token y el elemento de producción [el cual tiene el mismo valor que el de la col... o al menos debería...]
+
+       
 
         public String[] darSugerencias(String porcion) {            
             ListaEnlazada<String> listadoCoincidentes = buscador.hallarCoincidentes(porcion);

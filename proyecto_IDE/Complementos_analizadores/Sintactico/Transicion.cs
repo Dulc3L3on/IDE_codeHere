@@ -12,7 +12,7 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico
     class Transicion
     {//aquí se definirán todas las transicicones que se realizarán en la tabla de trancisiones        
 
-        Produccion[,] producciones = new Produccion[29, 31];//se usará esta forma... conlleva menos trabajo        
+        Produccion[,] producciones = new Produccion[30, 29];//la última columna es por las alternativas... [solo para el caso de Z y N porque asig y op, ya ocupan una celda... entonces solo deberá hacerse referencia a la que corresponda...al igual que para G y N xd]
             
         M principal; L ciclo;
         B bloque; E estructuraCondicional;
@@ -27,8 +27,8 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico
         U menosUnario; F concatenacion;
         X_ sumaRestaPrima; F_ concatenacionPrima;
         T_ multiplicacionDivisionPrima; W impresion;
-        S estado; R lectura;
-        J numerico;
+        S estado; R lectura; Q multipleCondicion; K multipleComparacion;
+  
 
         public Transicion()
         {
@@ -38,127 +38,128 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico
 
         public void entablar() {
             producciones[0,0] = principal.darProduccion(0);
-            producciones[0,30] = principal.darProduccion(1);
-            producciones[1, 1] = bloque.darProduccion(0);
+            producciones[0,27] = principal.darProduccion(1);//2
+            producciones[1, 1] = bloque.darProduccion(0);//1
             producciones[2, 2] = bloquePrima.darProduccion(0);
-            producciones[2, 4] = bloquePrima.darProduccion(0);
-            producciones[2, 7] = bloquePrima.darProduccion(0);
-            producciones[2, 11] = bloquePrima.darProduccion(0);
+            producciones[2, 3] = bloquePrima.darProduccion(0);
+            producciones[2, 6] = bloquePrima.darProduccion(0);
+            producciones[2, 10] = bloquePrima.darProduccion(0);
+            producciones[2, 16] = bloquePrima.darProduccion(0);
             producciones[2, 17] = bloquePrima.darProduccion(0);
             producciones[2, 18] = bloquePrima.darProduccion(0);
-            producciones[2, 19] = bloquePrima.darProduccion(0);
             producciones[2, 20] = bloquePrima.darProduccion(0);
-            producciones[2, 21] = bloquePrima.darProduccion(0);
-            producciones[2, 23] = bloquePrima.darProduccion(0);
-            producciones[2, 27] = bloquePrima.darProduccion(0);
-            producciones[2, 28] = bloquePrima.darProduccion(0);
-            producciones[2, 29] = bloquePrima.darProduccion(1);
+            producciones[2, 24] = bloquePrima.darProduccion(0);
+            producciones[2, 25] = bloquePrima.darProduccion(0);
+            producciones[2, 26] = bloquePrima.darProduccion(1);//11
             producciones[3, 2] = cuerpo.darProduccion(0);
-            producciones[3, 4] = cuerpo.darProduccion(1);
-            producciones[3, 7] = cuerpo.darProduccion(2);
-            producciones[3, 11] = cuerpo.darProduccion(2);
-            producciones[3, 17] = cuerpo.darProduccion(2);
-            producciones[3, 18] = cuerpo.darProduccion(2);
-            producciones[3, 19] = cuerpo.darProduccion(3);
-            producciones[3, 20] = cuerpo.darProduccion(3);
-            producciones[3, 21] = cuerpo.darProduccion(3);
-            producciones[3, 23] = cuerpo.darProduccion(4);
-            producciones[3, 27] = cuerpo.darProduccion(5);
-            producciones[3, 28] = cuerpo.darProduccion(6);
-            producciones[4, 2] = declaracion.darProduccion(0);
-            producciones[5, 10] = igualacion.darProduccion(0);
-            producciones[5, 14] = igualacion.darProduccion(1);
-            producciones[5, 15] = igualacion.darProduccion(2);
-            producciones[6, 4] = asignacion.darProduccion(0);          
-            producciones[7, 7] = operacion.darProduccion(0);
-            producciones[7, 11] = operacion.darProduccion(0);
-            producciones[7, 17] = operacion.darProduccion(0);
-            producciones[7, 18] = operacion.darProduccion(0);
-            producciones[8, 7] = sumaResta.darProduccion(0);
-            producciones[8, 11] = sumaResta.darProduccion(0);
-            producciones[8, 17] = sumaResta.darProduccion(0);
-            producciones[8, 18] = sumaResta.darProduccion(0);
-            producciones[9, 7] = multiplicacionDivision.darProduccion(0);
-            producciones[9, 11] = multiplicacionDivision.darProduccion(0);
-            producciones[9, 17] = multiplicacionDivision.darProduccion(0);
-            producciones[9, 18] = multiplicacionDivision.darProduccion(0);
-            producciones[10, 7] = menosUnario.darProduccion(0);
-            producciones[10, 11] = menosUnario.darProduccion(1);
-            producciones[10, 17] = menosUnario.darProduccion(1);
-            producciones[10, 18] = menosUnario.darProduccion(1);
-            producciones[11, 6] = sumaRestaPrima.darProduccion(0);
-            producciones[11, 7] = sumaRestaPrima.darProduccion(1);
-            producciones[11, 12] = sumaRestaPrima.darProduccion(2);//este fue agregado por necesidad...
-            producciones[11, 14] = sumaRestaPrima.darProduccion(2);
+            producciones[3, 3] = cuerpo.darProduccion(1);//dependerá del token siguiente...
+            producciones[3, 6] = cuerpo.darProduccion(2);
+            producciones[3, 10] = cuerpo.darProduccion(2);
+            producciones[3, 16] = cuerpo.darProduccion(3);
+            producciones[3, 17] = cuerpo.darProduccion(3);
+            producciones[3, 18] = cuerpo.darProduccion(3);
+            producciones[3, 20] = cuerpo.darProduccion(4);
+            producciones[3, 24] = cuerpo.darProduccion(5);
+            producciones[3, 25] = cuerpo.darProduccion(6);//10                
+            producciones[4, 2] = declaracion.darProduccion(0);//1
+            producciones[5, 9] = igualacion.darProduccion(0);
+            producciones[5, 13] = igualacion.darProduccion(1);
+            producciones[5, 14] = igualacion.darProduccion(2);//3
+            producciones[6, 3] = asignacion.darProduccion(0);//1        
+            producciones[7, 3] = operacion.darProduccion(0);
+            producciones[7, 4] = operacion.darProduccion(0);
+            producciones[7, 6] = operacion.darProduccion(0);
+            producciones[7, 10] = operacion.darProduccion(0);//4
+            producciones[8, 3] = sumaResta.darProduccion(0);
+            producciones[8, 4] = sumaResta.darProduccion(0);
+            producciones[8, 6] = sumaResta.darProduccion(0);
+            producciones[8, 10] = sumaResta.darProduccion(0);//4
+            producciones[9, 3] = multiplicacionDivision.darProduccion(0);
+            producciones[9, 4] = multiplicacionDivision.darProduccion(0);
+            producciones[9, 6] = multiplicacionDivision.darProduccion(0);
+            producciones[9, 10] = multiplicacionDivision.darProduccion(0);//4
+            producciones[10, 3] = menosUnario.darProduccion(1);
+            producciones[10, 4] = menosUnario.darProduccion(1);
+            producciones[10, 6] = menosUnario.darProduccion(0);
+            producciones[10, 10] = menosUnario.darProduccion(1);//4
+            producciones[11, 5] = sumaRestaPrima.darProduccion(0);
+            producciones[11, 6] = sumaRestaPrima.darProduccion(1);
+            producciones[11, 11] = sumaRestaPrima.darProduccion(2);//Ya no fue necesidad xD
+            producciones[11, 13] = sumaRestaPrima.darProduccion(2);//4
+            producciones[12, 5] = multiplicacionDivisionPrima.darProduccion(0);
             producciones[12, 6] = multiplicacionDivisionPrima.darProduccion(0);
-            producciones[12, 7] = multiplicacionDivisionPrima.darProduccion(0);
-            producciones[12, 8] = multiplicacionDivisionPrima.darProduccion(1);
-            producciones[12, 9] = multiplicacionDivisionPrima.darProduccion(2);
-            producciones[12, 12] = multiplicacionDivisionPrima.darProduccion(0);//este fue agregado por necesidad...
-            producciones[12, 14] = multiplicacionDivisionPrima.darProduccion(0);
-            producciones[13, 11] = estado.darProduccion(0);
-            producciones[13, 17] = estado.darProduccion(1);
-            producciones[13, 18] = estado.darProduccion(1);
-            producciones[14, 17] = numerico.darProduccion(0);
-            producciones[14, 18] = numerico.darProduccion(1);
-            producciones[15, 19] = ciclo.darProduccion(0);
-            producciones[15, 20] = ciclo.darProduccion(1);
-            producciones[15, 21] = ciclo.darProduccion(2);
-            producciones[16, 23] = estructuraCondicional.darProduccion(0);
-            producciones[17, 2] = estructuraPrima.darProduccion(0);
-            producciones[17, 4] = estructuraPrima.darProduccion(0);
-            producciones[17, 7] = estructuraPrima.darProduccion(0);
-            producciones[17, 11] = estructuraPrima.darProduccion(0);
-            producciones[17, 17] = estructuraPrima.darProduccion(0);
-            producciones[17, 18] = estructuraPrima.darProduccion(0);
-            producciones[17, 19] = estructuraPrima.darProduccion(0);
-            producciones[17, 20] = estructuraPrima.darProduccion(0);
-            producciones[17, 21] = estructuraPrima.darProduccion(0);
-            producciones[17, 23] = estructuraPrima.darProduccion(0);
-            producciones[17, 24] = estructuraPrima.darProduccion(1);
-            producciones[17, 27] = estructuraPrima.darProduccion(0);
-            producciones[17, 28] = estructuraPrima.darProduccion(0);
-            producciones[17, 29] = estructuraPrima.darProduccion(0);
-            producciones[18, 23] = condicional.darProduccion(0);
-            producciones[19, 2] = condicionalPrima.darProduccion(0);
-            producciones[19, 4] = condicionalPrima.darProduccion(0);
-            producciones[19, 7] = condicionalPrima.darProduccion(0);
-            producciones[19, 11] = condicionalPrima.darProduccion(0);
-            producciones[19, 17] = condicionalPrima.darProduccion(0);
-            producciones[19, 18] = condicionalPrima.darProduccion(0);
-            producciones[19, 19] = condicionalPrima.darProduccion(0);
-            producciones[19, 20] = condicionalPrima.darProduccion(0);
-            producciones[19, 21] = condicionalPrima.darProduccion(0);
-            producciones[19, 23] = condicionalPrima.darProduccion(1);
-            producciones[19, 24] = condicionalPrima.darProduccion(0);
-            producciones[19, 25] = condicionalPrima.darProduccion(2);
-            producciones[19, 27] = condicionalPrima.darProduccion(0);
-            producciones[19, 28] = condicionalPrima.darProduccion(0);
-            producciones[19, 29] = condicionalPrima.darProduccion(0);
-            producciones[20, 3] = condicion.darProduccion(0);
-            producciones[20, 11] = condicion.darProduccion(0);
-            producciones[20, 13] = condicion.darProduccion(0);
+            producciones[12, 7] = multiplicacionDivisionPrima.darProduccion(1);
+            producciones[12, 8] = multiplicacionDivisionPrima.darProduccion(2);
+            producciones[12, 11] = multiplicacionDivisionPrima.darProduccion(0);//este fue agregado por necesidad...
+            producciones[12, 13] = multiplicacionDivisionPrima.darProduccion(0);//6
+            producciones[13, 3] = estado.darProduccion(0);
+            producciones[13, 4] = estado.darProduccion(0);
+            producciones[13, 10] = estado.darProduccion(1);//se elimino J :'(       3
+            producciones[14, 16] = ciclo.darProduccion(0);
+            producciones[14, 17] = ciclo.darProduccion(1);
+            producciones[14, 18] = ciclo.darProduccion(2);//3
+            producciones[15, 20] = estructuraCondicional.darProduccion(0);//1
+            producciones[16, 2] = estructuraPrima.darProduccion(0);
+            producciones[16, 3] = estructuraPrima.darProduccion(0);
+            producciones[16, 6] = estructuraPrima.darProduccion(0);
+            producciones[16, 10] = estructuraPrima.darProduccion(0);
+            producciones[16, 16] = estructuraPrima.darProduccion(0);
+            producciones[16, 17] = estructuraPrima.darProduccion(0);
+            producciones[16, 18] = estructuraPrima.darProduccion(0);
+            producciones[16, 20] = estructuraPrima.darProduccion(0);
+            producciones[16, 21] = estructuraPrima.darProduccion(1);
+            producciones[16, 24] = estructuraPrima.darProduccion(0);
+            producciones[16, 25] = estructuraPrima.darProduccion(0);
+            producciones[16, 26] = estructuraPrima.darProduccion(0);//12            
+            producciones[17, 20] = condicional.darProduccion(0);//1
+            producciones[18, 2] = condicionalPrima.darProduccion(0);
+            producciones[18, 3] = condicionalPrima.darProduccion(0);
+            producciones[18, 6] = condicionalPrima.darProduccion(0);
+            producciones[18, 10] = condicionalPrima.darProduccion(0);
+            producciones[18, 16] = condicionalPrima.darProduccion(0);
+            producciones[18, 17] = condicionalPrima.darProduccion(0);
+            producciones[18, 18] = condicionalPrima.darProduccion(0);
+            producciones[18, 20] = condicionalPrima.darProduccion(1);
+            producciones[18, 21] = condicionalPrima.darProduccion(0);
+            producciones[18, 22] = condicionalPrima.darProduccion(2);
+            producciones[18, 24] = condicionalPrima.darProduccion(0);
+            producciones[18, 25] = condicionalPrima.darProduccion(0);
+            producciones[18, 26] = condicionalPrima.darProduccion(0);//13            
+            producciones[19, 3] = condicion.darProduccion(0);
+            producciones[19, 4] = condicion.darProduccion(0);
+            producciones[19, 10] = condicion.darProduccion(0);
+            producciones[19, 11] = condicion.darProduccion(1);
+            producciones[19, 12] = condicion.darProduccion(0);//5
+            producciones[20, 11] = multipleCondicion.darProduccion(0);
+            producciones[20, 23] = multipleCondicion.darProduccion(1);//2
             producciones[21, 3] = cuerpoCondicion.darProduccion(0);
-            producciones[21, 4] = cuerpoCondicion.darProduccion(1);
-            producciones[21, 5] = cuerpoCondicion.darProduccion(1);
+            producciones[21, 4] = cuerpoCondicion.darProduccion(0);
+            producciones[21, 10] = cuerpoCondicion.darProduccion(1);
             producciones[21, 11] = cuerpoCondicion.darProduccion(2);
-            producciones[21, 13] = cuerpoCondicion.darProduccion(1);
-            producciones[22, 4] = iteracionNegacion.darProduccion(0);
-            producciones[22, 5] = iteracionNegacion.darProduccion(0);
-            producciones[22, 12] = iteracionNegacion.darProduccion(1);
-            producciones[22, 13] = iteracionNegacion.darProduccion(2);
-            producciones[22, 16] = iteracionNegacion.darProduccion(2);
-            producciones[23, 12] = negacion.darProduccion(0);
-            producciones[23, 13] = negacion.darProduccion(0);
-            producciones[23, 16] = negacion.darProduccion(1);
-            producciones[24, 5] = valVar.darProduccion(0);
-            producciones[24, 4] = valVar.darProduccion(1);
-            producciones[25, 5] = concatenacion.darProduccion(0);
-            producciones[25, 4] = concatenacion.darProduccion(0);
-            producciones[26, 6] = concatenacionPrima.darProduccion(0);
-            producciones[26, 12] = concatenacionPrima.darProduccion(1);
-            producciones[27, 27] = impresion.darProduccion(0);
-            producciones[28, 28] = lectura.darProduccion(0);
+            producciones[21, 12] = cuerpoCondicion.darProduccion(0);
+            producciones[21, 23] = cuerpoCondicion.darProduccion(2);//6
+            producciones[22, 15] = multipleComparacion.darProduccion(0);
+            producciones[22, 23] = multipleComparacion.darProduccion(1);//2
+            producciones[23, 3] = iteracionNegacion.darProduccion(0);
+            producciones[23, 4] = iteracionNegacion.darProduccion(0);
+            producciones[23, 11] = iteracionNegacion.darProduccion(1);
+            producciones[23, 12] = iteracionNegacion.darProduccion(2);
+            producciones[23, 15] = iteracionNegacion.darProduccion(1);
+            producciones[23, 23] = iteracionNegacion.darProduccion(1);//6
+            producciones[24, 3] = negacion.darProduccion(0);
+            producciones[24, 4] = negacion.darProduccion(0);
+            producciones[24, 10] = negacion.darProduccion(0);
+            producciones[24, 12] = negacion.darProduccion(1);//4
+            producciones[25, 3] = valVar.darProduccion(0);
+            producciones[25, 4] = valVar.darProduccion(1);//2
+            producciones[26, 3] = concatenacion.darProduccion(0);
+            producciones[26, 4] = concatenacion.darProduccion(0);//2
+            producciones[27, 5] = concatenacionPrima.darProduccion(0);
+            producciones[27, 11] = concatenacionPrima.darProduccion(1);//2
+            producciones[28, 24] = impresion.darProduccion(0);//1
+            producciones[29, 25] = lectura.darProduccion(0);//1
+
+            producciones[6, 28] = operacion.darProduccion(0);//será la única excepción :o xD
         }
 
         public Produccion[,] darTablaTrancisiones() {
@@ -170,11 +171,11 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico
                 return producciones[noTerminal, token].darElementosProduccion();
             }
             return null;//xD, es que no podría devolver nada más a menos que cree algo xD
-        }
+        }    
 
         public void inicializarNoTerminales()
         {
-            principal = new M(); numerico = new J();
+            principal = new M();   
             bloque = new B(false); ciclo = new L();
             bloquePrima = new B_(); estructuraCondicional = new E();
             cuerpo = new C(); estructuraPrima = new E_();
@@ -188,7 +189,7 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico
             sumaRestaPrima = new X_(); concatenacion = new F();
             multiplicacionDivisionPrima = new T_(); concatenacionPrima = new F_();
             estado = new S(); impresion = new W();
-            lectura = new R();
+            lectura = new R(); multipleCondicion = new Q(); multipleComparacion = new K();
         }
 
         //deberá crearse un método para rellenar los espacios que quedaron vacíos pero con la producción "erronea" que servirá para tratar los erroes... al menos eso pienso por ahora...

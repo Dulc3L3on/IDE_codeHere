@@ -69,8 +69,8 @@ namespace proyecto_IDE.Excepciones
                     mensajeError = mensajeError + "Se esperaba un único SINO, uno o más SINO_ SI ó que cambiaras de estructura";
                     listaErrores.anadirAlFinal(mensajeError);
                     break;                                
-                case "N": case "Z":
-                    mensajeError = mensajeError + "Una condicion puede poseer comparaciones, agrupaciones, negaciones ó valores booleanos";//esto lo digo puesto que el if en realidad retorna valores de verdad...
+                case "N": case "Q": case "Z": case "K":
+                    mensajeError = mensajeError + "Una condicion compara, agrupa y o niegua uno o más valores";//esto lo digo puesto que el if en realidad retorna valores de verdad...
                     listaErrores.anadirAlFinal(mensajeError);
                     break;                
                 case "H": case "G":

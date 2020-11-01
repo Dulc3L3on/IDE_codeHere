@@ -38,13 +38,15 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
             producciones[0].agregarTerminal("Funcional_HACER");
 
             producciones[1].agregarNoTerminal("B");
-            producciones[1].agregarNoTerminal("J");
+            producciones[1].agregarNoTerminal("V");
             producciones[1].agregarTerminal("Estructural_INCREMENTO");
-            producciones[1].agregarNoTerminal("N");
-            producciones[1].agregarTerminal("Funcional_HASTA");
-            producciones[1].agregarNoTerminal("J");
+            producciones[1].agregarNoTerminal("V");
             producciones[1].agregarTerminal("asignacion_igualA");
-            producciones[1].agregarNoTerminal("J");
+            producciones[1].agregarNoTerminal("var");
+            producciones[1].agregarTerminal("Funcional_HASTA");
+            producciones[1].agregarNoTerminal("V");
+            producciones[1].agregarTerminal("asignacion_igualA");
+            producciones[1].agregarNoTerminal("V");
             producciones[1].agregarTerminal("Estructural_DESDE");
 
             producciones[2].agregarNoTerminal("B");

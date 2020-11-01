@@ -7,15 +7,16 @@ using proyecto_IDE.Complementos_analizadores.Sintactico.Simbolos;
 
 namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
 {
-    class H : NoTerminal
+    class Q : NoTerminal
     {
-        public H() {
-            producciones = new Produccion[3];
+        public Q()
+        {
+            producciones = new Produccion[2];
             definirProducciones();
             soyGeneral = false;
             contengoCuerpo = false;
-            nombre = "H";
-            nombreCompleto = "Condicion";
+            nombre = "Q";
+            nombreCompleto = "Multiple condicion";
         }
 
         public override void definirProducciones()
@@ -23,17 +24,13 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
             base.definirProducciones();
 
             producciones[0] = new Produccion();
-            producciones[1] = new Produccion();
-            producciones[2] = new Produccion();
+            producciones[1] = new Produccion();            
 
-            producciones[0].agregarNoTerminal("V");
+            producciones[0].agregarNoTerminal("N");
+            producciones[0].agregarTerminal("logico");
 
             producciones[1].agregarTerminal("e");
-
-            producciones[2].agregarTerminal("V");
-            producciones[2].agregarNoTerminal("G");
         }
 
     }
 }
-

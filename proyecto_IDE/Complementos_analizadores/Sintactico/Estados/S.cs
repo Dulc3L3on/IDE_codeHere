@@ -25,11 +25,11 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
             producciones[0] = new Produccion();
             producciones[1] = new Produccion();
 
-            producciones[0].agregarTerminal("parentesis_Cierre");
-            producciones[0].agregarNoTerminal("X");
-            producciones[0].agregarTerminal("parentesis_Apertura");
+            producciones[0].agregarNoTerminal("V");
 
-            producciones[1].agregarNoTerminal("J");
+            producciones[1].agregarTerminal("parentesis_Cierre");
+            producciones[1].agregarNoTerminal("X");
+            producciones[1].agregarTerminal("parentesis_Apertura");            
         }
 
     }

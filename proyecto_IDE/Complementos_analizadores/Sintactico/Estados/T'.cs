@@ -26,13 +26,13 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
             producciones[1] = new Produccion();
             producciones[2] = new Produccion();
 
-            producciones[0].agregarTerminal("U");
-            producciones[0].agregarNoTerminal("signo_multiplicacion");
+            producciones[0].agregarTerminal("e");
 
             producciones[1].agregarTerminal("U");
-            producciones[1].agregarNoTerminal("signo_division");
+            producciones[1].agregarNoTerminal("signo_multiplicacion");
 
-            producciones[2].agregarTerminal("e");
+            producciones[2].agregarTerminal("U");
+            producciones[2].agregarNoTerminal("signo_division");            
         }
 
 

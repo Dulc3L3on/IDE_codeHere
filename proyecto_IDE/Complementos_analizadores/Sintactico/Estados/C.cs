@@ -10,7 +10,7 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
     class C : NoTerminal
     {
         public C() {
-            producciones = new Produccion[7];
+            producciones = new Produccion[7];//Debido a que la alternativa es oficial, entonces ocupa un lugar...
             definirProducciones();
             soyGeneral = true;
             contengoCuerpo = false;
@@ -32,7 +32,7 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
 
             producciones[0].agregarNoTerminal("D");
 
-            producciones[1].agregarNoTerminal("A");
+            producciones[1].agregarNoTerminal("A");//Recuerda que antes de apilar esta habrá que corroborar que si el signo que viene después de la variable o valor es "="
 
             producciones[2].agregarTerminal("asignacion_fin");
             producciones[2].agregarNoTerminal("I");            

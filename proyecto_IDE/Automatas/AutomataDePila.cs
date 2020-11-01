@@ -23,13 +23,13 @@ namespace proyecto_IDE.Automatas
         int indiceNTActual;
         ExcepcionSintactico excepcionSintactico;
 
-        NoTerminal[] noTerminales = {new M(), new B(false), new B_(), new C(), new D(), new Y(), new A(), new I(), new X(), new T(), new U(), new X_(), new T_(), new S(), new J(), new L(), new E(), new E_(), new O(), new O_(), new N(), new Z(), new H(), new G(), new V(), new F(), new F_(), new W(), new R()};//no será funcional, puesto que no se considerará la exe...si se considerara, tendría que hallarse la forma de que cada vez que se llegase a B, se agregara un bloque al NT por el cual se ll´gó ahí... pero creo que para eso habría que hacerlo desde el NT enviador... xd
+        NoTerminal[] noTerminales = {new M(), new B(false), new B_(), new C(), new D(), new Y(), new A(), new I(), new X(), new T(), new U(), new X_(), new T_(), new S(), new L(), new E(), new E_(), new O(), new O_(), new N(), new Q(), new Z(), new K(), new H(), new G(), new V(), new F(), new F_(), new W(), new R()};//no será funcional, puesto que no se considerará la exe...si se considerara, tendría que hallarse la forma de que cada vez que se llegase a B, se agregara un bloque al NT por el cual se ll´gó ahí... pero creo que para eso habría que hacerlo desde el NT enviador... xd
         //NoTerminal[] noTerminales = new NoTerminal[29];
         //NoTerminal[0] = new M();
 
-        String[] terminales = {"Reservada_principal", "inicio_Bloque", "tipo", "booleano", "var", "valor", "signo_mas",
+        String[] terminales = {"Reservada_principal", "inicio_Bloque", "tipo", "var", "valor", "signo_mas",
             "signo_menos", "signo_multiplicacion", "signo_division", "asignacion_igualA", "parentesis_Apertura", "parentesis_Cierre",
-            "negacion", "asignacion_fin", "coma", "comparacion", "var_numero", "valor_numero", "Estructural_HACER", "Estructural_DESDE",//sino habrá AMBIGUEDAD por la palabra lógico de simbolo lógico xD
+            "negacion", "asignacion_fin", "coma", "comparacion","Estructural_HACER", "Estructural_DESDE",//sino habrá AMBIGUEDAD por la palabra lógico de simbolo lógico xD
             "Estructural_MIENTRAS", "Estructural_INCREMENTO", "Estructural_SI", "Estructural_SINO", "Estructural_SINO_SI", "logico", "imprimir", "leer", "fin_Bloque", "fin" };
         //Eso de var número aú no lo puedo corroboara, cre que deberá irse, sino tendrás que hacer un montón... y como no debes exe :) xD
 
@@ -61,17 +61,26 @@ namespace proyecto_IDE.Automatas
             return 0;//pero nunca llegará acá puesto que los estados los ingresé yo y por la inclusión de los T, hice una excepción y por ello está asegurado que no habrá errores xD
         }
 
-        public int buscarTerminal(String terminal)
+        public int buscarTerminal(String terminal, String tokenSiguiente)
         {
             for (int terminalActual = 0; terminalActual < terminales.Length; terminalActual++)
             {
                 if (terminales[terminalActual].Equals(terminal))//ya no es necesario el método de dar parte de IMPORTANCIA,porque ahora lo hace el analizador sintáctico xD
                 {
                     indiceTerminalActual = terminalActual;
-                    return terminalActual;
+                    return darOpcionCorrespondiente(tokenSiguiente);                    
                 }
             }
             return 0;
+        }
+
+        private int darOpcionCorrespondiente(String tokenSiguiente)
+        { //será llamado en la parte del parámetro del token de "darProduccion" para obtener la correspondiente debido a los caminos alternos...
+            if ((indiceTerminalActual==3 && tokenSiguiente.Equals("=")))
+            {
+                return 28;
+            }
+            return indiceTerminalActual;
         }
 
         public bool esTerminal(String tipo)
@@ -129,7 +138,7 @@ namespace proyecto_IDE.Automatas
                 pila.desapilar();//puesto que en esa situación, no es de mi interés revisar las producciones de los NT que estuvieran ahí presentes...
             }
             listaNoTerminalesGeneralesEnEstudio.eliminarUltimoNodo();//puesto que se sabe que se llegó a la posi antes de la que ocupaba dicho NT...
-        }
+        }//tendo que agregar lo de I
 
         public void establecerObjetoExcepcion(ExcepcionSintactico excepcion) {
             excepcionSintactico = excepcion;

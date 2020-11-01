@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using proyecto_IDE.Complementos_analizadores.Sintactico.Simbolos;
 
 namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
 {
-    class J: NoTerminal
+    class K: NoTerminal
     {
-        public J() {
+        public K()
+        {
             producciones = new Produccion[2];
-            
             definirProducciones();
             soyGeneral = false;
             contengoCuerpo = false;
-            nombre = "J";
-            nombreCompleto = "TipoValor";
+            nombre = "K";
+            nombreCompleto = "Multiple Comparacion";
         }
 
         public override void definirProducciones()
@@ -25,11 +24,12 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
             base.definirProducciones();
 
             producciones[0] = new Produccion();
-            producciones[1] = new Produccion();
+            producciones[1] = new Produccion();            
 
-            producciones[0].agregarTerminal("var_numero");//Creo que este NT desaparecerá puesto que no puedo revisar el tipo para decir que es numérico... bueno sí, pero habría que hacer algunas excepciones por el hecho de tener que revisar en algunos el 1ros y en otros el 2do...
+            producciones[0].agregarNoTerminal("H");
+            producciones[0].agregarTerminal("comparacion");
 
-            producciones[1].agregarTerminal("valor_numero");
+            producciones[1].agregarTerminal("e");
         }
 
     }

@@ -65,11 +65,12 @@
     <Compile Include="Complementos_analizadores\Sintactico\Estados\G.cs" />
     <Compile Include="Complementos_analizadores\Sintactico\Estados\H.cs" />
     <Compile Include="Complementos_analizadores\Sintactico\Estados\I.cs" />
-    <Compile Include="Complementos_analizadores\Sintactico\Estados\J.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\K.cs" />
     <Compile Include="Complementos_analizadores\Sintactico\Estados\L.cs" />
     <Compile Include="Complementos_analizadores\Sintactico\Estados\N.cs" />
     <Compile Include="Complementos_analizadores\Sintactico\Estados\O%27.cs" />
     <Compile Include="Complementos_analizadores\Sintactico\Estados\O.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\Estados\Q.cs" />
     <Compile Include="Complementos_analizadores\Sintactico\Estados\R.cs" />
     <Compile Include="Complementos_analizadores\Sintactico\Estados\S.cs" />
     <Compile Include="Complementos_analizadores\Sintactico\Estados\T%27.cs" />
