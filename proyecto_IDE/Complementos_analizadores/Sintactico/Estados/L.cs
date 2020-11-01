@@ -33,25 +33,25 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
             producciones[0].agregarTerminal("parentesis_Cierre");
             producciones[0].agregarNoTerminal("N");
             producciones[0].agregarTerminal("parentesis_Apertura");
-            producciones[0].agregarTerminal("Funcional_MIENTRAS");
+            producciones[0].agregarTerminal("Estructural_MIENTRAS");
             producciones[0].agregarNoTerminal("B");
             producciones[0].agregarTerminal("Funcional_HACER");
 
             producciones[1].agregarNoTerminal("B");
             producciones[1].agregarNoTerminal("J");
-            producciones[1].agregarTerminal("Funcional_INCREMENTO");
+            producciones[1].agregarTerminal("Estructural_INCREMENTO");
             producciones[1].agregarNoTerminal("N");
             producciones[1].agregarTerminal("Funcional_HASTA");
             producciones[1].agregarNoTerminal("J");
-            producciones[1].agregarTerminal("igual");
+            producciones[1].agregarTerminal("asignacion_igualA");
             producciones[1].agregarNoTerminal("J");
-            producciones[1].agregarTerminal("Funcional_DESDE");
+            producciones[1].agregarTerminal("Estructural_DESDE");
 
             producciones[2].agregarNoTerminal("B");
             producciones[2].agregarTerminal("parentesis_Cierre");
             producciones[2].agregarNoTerminal("N");
             producciones[2].agregarTerminal("parentesis_Apertura");
-            producciones[2].agregarTerminal("Funcional_MIENTRAS");
+            producciones[2].agregarTerminal("Estructural_MIENTRAS");
         }
 
         public B darBloque() {

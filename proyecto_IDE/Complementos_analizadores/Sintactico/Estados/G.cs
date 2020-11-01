@@ -28,7 +28,7 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
             producciones[0].agregarTerminal("e");
 
             producciones[1].agregarNoTerminal("G");
-            producciones[1].agregarTerminal("logico_negacion");
+            producciones[1].agregarTerminal("negacion");//por la ambiguedad con simbolo_logico... xD
         }
 
     }

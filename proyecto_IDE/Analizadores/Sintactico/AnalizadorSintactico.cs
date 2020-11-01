@@ -20,7 +20,7 @@ namespace proyecto_IDE.Analizadores
         AutomataDePila automataPilas;//xD
         ListaEnlazada<Token> listaEnlazadaToken;
         ExcepcionSintactico excepcionSintactico = new ExcepcionSintactico();
-        Kit herramientas;
+        Kit herramientas;        
 
         int tokenPorDar = 1;//por esto, la variable finalizará en un valor 2 pasos más allá del tamaño de la lista xD
 
@@ -51,8 +51,9 @@ namespace proyecto_IDE.Analizadores
             return nodoAuxiliar.contenido;
         }
 
-        public void analizarCodigo() {//Aquí convergerá todos los métodos para realizar el análisis
+        public void analizarCodigo() {//Aquí convergerá todos los métodos para realizar el análisis           
             Token tokenSolicitado= darTokenSiguiente();//para que pueda ubicarse en el token inicial y así iniciar el análisis a partir de él...
+            String parteDeImportancia = darParteImportancia(tokenSolicitado.darClasificacion());//puesto que por los valores y variables numéricas solo debe hacerse una vez, y es cuando se detecte que el NT es una operación o ciclo, por lo cual podía hacerse revisando el listado de NT generales o revisando la pila... da igual xD
             
             while (!automataPilas.darPila().esVacia() || (tokenPorDar <= listaEnlazadaToken.darTamanio())) {//realmente esto no sucederá por el la resiliencia... [reposición ante los errores], es decir que                                                                                            
                 //todos los errores se tratarán dentro de este método y no más xD y por ello bastaría con decir que el indice halla sobrepasado el tamaño ó que la pila esté vacía para parar...
@@ -60,24 +61,27 @@ namespace proyecto_IDE.Analizadores
                 {
                     //if (tokenSolicitado.darToken().Equals(automataPilas.darPila().inspeccionarTope().darContenido()))
                     //{
-                    if (!automataPilas.reducir(tokenSolicitado.darClasificacion(), tokenSolicitado.darFilaUbicacionInicio()))
+                    if (!automataPilas.reducir(tokenSolicitado.darToken(), parteDeImportancia, tokenSolicitado.darFilaUbicacionInicio()))
                     {
                         tokenSolicitado =  pasarTokens(tokenSolicitado);
+                        parteDeImportancia = darParteImportancia(tokenSolicitado.darClasificacion());
                     }
                     else {
                         tokenSolicitado= darTokenSiguiente();//pues solo al coincidir los tokens debería pasar con normalidad al siguiente token...
+                        parteDeImportancia = darParteImportancia(tokenSolicitado.darClasificacion());
                     }
                     //} lo comenté por si acaso decides tratar los errores acá..
                 }
                 else {
-                    ListaEnlazada<Elemento> listaElementos = transicion.darProduccion(automataPilas.buscarEstado(automataPilas.darPila().inspeccionarTope().darContenido()), automataPilas.buscarTerminal(tokenSolicitado.darClasificacion()));
+                    ListaEnlazada<Elemento> listaElementos = transicion.darProduccion(automataPilas.buscarEstado(automataPilas.darPila().inspeccionarTope().darContenido()), automataPilas.buscarTerminal(parteDeImportancia));
 
                     if (listaElementos != null)
                     {
                         automataPilas.reemplazar(listaElementos);
                     }
                     else {
-                        pasarTokens(tokenSolicitado);
+                        tokenSolicitado = pasarTokens(tokenSolicitado);
+                        parteDeImportancia = darParteImportancia(tokenSolicitado.darClasificacion());
                         automataPilas.eludirExcepcion();//se ignoran los elementos y se elemina el estado general de la lista, para así trabajr con quine corresponde xD
                         excepcionSintactico.reaccionarAnteProduccionNoExistente(automataPilas.darPila().inspeccionarTope().darTipo(), tokenSolicitado.darFilaUbicacionInicio());
                     }                    
@@ -92,10 +96,33 @@ namespace proyecto_IDE.Analizadores
             {
                 tokenAnterior = tokenSolicitado;
                 tokenSolicitado = darTokenSiguiente();//imagino que como estoy trabajndo por referencia entonces el valor del token de allá afuera cambiará.. sino entonces haz que este método devuelva el token y ya xd
-            } while (tokenPorDar < listaEnlazadaToken.darTamanio() && (!tokenAnterior.Equals("}") || !tokenAnterior.Equals(";") || !tokenAnterior.Equals("{")));
+            } while (tokenPorDar < listaEnlazadaToken.darTamanio() && !tokenAnterior.darToken().Equals("}") && !tokenAnterior.darToken().Equals(";") && !tokenAnterior.darToken().Equals("{"));
             return tokenSolicitado;
-        }
-        
+        }//recuerda que lo que debes hacer es llegar hasta el token con el que empieza la otra estructura para empezar bien el análisis con él... xD
+
+        public String darParteImportancia(String tokenTerminal)
+        { //esto será útil para cambiar de columna y para hacer la reducción
+            String[] partes;
+
+            if (((tokenTerminal.StartsWith("var") || tokenTerminal.StartsWith("valor")) && !automataPilas.darListadoNoTerminalesEnEstudio().estaVacia() && automataPilas.darListadoNoTerminalesEnEstudio().darUltimoNodo().contenido.Equals("E")) || tokenTerminal.Equals("logico_negacion"))
+            {
+                partes = tokenTerminal.Split('_');
+                return partes[1];//pues solo quiero la palabra boolean... ó la palabra negación, según sea el caso xD
+            }
+            if ((tokenTerminal.StartsWith("var") || tokenTerminal.StartsWith("valor")) && !automataPilas.darListadoNoTerminalesEnEstudio().estaVacia() && (automataPilas.darListadoNoTerminalesEnEstudio().darUltimoNodo().contenido.Equals("I") ||
+                automataPilas.darListadoNoTerminalesEnEstudio().darUltimoNodo().contenido.Equals("L"))) {
+                return "valor_numero";//xD jajaja
+
+            }//puesto que un tkn se pide otra vez después de comparar al tkn recibido con con el elemento del tope de la pila que se determinó que es T, entonces no habrá problema de establecer de una vez la parte de importancia así xD, porque se mantendrá de esta forma, justo con aquellos NT que lo requieren así UwU xD
+            if(    tokenTerminal.StartsWith("logico") || tokenTerminal.StartsWith("comparacion"))
+            {
+                partes = tokenTerminal.Split('_');
+                return partes[0];//Esto porque la gramática solo requiere de var y valor para NT diferentes a I y L, y solo requiere de la palabra lógico y comparación cuando estas vengan xD
+            }
+
+            return tokenTerminal;
+        }//y así se ha logrado poner de acuerdo con el token y la columna del tkn permitido ó el token y el elemento de producción [el cual tiene el mismo valor que el de la col... o al menos debería...]
+
         public String[] darSugerencias(String porcion) {            
             ListaEnlazada<String> listadoCoincidentes = buscador.hallarCoincidentes(porcion);
             String[] coincidencias = new String[listadoCoincidentes.darTamanio()];

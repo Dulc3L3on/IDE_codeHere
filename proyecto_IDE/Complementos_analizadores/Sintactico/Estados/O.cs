@@ -32,7 +32,7 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
             producciones[0].agregarTerminal("parentesis_Cierre");
             producciones[0].agregarNoTerminal("N");
             producciones[0].agregarTerminal("parentesis_Apertura");
-            producciones[0].agregarTerminal("Funcional_SI");
+            producciones[0].agregarTerminal("Estructural_SI");
         }
 
         public B darBloque() {

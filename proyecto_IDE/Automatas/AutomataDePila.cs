@@ -29,8 +29,8 @@ namespace proyecto_IDE.Automatas
 
         String[] terminales = {"Reservada_principal", "inicio_Bloque", "tipo", "booleano", "var", "valor", "signo_mas",
             "signo_menos", "signo_multiplicacion", "signo_division", "asignacion_igualA", "parentesis_Apertura", "parentesis_Cierre",
-            "logico_negacion", "asignacion_fin", "coma", "comparacion", "var_numero", "valor_numero", "Funcional_HACER", "Funcional_DESDE",
-            "Funcional_MIENTRAS", "Funcional_INCREMENTO", "Funcional_SI", "Funcional_SINO", "Funcional_SINO_SI", "logico", "imprimir", "leer", "fin_Bloque", "fin" };
+            "negacion", "asignacion_fin", "coma", "comparacion", "var_numero", "valor_numero", "Estructural_HACER", "Estructural_DESDE",//sino habrá AMBIGUEDAD por la palabra lógico de simbolo lógico xD
+            "Estructural_MIENTRAS", "Estructural_INCREMENTO", "Estructural_SI", "Estructural_SINO", "Estructural_SINO_SI", "logico", "imprimir", "leer", "fin_Bloque", "fin" };
         //Eso de var número aú no lo puedo corroboara, cre que deberá irse, sino tendrás que hacer un montón... y como no debes exe :) xD
 
         public AutomataDePila() {
@@ -65,7 +65,7 @@ namespace proyecto_IDE.Automatas
         {
             for (int terminalActual = 0; terminalActual < terminales.Length; terminalActual++)
             {
-                if (terminales[terminalActual].Equals(terminal))
+                if (terminales[terminalActual].Equals(terminal))//ya no es necesario el método de dar parte de IMPORTANCIA,porque ahora lo hace el analizador sintáctico xD
                 {
                     indiceTerminalActual = terminalActual;
                     return terminalActual;
@@ -83,25 +83,9 @@ namespace proyecto_IDE.Automatas
             return false;
         }//dependiendo del resultado que devuelva este método se "reducirá" ó "reemplazará"
 
-        public String darParteImportancia(String tokenTerminal) { //esto será útil para cambiar de columna y para hacer la reducción
-            String[] partes;           
-
-            if ((tokenTerminal.StartsWith("var") || tokenTerminal.StartsWith("valor")) && noTerminales[indiceNTActual].darNombre().Equals("E")) {
-                partes = tokenTerminal.Split('_');
-                return partes[1];//pues solo quiero la palabra boolean...
-            }
-            if (((tokenTerminal.StartsWith("var") || tokenTerminal.StartsWith("valor")) && (noTerminales[indiceNTActual].darNombre().Equals("I") || noTerminales[indiceNTActual].darNombre().Equals("L"))) || 
-                tokenTerminal.StartsWith("logico") || tokenTerminal.StartsWith("comparacion"))
-            {
-                partes = tokenTerminal.Split('_');
-                return partes[0];
-            }
-
-            return tokenTerminal;
-        }//y así se ha logrado poner de acuerdo con el token y la columna del tkn permitido ó el token y el elemento de producción [el cual tiene el mismo valor que el de la col... o al menos debería...]
-
-        public bool reducir(String tokenTerminal, int numeroFila) {//reduce
-            String parteComparacion = darParteImportancia(tokenTerminal);
+      
+        public bool reducir(String contenidoToken, String tokenTerminal, int numeroFila) {//reduce
+            String parteComparacion = tokenTerminal;//el analizador sintáctico es quien da ahora la parte de IMPORTANCIA pora resolver el problema con los valores numéricos cuando la estructura general es una operaíón o ciclo xD...
 
             if (tokenTerminal.Equals("e") || parteComparacion.Equals(pila.inspeccionarTope().darContenido()))
             { //y aquí el elemento del tope de la pila             
@@ -114,7 +98,7 @@ namespace proyecto_IDE.Automatas
             }
             //Sino pues aquí se trata el error...
             eludirExcepcion();
-            excepcionSintactico.reaccionarAnteNoIgualdad(noTerminales[indiceNTActual].nombreCompleto, tokenTerminal, numeroFila);                            
+            excepcionSintactico.reaccionarAnteNoIgualdad(noTerminales[indiceNTActual].nombreCompleto, contenidoToken, numeroFila);                            
             return false;//devulevo esto con tal de no tener qu erecibir el analizador Sintáctico solo para hacer esto... si llegaras a necesitarlo para otra operación entonces ahí si, deplano que habrá que establecerlo, pero quizá por medio de otro método que se exe antes de llegar al for para analizar el código...
         }//no se si sea mejor manejar los errores aquí o en el sintác directamente...
 
@@ -156,7 +140,9 @@ namespace proyecto_IDE.Automatas
             return pila;
         }
 
-
+        public ListaEnlazada<String> darListadoNoTerminalesEnEstudio() {
+            return listaNoTerminalesGeneralesEnEstudio;
+        }
     }  
 }
 

@@ -36,14 +36,14 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
             producciones[1].agregarTerminal("parentesis_Cierre");
             producciones[1].agregarNoTerminal("N");
             producciones[1].agregarTerminal("parentesis_Apertura");
-            producciones[1].agregarTerminal("Funcional_SI");//tendré que agregarle la alternativa???
+            producciones[1].agregarTerminal("Estructural_SI");//tendré que agregarle la alternativa???
 
             producciones[2].agregarNoTerminal("O'");
             producciones[2].agregarNoTerminal("B");
             producciones[2].agregarTerminal("parentesis_Cierre");
             producciones[2].agregarNoTerminal("N");
             producciones[2].agregarTerminal("parentesis_Apertura");
-            producciones[2].agregarTerminal("Funcional_SINO_SI");
+            producciones[2].agregarTerminal("Estructural_SINO_SI");
         }
 
         public B darBloque() {

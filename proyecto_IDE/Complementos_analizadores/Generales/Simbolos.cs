@@ -113,7 +113,7 @@ namespace proyecto_IDE.Complementos_analizadores
 
         private String buscarEnEstructurales(String palabraABuscar)
         {
-            for (int palabraActual = 0; palabraActual < reservadasFuncionales.Length; palabraActual++)
+            for (int palabraActual = 0; palabraActual < reservadasEstructurales.Length; palabraActual++)
             {
                 if (palabraABuscar.Equals(reservadasEstructurales[palabraActual]))
                 {
@@ -127,9 +127,9 @@ namespace proyecto_IDE.Complementos_analizadores
         {
             for (int palabraActual = 0; palabraActual < reservadasFuncionales.Length; palabraActual++)
             {
-                if (palabraABuscar.Equals(reservadasEstructurales[palabraActual]))
+                if (palabraABuscar.Equals(reservadasFuncionales[palabraActual]))
                 {
-                    return "Funcional_" + reservadasEstructurales[palabraActual];
+                    return "Funcional_" + reservadasFuncionales[palabraActual];
                 }
             }
             return "erronea";

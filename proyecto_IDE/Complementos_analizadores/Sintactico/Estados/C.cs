@@ -34,8 +34,8 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
 
             producciones[1].agregarNoTerminal("A");
 
-            producciones[2].agregarNoTerminal("I");
             producciones[2].agregarTerminal("asignacion_fin");
+            producciones[2].agregarNoTerminal("I");            
 
             producciones[3].agregarNoTerminal("L");
 

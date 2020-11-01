@@ -12,7 +12,7 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Simbolos
             producciones = new Produccion[2];
 
             definirProducciones();
-            soyGeneral = true;
+            soyGeneral = true;//porque sino cuando empiece el bloque y de casualidad la primer estructura está mal, no se revisarán las demás aunque estén buenas... 
             contengoCuerpo = false;
             nombre = "B'";
             nombreCompleto = "Bloque";//no se colocará prima porque esto es mostrado en el log... y además no hay choque puesto que no es una opción a escoger el nombre completo, sino una opción a mostrar...

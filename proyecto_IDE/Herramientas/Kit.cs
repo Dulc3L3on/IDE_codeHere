@@ -34,6 +34,10 @@ namespace proyecto_IDE.Herramientas
             {
                 return 'p';//de punto
             }
+            if ((int)caracterInicial == 95)
+            {
+                return '_';//de punto guión bajo :v
+            }
 
             if ((int)caracterInicial == 34 || (int)caracterInicial == 47)//cuando la c se hay devueto por el hecho de ser 47, tendrá que analizarse inmediatamente su siguiente en el método qie determina las agrupaciones, para saber si se sigue analizando ahí o no...
             {

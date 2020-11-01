@@ -13,7 +13,7 @@ namespace proyecto_IDE.Excepciones
 
         public void reaccionarAnteProduccionNoExistente(String NTenCuestion, int numeroFila)//donde dicho NT corresponde al nombre [normal xd] del estado al cual se movió para cambiar de fila por el hecho de estar en el tope...
         {
-            String mensajeError ="Error: fila "+ numeroFila;
+            String mensajeError ="Error: línea "+ numeroFila;
 
             switch (NTenCuestion) {
                 case "M":
@@ -25,7 +25,7 @@ namespace proyecto_IDE.Excepciones
                     listaErrores.anadirAlFinal(mensajeError);
                     break;
                 case "B'": case "C":
-                    mensajeError = mensajeError + "Las unicas estructuras válidas son: ciclo, asignación, declaración, condición operacion, escritura y lectura";
+                    mensajeError = mensajeError + "Las Únicas estructuras válidas son: ciclo, asignación, declaración, condición operacion, escritura y lectura";
                     listaErrores.anadirAlFinal(mensajeError);
                     break;
                 
@@ -108,7 +108,7 @@ namespace proyecto_IDE.Excepciones
                 mensajeError = "Error: fila " + numeroFila + ">>> Inicio de bloque mal posicionado";
             }
             else {
-                mensajeError = "Error: fila "+ numeroFila+" >>> No se esperaba "+ token+" en la estrutura "+ nombreNT;
+                mensajeError = "Error: fila "+ numeroFila+" >>> No se esperaba \""+ token+"\" en la estructura "+ nombreNT;
             }            
             listaErrores.anadirAlFinal(mensajeError);
         }

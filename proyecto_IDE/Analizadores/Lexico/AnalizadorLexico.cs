@@ -31,10 +31,10 @@ namespace proyecto_IDE.Analizadores
         public void analizarLinea(char[] lineaDesglosada, int numeroLinea) {
             for (int caracterActual = 0; caracterActual < lineaDesglosada.Length; caracterActual++)
             {
-                if (!((int)lineaDesglosada[caracterActual] == 32))
+                if (!((int)lineaDesglosada[caracterActual] == 32) && !((int)lineaDesglosada[caracterActual] == 9))
                 { //Es decir es un espacio en blanco...
                     caracterActual = analizarAgrupadores(lineaDesglosada, numeroLinea, caracterActual);
-                    if (controlCierre.hayQueAnalizarPrimitivos() && (caracterActual) < lineaDesglosada.Length && (int)lineaDesglosada[caracterActual] != 32)//puesto que este es el último analizado y si entro a analizar los primitivos, no debería se
+                    if (controlCierre.hayQueAnalizarPrimitivos() && (caracterActual) < lineaDesglosada.Length && (int)lineaDesglosada[caracterActual] != 32 && !((int)lineaDesglosada[caracterActual] == 9))//puesto que este es el último analizado y si entro a analizar los primitivos, no debería se
                     {
                         caracterActual = analizarPrimitivos(lineaDesglosada, numeroLinea, caracterActual);
                     }
@@ -194,19 +194,20 @@ namespace proyecto_IDE.Analizadores
             while ((posicionAnalisis < lineaAEstudiar.Length) && (int)lineaAEstudiar[posicionAnalisis] != 32 && (parar == false))
             {//Es decir mientras no halle un espacio en blanco...      para cuando ya se agregue el identificador esta condi de !palabra deberá cambiar puesto que sin importar que sea palabra o identificador, deberá parar... ahi si deberá usarse un bool, que cb de val para que ya no siga, media vez entre al if para usar el método de Excepción...
 
-                if (herramienta.determinarTipoCaracter(lineaAEstudiar[posicionAnalisis]) != 'l' || herramienta.determinarTipoCaracter(lineaAEstudiar[posicionAnalisis]) != 'd')//como no restringieron que viniera una letra después del "_"...
+                if (herramienta.determinarTipoCaracter(lineaAEstudiar[posicionAnalisis]) == 'p' || herramienta.determinarTipoCaracter(lineaAEstudiar[posicionAnalisis]) == '_' || herramienta.determinarTipoCaracter(lineaAEstudiar[posicionAnalisis]) == 'c' || herramienta.determinarTipoCaracter(lineaAEstudiar[posicionAnalisis]) == 'o')//como no restringieron que viniera una letra después del "_"...
                 {
                     detallesPalabra[1] = excepcionLexico.excepcionIdentificador(numeroLinea, posicionAnalisis, lineaAEstudiar, detallesPalabra[2].Length);
                     parar = true;
                 }
                 if (parar == false)
                 {
-                    detallesPalabra[2] += lineaAEstudiar[posicionAnalisis];
-                    posicionAnalisis++;//1 pos más alla de lo que se concatenó por este método, por lo cual al enviar los datos a resultado es nec restarle 1 pues no se quedó en esta col la concat, sino en la any
+                    detallesPalabra[2] += lineaAEstudiar[posicionAnalisis];                    
 
                     if (posicionAnalisis == (posicionInicialAnalisis+1)) {
                         detallesPalabra[1] = "var";
                     }
+
+                    posicionAnalisis++;//1 pos más alla de lo que se concatenó por este método, por lo cual al enviar los datos a resultado es nec restarle 1 pues no se quedó en esta col la concat, sino en la any
                 }//esto desaperecerá al tener al identificador, porque independientemente de lo que se tenga se debe parar
             }
 

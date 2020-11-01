@@ -32,7 +32,7 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
 
             producciones[1].agregarNoTerminal("E'");
             producciones[1].agregarNoTerminal("B");
-            producciones[1].agregarTerminal("Funcional_SINO");      
+            producciones[1].agregarTerminal("Estructural_SINO");      
         }
 
         public B darBloque() {
