@@ -61,12 +61,15 @@ namespace proyecto_IDE.Analizadores
                 {
                     //if (tokenSolicitado.darToken().Equals(automataPilas.darPila().inspeccionarTope().darContenido()))
                     //{
-                    if (!automataPilas.reducir(tokenSolicitado.darToken(), parteDeImportancia, tokenSolicitado.darFilaUbicacionInicio()))
+                    int tipoSituacion = automataPilas.reducir(tokenSolicitado.darToken(), parteDeImportancia, tokenSolicitado.darFilaUbicacionInicio());
+
+                    if (tipoSituacion == 0)
                     {
                         tokenSolicitado =  pasarTokens(tokenSolicitado);
                         parteDeImportancia = darParteImportancia(tokenSolicitado.darClasificacion());
                     }
-                    else {
+                    else if(tipoSituacion == 1)//no pongo 2 porque con esa opción no se debe pasar al sig token y tampoco es un error...
+                    {
                         tokenSolicitado= darTokenSiguiente();//pues solo al coincidir los tokens debería pasar con normalidad al siguiente token...
                         parteDeImportancia = darParteImportancia(tokenSolicitado.darClasificacion());
                     }

@@ -12,7 +12,7 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico
     class Transicion
     {//aquí se definirán todas las transicicones que se realizarán en la tabla de trancisiones        
 
-        Produccion[,] producciones = new Produccion[30, 29];//la última columna es por las alternativas... [solo para el caso de Z y N porque asig y op, ya ocupan una celda... entonces solo deberá hacerse referencia a la que corresponda...al igual que para G y N xd]
+        Produccion[,] producciones = new Produccion[30, 28];//ya no se requieren alternativas xD pues el problema ya está resuelto [por medio de un modo más facilito xd]
             
         M principal; L ciclo;
         B bloque; E estructuraCondicional;
@@ -130,20 +130,21 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico
             producciones[19, 10] = condicion.darProduccion(0);
             producciones[19, 11] = condicion.darProduccion(1);
             producciones[19, 12] = condicion.darProduccion(0);//5
-            producciones[20, 11] = multipleCondicion.darProduccion(0);
-            producciones[20, 23] = multipleCondicion.darProduccion(1);//2
+            producciones[20, 11] = multipleCondicion.darProduccion(1);
+            producciones[20, 23] = multipleCondicion.darProduccion(0);//2
             producciones[21, 3] = cuerpoCondicion.darProduccion(0);
             producciones[21, 4] = cuerpoCondicion.darProduccion(0);
             producciones[21, 10] = cuerpoCondicion.darProduccion(1);
             producciones[21, 11] = cuerpoCondicion.darProduccion(2);
             producciones[21, 12] = cuerpoCondicion.darProduccion(0);
             producciones[21, 23] = cuerpoCondicion.darProduccion(2);//6
+            producciones[22, 11] = multipleComparacion.darProduccion(1);
             producciones[22, 15] = multipleComparacion.darProduccion(0);
-            producciones[22, 23] = multipleComparacion.darProduccion(1);//2
+            producciones[22, 23] = multipleComparacion.darProduccion(1);//3
             producciones[23, 3] = iteracionNegacion.darProduccion(0);
             producciones[23, 4] = iteracionNegacion.darProduccion(0);
             producciones[23, 11] = iteracionNegacion.darProduccion(1);
-            producciones[23, 12] = iteracionNegacion.darProduccion(2);
+            producciones[23, 12] = iteracionNegacion.darProduccion(0);
             producciones[23, 15] = iteracionNegacion.darProduccion(1);
             producciones[23, 23] = iteracionNegacion.darProduccion(1);//6
             producciones[24, 3] = negacion.darProduccion(0);
@@ -158,8 +159,6 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico
             producciones[27, 11] = concatenacionPrima.darProduccion(1);//2
             producciones[28, 24] = impresion.darProduccion(0);//1
             producciones[29, 25] = lectura.darProduccion(0);//1
-
-            producciones[6, 28] = operacion.darProduccion(0);//será la única excepción :o xD
         }
 
         public Produccion[,] darTablaTrancisiones() {

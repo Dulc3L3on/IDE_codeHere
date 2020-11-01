@@ -76,9 +76,9 @@ namespace proyecto_IDE.Automatas
 
         private int darOpcionCorrespondiente(String tokenSiguiente)
         { //será llamado en la parte del parámetro del token de "darProduccion" para obtener la correspondiente debido a los caminos alternos...
-            if ((indiceTerminalActual==3 && tokenSiguiente.Equals("=")))
+            if ((indiceTerminalActual==3 && !tokenSiguiente.Equals("=")))
             {
-                return 28;
+                return 6;//así se va directo a lo de operación, puesto que las columnas solo son para acceder a las producciones de la celda correspodiente, pero como yo se que cuando es B' y se tiene una var depende del signo =, entonces puedo hacer eso xD y como las producciones son exactamente las mismas para el caso de operación, cabal xD
             }
             return indiceTerminalActual;
         }
@@ -93,22 +93,24 @@ namespace proyecto_IDE.Automatas
         }//dependiendo del resultado que devuelva este método se "reducirá" ó "reemplazará"
 
       
-        public bool reducir(String contenidoToken, String tokenTerminal, int numeroFila) {//reduce
+        public int reducir(String contenidoToken, String tokenTerminal, int numeroFila) {//reduce
             String parteComparacion = tokenTerminal;//el analizador sintáctico es quien da ahora la parte de IMPORTANCIA pora resolver el problema con los valores numéricos cuando la estructura general es una operaíón o ciclo xD...
+            int tipoSituacion = parteComparacion.Equals(pila.inspeccionarTope().darContenido()) ? 1: (pila.inspeccionarTope().darContenido().Equals("e") ? 2 : 0);// es decir que el tkn era igual que el contenido de la pila
 
-            if (tokenTerminal.Equals("e") || parteComparacion.Equals(pila.inspeccionarTope().darContenido()))
-            { //y aquí el elemento del tope de la pila             
+            if (tipoSituacion == 1 || tipoSituacion == 2)
+            { //y aquí el elemento del tope de la pila                         
                 pila.desapilar();
 
                 if (!listaNoTerminalesGeneralesEnEstudio.estaVacia() &&  pila.darIndiceTope() == (Convert.ToInt32(listaNoTerminalesGeneralesEnEstudio.darUltimoNodo().darNombre())-1)) {
                     listaNoTerminalesGeneralesEnEstudio.eliminarUltimoNodo();//y así se elimina correctamente el NT general cuando se han acabado todas sus producciones xD                    
                 }
-                return true;
+
+                return tipoSituacion;                
             }
             //Sino pues aquí se trata el error...
             eludirExcepcion();
             excepcionSintactico.reaccionarAnteNoIgualdad(noTerminales[indiceNTActual].nombreCompleto, contenidoToken, numeroFila);                            
-            return false;//devulevo esto con tal de no tener qu erecibir el analizador Sintáctico solo para hacer esto... si llegaras a necesitarlo para otra operación entonces ahí si, deplano que habrá que establecerlo, pero quizá por medio de otro método que se exe antes de llegar al for para analizar el código...
+            return tipoSituacion;//devulevo esto con tal de no tener qu erecibir el analizador Sintáctico solo para hacer esto... si llegaras a necesitarlo para otra operación entonces ahí si, deplano que habrá que establecerlo, pero quizá por medio de otro método que se exe antes de llegar al for para analizar el código...
         }//no se si sea mejor manejar los errores aquí o en el sintác directamente...
 
         public void reemplazar(ListaEnlazada<Elemento> listaElementos) { //pop = sacar el estado anterior & shift = reemplazar por las respectivas producciones
