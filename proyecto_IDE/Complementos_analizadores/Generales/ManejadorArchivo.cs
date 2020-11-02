@@ -12,7 +12,7 @@ namespace proyecto_IDE.Complementos_analizadores
     [Serializable]
     class ManejadorArchivo
     {
-        String direccionCreado;
+        String direccionCreado;       
 
         public void guardarArchivoBinario(String Path, RichTextBox areaDesarrolloASerailizar) {
             try {
@@ -65,6 +65,12 @@ namespace proyecto_IDE.Complementos_analizadores
             }
         }
 
+        public void guardarArbol(String grafo) {                  
+            TextWriter tw = new StreamWriter("grafo.txt");
+            tw.WriteLine(grafo);
+            tw.Close();
+        }
+
         public String leerArchivo(String direccionALeer) {
             String datosLeidos="";
 
@@ -111,5 +117,11 @@ namespace proyecto_IDE.Complementos_analizadores
             return false;
         }
 
+        public bool existeArbol() {
+            if (File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "grafo.txt"))) { 
+                return true;
+            }
+            return false;
+        }       
     }
 }

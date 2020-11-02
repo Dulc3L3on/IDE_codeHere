@@ -54,6 +54,8 @@
     <Compile Include="Complementos_analizadores\Generales\ManejadorArchivo.cs" />
     <Compile Include="Complementos_analizadores\Generales\Token.cs" />
     <Compile Include="Complementos_analizadores\Generales\Simbolos.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\ArbolDerivaciones\ArbolDeDerivaciones.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\ArbolDerivaciones\Padre.cs" />
     <Compile Include="Complementos_analizadores\Sintactico\Elementos\Elemento.cs" />
     <Compile Include="Complementos_analizadores\Sintactico\Estados\A.cs" />
     <Compile Include="Complementos_analizadores\Sintactico\Estados\C.cs" />
@@ -81,6 +83,7 @@
     <Compile Include="Complementos_analizadores\Sintactico\Estados\X%27.cs" />
     <Compile Include="Complementos_analizadores\Sintactico\Estados\X.cs" />
     <Compile Include="Complementos_analizadores\Sintactico\Estados\Y.cs" />
+    <Compile Include="Complementos_analizadores\Sintactico\graph.cs" />
     <Compile Include="Complementos_analizadores\Sintactico\Peculiaridad.cs" />
     <Compile Include="Complementos_analizadores\Sintactico\Produccion.cs" />
     <Compile Include="Complementos_analizadores\Sintactico\Estados\B.cs" />

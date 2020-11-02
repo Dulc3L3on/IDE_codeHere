@@ -1,0 +1,16 @@
+digraph G {
+"0.M"->"1. B"
+"0.M"->"2. parentesis_Cierre"
+"0.M"->"3. parentesis_Apertura"
+"0.M"->"4. Reservada_principal"
+"1.B"->"5. B'"
+"1.B"->"6. inicio_Bloque"
+"5.B'"->"7. B'"
+"5.B'"->"8. C"
+"8.C"->"9. L"
+"9.L"->"10. B"
+"9.L"->"11. parentesis_Cierre"
+"9.L"->"12. N"
+"9.L"->"13. parentesis_Apertura"
+"9.L"->"14. Estructural_MIENTRAS"
+}

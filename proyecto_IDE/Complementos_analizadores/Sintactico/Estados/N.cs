@@ -10,7 +10,7 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
     class N : NoTerminal
     {
         public N() {
-            producciones = new Produccion[2];
+            producciones = new Produccion[1];
             definirProducciones();
             soyGeneral = false;
             contengoCuerpo = false;
@@ -22,14 +22,11 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
         {
             base.definirProducciones();
 
-            producciones[0] = new Produccion();//ya no es fusionada xD
-            producciones[1] = new Produccion();
+            producciones[0] = new Produccion();//ya no es fusionada xD            
 
             producciones[0].agregarNoTerminal("Q");
             producciones[0].agregarNoTerminal("Z");
-            producciones[0].agregarNoTerminal("G");
-
-            producciones[1].agregarTerminal("e");
+            producciones[0].agregarNoTerminal("G");            
         }
     }
 }

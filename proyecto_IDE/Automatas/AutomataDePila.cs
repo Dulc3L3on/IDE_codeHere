@@ -13,8 +13,7 @@ using proyecto_IDE.Herramientas;
 namespace proyecto_IDE.Automatas
 {
     class AutomataDePila
-    {
-        //Aquí la llamada a la pila xD
+    {        
         Pila<Elemento> pila;
         Elemento noTerminalInicial = new Elemento();
         Elemento marcaDeFin = new Elemento();
@@ -22,10 +21,9 @@ namespace proyecto_IDE.Automatas
         int indiceTerminalActual;//Estos eran para hacer el trato de los 2 tipos de excepciones [extra y faltante]
         int indiceNTActual;
         ExcepcionSintactico excepcionSintactico;
+        ArbolDeDerivaciones arbol = new ArbolDeDerivaciones("M");
 
-        NoTerminal[] noTerminales = {new M(), new B(false), new B_(), new C(), new D(), new Y(), new A(), new I(), new X(), new T(), new U(), new X_(), new T_(), new S(), new L(), new E(), new E_(), new O(), new O_(), new N(), new Q(), new Z(), new K(), new H(), new G(), new V(), new F(), new F_(), new W(), new R()};//no será funcional, puesto que no se considerará la exe...si se considerara, tendría que hallarse la forma de que cada vez que se llegase a B, se agregara un bloque al NT por el cual se ll´gó ahí... pero creo que para eso habría que hacerlo desde el NT enviador... xd
-        //NoTerminal[] noTerminales = new NoTerminal[29];
-        //NoTerminal[0] = new M();
+        NoTerminal[] noTerminales = {new M(), new B(false), new B_(), new C(), new D(), new Y(), new A(), new I(), new X(), new T(), new U(), new X_(), new T_(), new S(), new L(), new E(), new E_(), new O(), new O_(), new N(), new Q(), new Z(), new K(), new H(), new G(), new V(), new F(), new F_(), new W(), new R()};//no será funcional, puesto que no se considerará la exe...si se considerara, tendría que hallarse la forma de que cada vez que se llegase a B, se agregara un bloque al NT por el cual se ll´gó ahí... pero creo que para eso habría que hacerlo desde el NT enviador... xd      
 
         String[] terminales = {"Reservada_principal", "inicio_Bloque", "tipo", "var", "valor", "signo_mas",
             "signo_menos", "signo_multiplicacion", "signo_division", "asignacion_igualA", "parentesis_Apertura", "parentesis_Cierre",
@@ -102,14 +100,17 @@ namespace proyecto_IDE.Automatas
                 pila.desapilar();
 
                 if (!listaNoTerminalesGeneralesEnEstudio.estaVacia() &&  pila.darIndiceTope() == (Convert.ToInt32(listaNoTerminalesGeneralesEnEstudio.darUltimoNodo().darNombre())-1)) {
-                    listaNoTerminalesGeneralesEnEstudio.eliminarUltimoNodo();//y así se elimina correctamente el NT general cuando se han acabado todas sus producciones xD                    
+                    listaNoTerminalesGeneralesEnEstudio.eliminarUltimoNodo();//y así se elimina correctamente el NT general cuando se han acabado todas sus producciones xD[porqueo lleguó a un espacio antes de donde se encontraba dicho NT]                    
                 }
+                if (tokenTerminal.Equals("fin")) {
+                    arbol.terminarArbol();
+                }//con este símbolo nunca habrá problemas... siempre terminará haciendo match xD
 
                 return tipoSituacion;                
             }
             //Sino pues aquí se trata el error...
-            eludirExcepcion();
-            excepcionSintactico.reaccionarAnteNoIgualdad(noTerminales[indiceNTActual].nombreCompleto, contenidoToken, numeroFila);                            
+            excepcionSintactico.reaccionarAnteNoIgualdad(noTerminales[indiceNTActual].nombreCompleto, contenidoToken, numeroFila+1);
+            eludirExcepcion();            
             return tipoSituacion;//devulevo esto con tal de no tener qu erecibir el analizador Sintáctico solo para hacer esto... si llegaras a necesitarlo para otra operación entonces ahí si, deplano que habrá que establecerlo, pero quizá por medio de otro método que se exe antes de llegar al for para analizar el código...
         }//no se si sea mejor manejar los errores aquí o en el sintác directamente...
 
@@ -123,6 +124,7 @@ namespace proyecto_IDE.Automatas
                 nodoAuxiliar = nodoAuxiliar.nodoSiguiente;
             }
 
+            arbol.anadirNodos(elementos);
             pila.apilar(elementos); //recuerda que el método comineza a llenarla a partir del último espacio, para hacer el "pop"
         }
         //OJO la pila será la que se encargue de pasar uno a uno los elementos del arreglo que se le pasó...
@@ -132,12 +134,18 @@ namespace proyecto_IDE.Automatas
             //Se ingnoran [o pasan] todos los tkns hasta llegar a un ; ó {, si es que el elemento fallido no fue }, puesto que se arruinaría [Esto se hace en el analizador sintáctico xD]
             //El proceso puesto que la estructura completa, la forma el solo...
             pasarElementos();
+            denegarCrecimientoArbol();
         }
 
         public void pasarElementos() {
             //Se borrarán hasta llegar a una posición antes de donde se encontraba el NT en cuestión...
             while (!listaNoTerminalesGeneralesEnEstudio.estaVacia() && pila.darIndiceTope()>= Convert.ToInt32(listaNoTerminalesGeneralesEnEstudio.darUltimoNodo().darNombre())) {//aunque bastaría con revisar que no esté vacía porque por la forma de trabajar, se que el último nodo no podría ser null a menos que no tenga nada...
+                String nomreNTAEliminar = listaNoTerminalesGeneralesEnEstudio.darUltimoNodo().contenido;
                 pila.desapilar();//puesto que en esa situación, no es de mi interés revisar las producciones de los NT que estuvieran ahí presentes...
+
+                if (nomreNTAEliminar.Equals("Operacion")) {
+                    pila.desapilar();//puesto que tiene el punto y coma a la par de la prod y no en su prod
+                }
             }
             listaNoTerminalesGeneralesEnEstudio.eliminarUltimoNodo();//puesto que se sabe que se llegó a la posi antes de la que ocupaba dicho NT...
         }//tendo que agregar lo de I
@@ -153,6 +161,10 @@ namespace proyecto_IDE.Automatas
 
         public ListaEnlazada<String> darListadoNoTerminalesEnEstudio() {
             return listaNoTerminalesGeneralesEnEstudio;
+        }
+
+        public void denegarCrecimientoArbol() {//será empleado por sintac cuando se llegue a una casilla nula... es decir cuando el listado de producciones sea nulo...
+            arbol.dejarDeAnadir();
         }
     }  
 }

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using proyecto_IDE.Analizadores;
 using proyecto_IDE.Complementos_analizadores;
+using proyecto_IDE.Complementos_analizadores.Sintactico;
 using proyecto_IDE.Herramientas;
 
 namespace proyecto_IDE
@@ -19,6 +20,7 @@ namespace proyecto_IDE
         AnalizadorLexico analizadorLexico;
         AnalizadorSintactico analizadorSintactico;
         ManejadorArchivo manejadorArchivo = new ManejadorArchivo();
+        graph grafoArbol = new graph();
 
         private int[] lineaCambiada = new int[2];//cuando el 2 tenga un valor !=0 se mandará a llamar la métood para analizar...
 
@@ -219,5 +221,14 @@ namespace proyecto_IDE
             areaDesarrollo.Clear();
             limpiarLog();
         }//Así como Word xD
+
+        private void verArbolDeDerivacionesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (manejadorArchivo.existeArbol()) {
+                System.Diagnostics.Process.Start("grafo.txt");
+                grafoArbol.generarArbol();
+                System.Diagnostics.Process.Start("grafo.jpg");//errorsin xD                
+            }
+        }
     }
 }

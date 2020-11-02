@@ -50,6 +50,7 @@ namespace proyecto_IDE
             this.compilarToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.editarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buscarPalabraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.verArbolDeDerivacionesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -203,7 +204,8 @@ namespace proyecto_IDE
             // compilarToolStripMenuItem
             // 
             this.compilarToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.compilarToolStripMenuItem1});
+            this.compilarToolStripMenuItem1,
+            this.verArbolDeDerivacionesToolStripMenuItem});
             this.compilarToolStripMenuItem.Name = "compilarToolStripMenuItem";
             this.compilarToolStripMenuItem.Size = new System.Drawing.Size(85, 24);
             this.compilarToolStripMenuItem.Text = "Opciones";
@@ -211,7 +213,7 @@ namespace proyecto_IDE
             // compilarToolStripMenuItem1
             // 
             this.compilarToolStripMenuItem1.Name = "compilarToolStripMenuItem1";
-            this.compilarToolStripMenuItem1.Size = new System.Drawing.Size(224, 26);
+            this.compilarToolStripMenuItem1.Size = new System.Drawing.Size(260, 26);
             this.compilarToolStripMenuItem1.Text = "Compilar";
             this.compilarToolStripMenuItem1.Click += new System.EventHandler(this.compilarToolStripMenuItem1_Click);
             // 
@@ -228,6 +230,13 @@ namespace proyecto_IDE
             this.buscarPalabraToolStripMenuItem.Name = "buscarPalabraToolStripMenuItem";
             this.buscarPalabraToolStripMenuItem.Size = new System.Drawing.Size(184, 26);
             this.buscarPalabraToolStripMenuItem.Text = "BuscarPalabra";
+            // 
+            // verArbolDeDerivacionesToolStripMenuItem
+            // 
+            this.verArbolDeDerivacionesToolStripMenuItem.Name = "verArbolDeDerivacionesToolStripMenuItem";
+            this.verArbolDeDerivacionesToolStripMenuItem.Size = new System.Drawing.Size(260, 26);
+            this.verArbolDeDerivacionesToolStripMenuItem.Text = "Ver arbol de derivaciones";
+            this.verArbolDeDerivacionesToolStripMenuItem.Click += new System.EventHandler(this.verArbolDeDerivacionesToolStripMenuItem_Click);
             // 
             // IDE
             // 
@@ -270,6 +279,7 @@ namespace proyecto_IDE
         private System.Windows.Forms.ToolStripMenuItem exportarErroresToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editarToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem buscarPalabraToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem verArbolDeDerivacionesToolStripMenuItem;
     }
 }
 

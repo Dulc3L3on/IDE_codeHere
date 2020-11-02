@@ -82,11 +82,12 @@ namespace proyecto_IDE.Analizadores
                     {
                         automataPilas.reemplazar(listaElementos);
                     }
-                    else {
+                    else {                        
+                        excepcionSintactico.reaccionarAnteProduccionNoExistente(automataPilas.darListadoNoTerminalesEnEstudio().darUltimoNodo().contenido, automataPilas.darPila().inspeccionarTope().darContenido(), tokenSolicitado.darFilaUbicacionInicio() +1);
+                        automataPilas.eludirExcepcion();//se ignoran los elementos y se elemina el estado general de la lista, para así trabajr con quine corresponde xD
                         tokenSolicitado = pasarTokens(tokenSolicitado);
                         parteDeImportancia = darParteImportancia(tokenSolicitado.darClasificacion());
-                        automataPilas.eludirExcepcion();//se ignoran los elementos y se elemina el estado general de la lista, para así trabajr con quine corresponde xD
-                        excepcionSintactico.reaccionarAnteProduccionNoExistente(automataPilas.darPila().inspeccionarTope().darTipo(), tokenSolicitado.darFilaUbicacionInicio());
+
                     }                    
                 }
             }//no creo que se pueda crear un bucle infinito xD

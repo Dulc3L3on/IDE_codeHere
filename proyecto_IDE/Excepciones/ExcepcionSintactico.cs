@@ -11,9 +11,10 @@ namespace proyecto_IDE.Excepciones
         //serían los tres tipos mencionados en el doc: repetido [atrás], falta [adelante], tkn erróneo... ya no será tan así, sino que se generalizará xd lleva menos trabajo xD
         ListaEnlazada<String> listaErrores = new ListaEnlazada<String>();//crei que se devolvía a una lista general.. pero si se hace eso, habría que crear una clase con tal que eso pueda suceder... y como que no me cuadra tener que crear una solo para eso...
 
-        public void reaccionarAnteProduccionNoExistente(String NTenCuestion, int numeroFila)//donde dicho NT corresponde al nombre [normal xd] del estado al cual se movió para cambiar de fila por el hecho de estar en el tope...
+        public void reaccionarAnteProduccionNoExistente(String NTgeneral, String NTenCuestion, int numeroFila)//donde dicho NT corresponde al nombre [normal xd] del estado al cual se movió para cambiar de fila por el hecho de estar en el tope...
         {
-            String mensajeError ="Error: línea "+ numeroFila;
+            String mensajeError ="Error: línea "+ numeroFila + ">>>"  ;
+            mensajeError += (NTgeneral != null) ? " En " + NTgeneral + "-> " : "";
 
             switch (NTenCuestion) {
                 case "M":
@@ -25,7 +26,7 @@ namespace proyecto_IDE.Excepciones
                     listaErrores.anadirAlFinal(mensajeError);
                     break;
                 case "B'": case "C":
-                    mensajeError = mensajeError + "Las Únicas estructuras válidas son: ciclo, asignación, declaración, condición operacion, escritura y lectura";
+                    mensajeError = mensajeError + "Solo puedes emplear: ciclos, asignaciones, declaraciones, condiciones, operaciones, escritura y lectura";
                     listaErrores.anadirAlFinal(mensajeError);
                     break;
                 
@@ -70,7 +71,7 @@ namespace proyecto_IDE.Excepciones
                     listaErrores.anadirAlFinal(mensajeError);
                     break;                                
                 case "N": case "Q": case "Z": case "K":
-                    mensajeError = mensajeError + "Una condicion compara, agrupa y o niegua uno o más valores";//esto lo digo puesto que el if en realidad retorna valores de verdad...
+                    mensajeError = mensajeError + "La condicion requiere comparar uno o más valores";//esto lo digo puesto que el if en realidad retorna valores de verdad...
                     listaErrores.anadirAlFinal(mensajeError);
                     break;                
                 case "H": case "G":
@@ -93,7 +94,7 @@ namespace proyecto_IDE.Excepciones
                     mensajeError = mensajeError + "La función lectura, REQUIERE iniciar con la palabra leer";
                     listaErrores.anadirAlFinal(mensajeError);
                     break;
-            }
+            }//no son exactamente correspondientes, puesto que 
 
         }//fin del método que se encarga de alertar sobre el tipo de error sucedido, cuando se calló en una celda nula...
 
@@ -101,14 +102,14 @@ namespace proyecto_IDE.Excepciones
             String mensajeError;
 
             if (token.Equals(";")) {
-                mensajeError = "Error: fila "+ numeroFila +" >>> Indicacion de fin de estructura fuera de lugar";
+                mensajeError = "Error: linea "+ numeroFila +" >>> Indicacion de fin de estructura fuera de lugar";
             }
             if (token.Equals("{"))
             {
-                mensajeError = "Error: fila " + numeroFila + ">>> Inicio de bloque mal posicionado";
+                mensajeError = "Error: linea " + numeroFila + ">>> Inicio de bloque mal posicionado";
             }
             else {
-                mensajeError = "Error: fila "+ numeroFila+" >>> No se esperaba \""+ token+"\" en la estructura "+ nombreNT;
+                mensajeError = "Error: linea " + numeroFila+" >>> No se esperaba \""+ token+"\" en la estructura "+ nombreNT;
             }            
             listaErrores.anadirAlFinal(mensajeError);
         }
