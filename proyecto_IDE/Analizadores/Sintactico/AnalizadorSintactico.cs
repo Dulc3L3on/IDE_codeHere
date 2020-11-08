@@ -82,7 +82,8 @@ namespace proyecto_IDE.Analizadores
                     {
                         automataPilas.reemplazar(listaElementos);
                     }
-                    else {                        
+                    else if(!automataPilas.darListadoNoTerminalesEnEstudio().estaVacia())
+                    {                        
                         excepcionSintactico.reaccionarAnteProduccionNoExistente(automataPilas.darListadoNoTerminalesEnEstudio().darUltimoNodo().contenido, automataPilas.darPila().inspeccionarTope().darContenido(), tokenSolicitado.darFilaUbicacionInicio() +1);
                         automataPilas.eludirExcepcion();//se ignoran los elementos y se elemina el estado general de la lista, para así trabajr con quine corresponde xD
                         tokenSolicitado = pasarTokens(tokenSolicitado);
@@ -113,7 +114,7 @@ namespace proyecto_IDE.Analizadores
                 partes = tokenTerminal.Split('_');
                 return partes[1];//pues solo quiero la palabra boolean... ó la palabra negación, según sea el caso xD
             }
-            if(tokenTerminal.StartsWith("valor") || tokenTerminal.StartsWith("logico") || tokenTerminal.StartsWith("comparacion"))
+            if(tokenTerminal.StartsWith("tipo") || tokenTerminal.StartsWith("valor") || tokenTerminal.StartsWith("logico") || tokenTerminal.StartsWith("comparacion"))
             {
                 partes = tokenTerminal.Split('_');
                 return partes[0];//Esto porque la gramática solo requiere de var y valor para NT diferentes a I y L, y solo requiere de la palabra lógico y comparación cuando estas vengan xD
@@ -135,6 +136,10 @@ namespace proyecto_IDE.Analizadores
                 nodoAuxiliar = nodoAuxiliar.nodoSiguiente;
             }
             return coincidencias;//de esta forma no habrá problemas puesto que si la listaEnlazada no tiene tamaño, entonces esto no se exe... xD :) :3
+        }
+
+        public AutomataDePila darAutomata() {
+            return automataPilas;
         }
 
 

@@ -14,7 +14,7 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
             definirProducciones();
             soyGeneral = false;
             contengoCuerpo = false;
-            nombre = "F_";
+            nombre = "F'";
             nombreCompleto = "Concatenacion";
         }
 
@@ -27,7 +27,7 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
 
             producciones[0].agregarNoTerminal("F'");
             producciones[0].agregarNoTerminal("V");
-            producciones[0].agregarNoTerminal("signo_mas");
+            producciones[0].agregarTerminal("signo_mas");
 
             producciones[1].agregarTerminal("e");
         }

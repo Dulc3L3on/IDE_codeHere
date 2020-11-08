@@ -14,7 +14,7 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
             definirProducciones();
             soyGeneral = false;
             contengoCuerpo = false;
-            nombre = "T_";
+            nombre = "T'";
             nombreCompleto = "Operacion";
         }
 

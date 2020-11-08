@@ -17,7 +17,7 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico
         private bool seguirAnadiendo = true;
         private graph grafo = new graph();
 
-        public ArbolDeDerivaciones(String padreRaiz) {
+        public ArbolDeDerivaciones(String padreRaiz) {            
             anadirPadre(padreRaiz, 0);
             numeroNodosEnElArbol = 1;//pues el conteo inicia desde 0 [y este ya es el valor para el sigueinte xD], por los requerimientos de graphviz... creo xD
         }
@@ -42,7 +42,7 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico
             Padre padreReferencia = darPadreNoEstudiado();            
 
             if (padreReferencia !=null) {
-                return Convert.ToString(padreReferencia.darNumeroCreacion()) +"."+ padreReferencia.darNombre();
+                return Convert.ToString(padreReferencia.darNumeroCreacion()) +"-"+ padreReferencia.darNombre();
             }            
             return "";//aunque jamás nunca debería devolver esto, pues el $ no surge por una producción... y además no se add al árbol...
         }
@@ -58,7 +58,7 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico
                     }
 
                     //y aquí el codigo [dentro del método o directo] que graph solicita... donde mandaré el nodo del que partírán los elementos que le voy a enviar...
-                    grafo.agregarHijo(identificador, Convert.ToString(numeroNodosEnElArbol) + ". "+ Convert.ToString(elementos[numeroNodo].darContenido()));                   
+                    grafo.agregarHijo(identificador, Convert.ToString(numeroNodosEnElArbol) + "-"+ Convert.ToString(elementos[numeroNodo].darContenido()));                   
 
                     numeroNodosEnElArbol++;
                 }
@@ -79,10 +79,12 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico
         }
 
         //aqupi el método para llegar a al último NT general no estudiado.. que al parecer siempre será B'...
-
         public ListaDoblementeEnlazada<Padre> darListaPadres() {
             return listadoPadres;
         }
 
+        public graph darGrafo() {
+            return grafo;
+        }
     }
 }

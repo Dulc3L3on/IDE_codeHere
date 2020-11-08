@@ -19,8 +19,7 @@ namespace proyecto_IDE
         Kit herramienta;
         AnalizadorLexico analizadorLexico;
         AnalizadorSintactico analizadorSintactico;
-        ManejadorArchivo manejadorArchivo = new ManejadorArchivo();
-        graph grafoArbol = new graph();
+        ManejadorArchivo manejadorArchivo = new ManejadorArchivo();        
 
         private int[] lineaCambiada = new int[2];//cuando el 2 tenga un valor !=0 se mandará a llamar la métood para analizar...
 
@@ -59,12 +58,11 @@ namespace proyecto_IDE
 
         private void areaDesarrollo_KeyUp(object sender, KeyEventArgs e)
         {
-            int linea = areaDesarrollo.GetLineFromCharIndex(areaDesarrollo.GetFirstCharIndexOfCurrentLine()+1);//se obtiene el índice [el número de columna total en el que se encuentra el cursor...
-            int indice = areaDesarrollo.SelectionStart;
-            int columna = indice - areaDesarrollo.GetFirstCharIndexOfCurrentLine();
+            int primerCaracter = areaDesarrollo.GetFirstCharIndexOfCurrentLine();
+            int lineaActual = areaDesarrollo.GetLineFromCharIndex(primerCaracter) + 1;
+            int columna = areaDesarrollo.SelectionStart - primerCaracter;
 
-
-            txtBx_Informativo.Text = "Linea: " + Convert.ToString(linea) + " Columna: " + Convert.ToString(columna);//parece ser repetitivo pero no lo es, porque uno se acciona cuando se presiona el teclado para hacer el cab de linea y el otro cuando se hace el cambio con el mouse
+            txtBx_Informativo.Text = "Linea: " + Convert.ToString(lineaActual) + " Columna: " + Convert.ToString(columna);//parece ser repetitivo pero no lo es, porque uno se acciona cuando se presiona el teclado para hacer el cab de linea y el otro cuando se hace el cambio con el mouse
         }
 
         private void areaDesarrollo_MouseMoved(object sender, MouseEventArgs e)
@@ -226,7 +224,7 @@ namespace proyecto_IDE
         {
             if (manejadorArchivo.existeArbol()) {
                 System.Diagnostics.Process.Start("grafo.txt");
-                grafoArbol.generarArbol();
+                analizadorSintactico.darAutomata().darArbol().darGrafo().generarArbol();
                 System.Diagnostics.Process.Start("grafo.jpg");//errorsin xD                
             }
         }

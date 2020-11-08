@@ -26,9 +26,9 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
 
             producciones[0].agregarTerminal("asignacion_fin");
             producciones[0].agregarTerminal("parentesis_Cierre");
-            producciones[0].agregarTerminal("F");
-            producciones[0].agregarNoTerminal("parentesis_Apertura");
-            producciones[0].agregarTerminal("imprimir");
+            producciones[0].agregarNoTerminal("F");
+            producciones[0].agregarTerminal("parentesis_Apertura");
+            producciones[0].agregarTerminal("Funcional_imprimir");
         }
     }
 }

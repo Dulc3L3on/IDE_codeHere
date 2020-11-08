@@ -14,11 +14,11 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico
         ManejadorArchivo manejadorArchivoArbol = new ManejadorArchivo();
 
         public graph() { 
-            textoArbol.Append("digraph G {" + Environment.NewLine);
+            textoArbol.Append("graph G {" + Environment.NewLine);
         }
 
         public void agregarHijo(String nodoPadre, String nodoHijo) {
-            textoArbol.AppendFormat("{0}->{1}{2}", "\""+nodoPadre+ "\"", "\""+ nodoHijo+ "\"", Environment.NewLine);
+            textoArbol.AppendFormat("{0} -- {1}{2}", "\""+nodoPadre+ "\"", "\""+ nodoHijo+ "\"", Environment.NewLine);
         }
 
         public void terminarArbol() {
@@ -31,12 +31,14 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico
             {
                 String directorioActual = Directory.GetCurrentDirectory();
                 String nombreArchivoArbol = "grafo.txt";
+                Console.WriteLine(Path.Combine(directorioActual, nombreArchivoArbol.Replace(".txt", ".jpg")));
                 var command = string.Format("dot -Tjpg {0} -o {1}", Path.Combine(directorioActual, nombreArchivoArbol), Path.Combine(directorioActual, nombreArchivoArbol.Replace(".txt", ".jpg")));
                 var procStartInfo = new System.Diagnostics.ProcessStartInfo("cmd", "/C " + command);
                 var proceso = new System.Diagnostics.Process();
-                proceso.StartInfo = procStartInfo;
+                proceso.StartInfo = procStartInfo;                
                 proceso.Start();
                 proceso.WaitForExit();
+                //System.Diagnostics.Process.Start("grafo.jpg");
             }
             catch (Exception exception)
             {

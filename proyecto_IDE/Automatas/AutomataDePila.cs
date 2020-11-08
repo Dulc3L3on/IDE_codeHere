@@ -28,7 +28,7 @@ namespace proyecto_IDE.Automatas
         String[] terminales = {"Reservada_principal", "inicio_Bloque", "tipo", "var", "valor", "signo_mas",
             "signo_menos", "signo_multiplicacion", "signo_division", "asignacion_igualA", "parentesis_Apertura", "parentesis_Cierre",
             "negacion", "asignacion_fin", "coma", "comparacion","Estructural_HACER", "Estructural_DESDE",//sino habrá AMBIGUEDAD por la palabra lógico de simbolo lógico xD
-            "Estructural_MIENTRAS", "Estructural_INCREMENTO", "Estructural_SI", "Estructural_SINO", "Estructural_SINO_SI", "logico", "imprimir", "leer", "fin_Bloque", "fin" };
+            "Estructural_MIENTRAS", "Estructural_INCREMENTO", "Estructural_SI", "Estructural_SINO", "Estructural_SINO_SI", "logico", "Funcional_imprimir", "Funcional_leer", "fin_Bloque", "fin" };
         //Eso de var número aú no lo puedo corroboara, cre que deberá irse, sino tendrás que hacer un montón... y como no debes exe :) xD
 
         public AutomataDePila() {
@@ -74,7 +74,7 @@ namespace proyecto_IDE.Automatas
 
         private int darOpcionCorrespondiente(String tokenSiguiente)
         { //será llamado en la parte del parámetro del token de "darProduccion" para obtener la correspondiente debido a los caminos alternos...
-            if ((indiceTerminalActual==3 && !tokenSiguiente.Equals("=")))
+            if ((indiceTerminalActual==3 && !tokenSiguiente.Equals("=") && (!listaNoTerminalesGeneralesEnEstudio.estaVacia() && listaNoTerminalesGeneralesEnEstudio.darUltimoNodo().contenido.Equals("Bloque"))))//esto es para operación... puesto que suscede cuando se va a escoger que "hijo" de C toca emplear xD... por ello hay que revisar si es B [tomando la situación ideal...]
             {
                 return 6;//así se va directo a lo de operación, puesto que las columnas solo son para acceder a las producciones de la celda correspodiente, pero como yo se que cuando es B' y se tiene una var depende del signo =, entonces puedo hacer eso xD y como las producciones son exactamente las mismas para el caso de operación, cabal xD
             }
@@ -165,6 +165,10 @@ namespace proyecto_IDE.Automatas
 
         public void denegarCrecimientoArbol() {//será empleado por sintac cuando se llegue a una casilla nula... es decir cuando el listado de producciones sea nulo...
             arbol.dejarDeAnadir();
+        }
+
+        public ArbolDeDerivaciones darArbol() {
+            return arbol;
         }
     }  
 }

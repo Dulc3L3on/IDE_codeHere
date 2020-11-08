@@ -28,7 +28,7 @@ namespace proyecto_IDE.Complementos_analizadores.Sintactico.Estados
             producciones[0].agregarTerminal("parentesis_Cierre");
             producciones[0].agregarTerminal("var");
             producciones[0].agregarTerminal("parentesis_Apertura");
-            producciones[0].agregarTerminal("leer");
+            producciones[0].agregarTerminal("Funcional_leer");
         }
 
     }

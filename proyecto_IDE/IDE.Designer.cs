@@ -32,6 +32,7 @@ namespace proyecto_IDE
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IDE));
             this.areaDesarrollo = new System.Windows.Forms.RichTextBox();
             this.txtBx_Informativo = new System.Windows.Forms.TextBox();
             this.txtBx_mensajero = new System.Windows.Forms.TextBox();
@@ -48,15 +49,17 @@ namespace proyecto_IDE
             this.acercaDeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.compilarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.compilarToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.verArbolDeDerivacionesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buscarPalabraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.verArbolDeDerivacionesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reservadas = new AutocompleteMenuNS.AutocompleteMenu();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // areaDesarrollo
             // 
             this.areaDesarrollo.AcceptsTab = true;
+            this.reservadas.SetAutocompleteMenu(this.areaDesarrollo, this.reservadas);
             this.areaDesarrollo.BackColor = System.Drawing.SystemColors.Desktop;
             this.areaDesarrollo.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.areaDesarrollo.Font = new System.Drawing.Font("Microsoft JhengHei", 10.15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -73,6 +76,7 @@ namespace proyecto_IDE
             // 
             // txtBx_Informativo
             // 
+            this.reservadas.SetAutocompleteMenu(this.txtBx_Informativo, null);
             this.txtBx_Informativo.BackColor = System.Drawing.Color.Purple;
             this.txtBx_Informativo.Font = new System.Drawing.Font("Verdana", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtBx_Informativo.ForeColor = System.Drawing.SystemColors.Menu;
@@ -87,6 +91,7 @@ namespace proyecto_IDE
             // 
             // txtBx_mensajero
             // 
+            this.reservadas.SetAutocompleteMenu(this.txtBx_mensajero, null);
             this.txtBx_mensajero.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(50)))), ((int)(((byte)(60)))));
             this.txtBx_mensajero.Font = new System.Drawing.Font("Ebrima", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtBx_mensajero.ForeColor = System.Drawing.SystemColors.ControlLight;
@@ -148,28 +153,28 @@ namespace proyecto_IDE
             // nuevoToolStripMenuItem
             // 
             this.nuevoToolStripMenuItem.Name = "nuevoToolStripMenuItem";
-            this.nuevoToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.nuevoToolStripMenuItem.Size = new System.Drawing.Size(205, 26);
             this.nuevoToolStripMenuItem.Text = "Nuevo";
             this.nuevoToolStripMenuItem.Click += new System.EventHandler(this.nuevoToolStripMenuItem_Click);
             // 
             // abrirToolStripMenuItem
             // 
             this.abrirToolStripMenuItem.Name = "abrirToolStripMenuItem";
-            this.abrirToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.abrirToolStripMenuItem.Size = new System.Drawing.Size(205, 26);
             this.abrirToolStripMenuItem.Text = "Abrir";
             this.abrirToolStripMenuItem.Click += new System.EventHandler(this.abrirToolStripMenuItem_Click);
             // 
             // eliminarToolStripMenuItem
             // 
             this.eliminarToolStripMenuItem.Name = "eliminarToolStripMenuItem";
-            this.eliminarToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.eliminarToolStripMenuItem.Size = new System.Drawing.Size(205, 26);
             this.eliminarToolStripMenuItem.Text = "Eliminar";
             this.eliminarToolStripMenuItem.Click += new System.EventHandler(this.eliminarToolStripMenuItem_Click);
             // 
             // guardarToolStripMenuItem
             // 
             this.guardarToolStripMenuItem.Name = "guardarToolStripMenuItem";
-            this.guardarToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.guardarToolStripMenuItem.Size = new System.Drawing.Size(205, 26);
             this.guardarToolStripMenuItem.Text = "Guardar Como";
             this.guardarToolStripMenuItem.Click += new System.EventHandler(this.guardarToolStripMenuItem_Click);
             // 
@@ -177,7 +182,7 @@ namespace proyecto_IDE
             // 
             this.guardarCambiosToolStripMenuItem.Enabled = false;
             this.guardarCambiosToolStripMenuItem.Name = "guardarCambiosToolStripMenuItem";
-            this.guardarCambiosToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.guardarCambiosToolStripMenuItem.Size = new System.Drawing.Size(205, 26);
             this.guardarCambiosToolStripMenuItem.Text = "Guardar cambios";
             this.guardarCambiosToolStripMenuItem.Click += new System.EventHandler(this.guardarCambiosToolStripMenuItem_Click);
             // 
@@ -185,13 +190,13 @@ namespace proyecto_IDE
             // 
             this.guardarYSalirToolStripMenuItem.Enabled = false;
             this.guardarYSalirToolStripMenuItem.Name = "guardarYSalirToolStripMenuItem";
-            this.guardarYSalirToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.guardarYSalirToolStripMenuItem.Size = new System.Drawing.Size(205, 26);
             this.guardarYSalirToolStripMenuItem.Text = "Guardar y cerrar";
             // 
             // exportarErroresToolStripMenuItem
             // 
             this.exportarErroresToolStripMenuItem.Name = "exportarErroresToolStripMenuItem";
-            this.exportarErroresToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.exportarErroresToolStripMenuItem.Size = new System.Drawing.Size(205, 26);
             this.exportarErroresToolStripMenuItem.Text = "ExportarErrores";
             this.exportarErroresToolStripMenuItem.Click += new System.EventHandler(this.exportarErroresToolStripMenuItem_Click);
             // 
@@ -217,6 +222,13 @@ namespace proyecto_IDE
             this.compilarToolStripMenuItem1.Text = "Compilar";
             this.compilarToolStripMenuItem1.Click += new System.EventHandler(this.compilarToolStripMenuItem1_Click);
             // 
+            // verArbolDeDerivacionesToolStripMenuItem
+            // 
+            this.verArbolDeDerivacionesToolStripMenuItem.Name = "verArbolDeDerivacionesToolStripMenuItem";
+            this.verArbolDeDerivacionesToolStripMenuItem.Size = new System.Drawing.Size(260, 26);
+            this.verArbolDeDerivacionesToolStripMenuItem.Text = "Ver arbol de derivaciones";
+            this.verArbolDeDerivacionesToolStripMenuItem.Click += new System.EventHandler(this.verArbolDeDerivacionesToolStripMenuItem_Click);
+            // 
             // editarToolStripMenuItem
             // 
             this.editarToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -231,12 +243,29 @@ namespace proyecto_IDE
             this.buscarPalabraToolStripMenuItem.Size = new System.Drawing.Size(184, 26);
             this.buscarPalabraToolStripMenuItem.Text = "BuscarPalabra";
             // 
-            // verArbolDeDerivacionesToolStripMenuItem
+            // reservadas
             // 
-            this.verArbolDeDerivacionesToolStripMenuItem.Name = "verArbolDeDerivacionesToolStripMenuItem";
-            this.verArbolDeDerivacionesToolStripMenuItem.Size = new System.Drawing.Size(260, 26);
-            this.verArbolDeDerivacionesToolStripMenuItem.Text = "Ver arbol de derivaciones";
-            this.verArbolDeDerivacionesToolStripMenuItem.Click += new System.EventHandler(this.verArbolDeDerivacionesToolStripMenuItem_Click);
+            this.reservadas.Colors = ((AutocompleteMenuNS.Colors)(resources.GetObject("reservadas.Colors")));
+            this.reservadas.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.reservadas.ImageList = null;
+            this.reservadas.Items = new string[] {
+        "booleano",
+        "cadena",
+        "caracter",
+        "decimal",
+        "DESDE",
+        "entero",
+        "HACER",
+        "HASTA",
+        "imprimir",
+        "INCREMENTO",
+        "leer",
+        "MIENTRAS",
+        "principal",
+        "SI",
+        "SINO",
+        "SINO_SI"};
+            this.reservadas.TargetControlWrapper = null;
             // 
             // IDE
             // 
@@ -280,6 +309,7 @@ namespace proyecto_IDE
         private System.Windows.Forms.ToolStripMenuItem editarToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem buscarPalabraToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem verArbolDeDerivacionesToolStripMenuItem;
+        private AutocompleteMenuNS.AutocompleteMenu reservadas;
     }
 }
 
