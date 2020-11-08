@@ -43,10 +43,7 @@ namespace proyecto_IDE.Analizadores
                         nodoAuxiliar = nodoAuxiliar.nodoSiguiente;                        
                 }
             }
-            else {
-                herramientas.mostrarError(excepcionSintactico.darListadoErrores());
-            }//pues ya terminó su trabajo el sintáctico xD                     
-
+            
             tokenPorDar++;           
             return nodoAuxiliar.contenido;
         }
@@ -55,7 +52,7 @@ namespace proyecto_IDE.Analizadores
             Token tokenSolicitado= darTokenSiguiente();//para que pueda ubicarse en el token inicial y así iniciar el análisis a partir de él...
             String parteDeImportancia = darParteImportancia(tokenSolicitado.darClasificacion());//puesto que por los valores y variables numéricas solo debe hacerse una vez, y es cuando se detecte que el NT es una operación o ciclo, por lo cual podía hacerse revisando el listado de NT generales o revisando la pila... da igual xD
             
-            while (!automataPilas.darPila().esVacia() || (tokenPorDar <= listaEnlazadaToken.darTamanio())) {//realmente esto no sucederá por el la resiliencia... [reposición ante los errores], es decir que                                                                                            
+            while (!automataPilas.darPila().esVacia() && (tokenPorDar <= listaEnlazadaToken.darTamanio())) {//realmente esto no sucederá por el la resiliencia... [reposición ante los errores], es decir que                                                                                            
                 //todos los errores se tratarán dentro de este método y no más xD y por ello bastaría con decir que el indice halla sobrepasado el tamaño ó que la pila esté vacía para parar...
                 if (automataPilas.esTerminal(automataPilas.darPila().inspeccionarTope().darTipo()))
                 {
@@ -82,16 +79,17 @@ namespace proyecto_IDE.Analizadores
                     {
                         automataPilas.reemplazar(listaElementos);
                     }
-                    else if(!automataPilas.darListadoNoTerminalesEnEstudio().estaVacia())
-                    {                        
-                        excepcionSintactico.reaccionarAnteProduccionNoExistente(automataPilas.darListadoNoTerminalesEnEstudio().darUltimoNodo().contenido, automataPilas.darPila().inspeccionarTope().darContenido(), tokenSolicitado.darFilaUbicacionInicio() +1);
+                    else {
+                        String noTerminalGeneral = (!automataPilas.darListadoNoTerminalesEnEstudio().estaVacia()) ? automataPilas.darListadoNoTerminalesEnEstudio().darUltimoNodo().contenido : null;
+                        excepcionSintactico.reaccionarAnteProduccionNoExistente(noTerminalGeneral, automataPilas.darPila().inspeccionarTope().darContenido(), tokenSolicitado.darFilaUbicacionInicio() +1);
                         automataPilas.eludirExcepcion();//se ignoran los elementos y se elemina el estado general de la lista, para así trabajr con quine corresponde xD
                         tokenSolicitado = pasarTokens(tokenSolicitado);
                         parteDeImportancia = darParteImportancia(tokenSolicitado.darClasificacion());
 
                     }                    
                 }
-            }//no creo que se pueda crear un bucle infinito xD
+            }
+            herramientas.mostrarError(excepcionSintactico.darListadoErrores());
         }//y ahí está xd ya hace las trancisiones... lo único que debe hacer es devolver una excepción si es que sucedió, sino no mostrará nada nadín nadita xD     
 
         public Token pasarTokens(Token tokenSolicitado) {

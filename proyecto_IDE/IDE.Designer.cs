@@ -245,6 +245,7 @@ namespace proyecto_IDE
             // 
             // reservadas
             // 
+            this.reservadas.AppearInterval = 300;
             this.reservadas.Colors = ((AutocompleteMenuNS.Colors)(resources.GetObject("reservadas.Colors")));
             this.reservadas.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.reservadas.ImageList = null;
